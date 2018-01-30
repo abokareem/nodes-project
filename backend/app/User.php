@@ -2,12 +2,24 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * App\User
+ *
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @mixin \Eloquent
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\User onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
+ */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -15,15 +27,26 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'email',
+        'password',
+        'email_confirmed',
+        'two_fa'
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password'
     ];
+
+    /**
+     * @param string $password
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
+    }
+
 }

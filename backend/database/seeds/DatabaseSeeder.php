@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\UserGroup;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        app(UserGroup::class)->create(['name' => 'admin']);
+        app(UserGroup::class)->create(['name' => 'user']);
     }
 }
