@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('users', 'RegisterController@store');
+
+Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')
+    ->name('email.confirm.backend');

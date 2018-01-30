@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * @SWG\Swagger(
+ *     basePath="/api",
+ *     @SWG\Info(
+ *         version="1.0.0",
+ *         title="Nodes project",
+ *         description="Nodes project.",
+ *     ),
+ *     consumes={"application/json"},
+ *     produces={"application/json"},
+ * )
+ */
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
