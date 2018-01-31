@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 
 /*
@@ -17,3 +18,7 @@ Route::post('users', 'RegisterController@store');
 
 Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')
     ->name('email.confirm.backend');
+
+Route::middleware('auth:api')->group(function(Router $router) {
+    $router->get('users', 'UserController@show');
+});
