@@ -52,6 +52,6 @@ class User extends Authenticatable
 
     public function twoFa()
     {
-        return $this->belongsTo();
+        return $this->hasMany(TwoFaAuth::class);
     }
 }

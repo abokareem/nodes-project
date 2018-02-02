@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\EmailConfirmation;
-use App\Events\TwoFaEnabled;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
-use PragmaRX\Google2FA\Google2FA;
 
 class UserController extends Controller
 {
@@ -16,7 +14,7 @@ class UserController extends Controller
      *
      *
      * @SWG\Get(
-     *     path="/api/users",
+     *     path="/users",
      *     summary="Get User",
      *     tags={"Users"},
      *     description="This request cannot be done without authorization.",
@@ -62,7 +60,7 @@ class UserController extends Controller
      * Confirm user email.
      *
      * @SWG\Get(
-     *     path="/api/users/email/confirm/{token}",
+     *     path="/users/email/confirm/{token}",
      *     summary="Confirm email",
      *     tags={"Users"},
      *     description="Confirm user email.",
@@ -88,6 +86,7 @@ class UserController extends Controller
      *
      * @param EmailConfirmation $token
      * @return UserResource
+     * @throws \Exception
      *
      */
     public function confirmEmail(EmailConfirmation $token)
@@ -107,16 +106,17 @@ class UserController extends Controller
 
         $user = Auth::user();
         $user->google2fa_secret = $secretKey;
+        $user->two_fa = true;
         $user->save();
 
         $imageDataUri = Google2FA::getQRCodeInline(
-            config('app.name'),
+            config('app.url'),
             $user->email,
             $secretKey,
             200
         );
-        return
-        event(new TwoFaEnabled(Auth::user()));
+        return response(['data' => $imageDataUri]);
+        //event(new TwoFaEnabled(Auth::user()));
     }
     /**
      * @SWG\Post(

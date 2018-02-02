@@ -11,12 +11,6 @@ use Illuminate\Http\Resources\Json\Resource;
  *     definition="User",
  *     title="User",
  *     @SWG\Property(
- *      property="id",
- *      type="integer",
- *      description="",
- *      example=1
- *     ),
- *     @SWG\Property(
  *      property="email",
  *      type="string",
  *      description="",
@@ -49,10 +43,9 @@ class UserResource extends Resource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'email' => $this->email,
-            'email_confirmed' => $this->email_confirmed,
-            'two_fa' => $this->two_fa
+            'email_confirmed' => (bool) $this->email_confirmed,
+            'two_fa' => (bool) $this->two_fa
         ];
     }
 }

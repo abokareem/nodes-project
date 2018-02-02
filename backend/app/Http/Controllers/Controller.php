@@ -1,7 +1,7 @@
 <?php
 /**
  * @SWG\Swagger(
- *     basePath="/",
+ *     basePath="/api",
  *     @SWG\Info(
  *         version="1.0.0",
  *         title="Nodes project",
