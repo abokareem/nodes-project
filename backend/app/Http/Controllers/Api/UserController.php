@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\EmailConfirmation;
+use App\Events\TwoFaEnabled;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use PragmaRX\Google2FA\Google2FA;
 
 class UserController extends Controller
 {
@@ -99,6 +101,23 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    public function enableTwoFa()
+    {
+        $secretKey = Google2FA::generateSecretKey();
+
+        $user = Auth::user();
+        $user->google2fa_secret = $secretKey;
+        $user->save();
+
+        $imageDataUri = Google2FA::getQRCodeInline(
+            config('app.name'),
+            $user->email,
+            $secretKey,
+            200
+        );
+        return
+        event(new TwoFaEnabled(Auth::user()));
+    }
     /**
      * @SWG\Post(
      *     path="/oauth/token",
@@ -136,7 +155,7 @@ class UserController extends Controller
      *                  example="*",
      *              ),
      *              @SWG\Property(
-     *                  property="email",
+     *                  property="username",
      *                  type="string",
      *                  description="",
      *                  example="test@example.com",

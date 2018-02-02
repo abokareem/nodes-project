@@ -19,8 +19,9 @@ class CreateUsersTable extends Migration
             $table->foreign('group_id')->references('id')->on('user_groups');
             $table->string('email')->unique();
             $table->string('password');
-            $table->tinyInteger('email_confirmed')->default(0);
-            $table->tinyInteger('two_fa')->default(0);
+            $table->boolean('email_confirmed')->default(false);
+            $table->boolean('two_fa')->default(false);
+            $table->string('google2fa_secret')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
