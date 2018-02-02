@@ -15,6 +15,10 @@ class CreateTwoFaAuthsTable extends Migration
     {
         Schema::create('two_fa_auths', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('token');
+            $table->text('auth_user_data');
             $table->timestamps();
         });
     }

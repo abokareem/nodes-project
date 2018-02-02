@@ -15,7 +15,7 @@ class RegisterController extends Controller
      *
      *
      * @SWG\Post(
-     *     path="/api/users",
+     *     path="/users",
      *     summary="Create User",
      *     tags={"Users"},
      *     description="Create user",
