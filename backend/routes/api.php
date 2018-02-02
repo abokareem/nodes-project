@@ -15,17 +15,12 @@ use Illuminate\Http\Request;
 */
 
 Route::post('users', 'RegisterController@store');
-
 Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')
     ->name('email.confirm.backend');
+Route::post('users/auth','UserAuthController@login');
+Route::post('users/auth/twofa','UserAuthController@twoFaLogin');
 
 Route::middleware('auth:api')->group(function(Router $router) {
-    //$router->get('users', 'UserController@show');
+    $router->get('users', 'UserController@show');
     $router->post('users/twofa/enabled','UserController@enableTwoFa');
 });
-
-Route::post('users/auth','UserAuthController@login')->middleware('tfa');
-
-Route::post('users/auth/twofa','UserAuthController@twoFaLogin')->middleware('tfa');
-
-Route::get('users', 'UserController@show')->middleware(['tfa']);
