@@ -29,7 +29,7 @@ use Illuminate\Http\Resources\Json\Resource;
  *      example=true
  *     ),
  *     @SWG\Property(
- *      property="2FA",
+ *      property="two_fa",
  *      type="boolean",
  *      description="",
  *      example=false
@@ -51,8 +51,8 @@ class UserResource extends Resource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'email_confirmed' => (bool) $this->email_confirmed,
-            '2FA' => (bool) $this->two_fa
+            'email_confirmed' => $this->email_confirmed,
+            'two_fa' => $this->two_fa
         ];
     }
 }

@@ -50,4 +50,8 @@ class User extends Authenticatable
         $this->attributes['password'] = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
     }
 
+    public function twoFa()
+    {
+        return $this->belongsTo();
+    }
 }
