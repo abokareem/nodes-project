@@ -47,13 +47,17 @@ class Login extends Resource
      */
     public function toArray($request)
     {
-        $content = json_decode($this->getContent());
+        $this::withoutWrapping();
+
+        $content = (array)json_decode($this->getContent());
 
         return [
-            "token_type" => $content->token_type,
-            "expires_in" => $content->expires_in,
-            "access_token" => $content->access_token,
-            "refresh_token" => $content->refresh_token
+            'data' => $content
         ];
+    }
+
+    public function withResponse($request, $response)
+    {
+        $response->setStatusCode($this->status());
     }
 }

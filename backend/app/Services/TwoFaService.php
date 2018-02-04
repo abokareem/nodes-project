@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\TwoFaReserveCodeTries;
 use App\Exceptions\TwoFaSecretNotExists;
 use App\Types\TwoFaType;
 use App\User;
@@ -14,6 +15,9 @@ use PragmaRX\Google2FA\Google2FA;
  */
 class TwoFaService
 {
+    /**
+     * @var Google2FA
+     */
     private $service;
 
     /**
@@ -26,44 +30,65 @@ class TwoFaService
     }
 
     /**
+     * @param string $hash
+     * @param string $code
+     * @param string $reserveCode
+     * @return bool
+     */
+    public function enable(string $hash, string $code, string $reserveCode): bool
+    {
+        $user = Auth::user();
+
+        $isValid = $this->verifyCode($hash, $code);
+
+        if ($isValid) {
+
+            $user->google2fa_secret = $hash;
+            $user->two_fa = true;
+            $user->save();
+
+            $user->reserveTwoFa()->create([
+                'code' => $reserveCode,
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return TwoFaType
      */
-    public function enable(): TwoFaType
+    public function generateDataForActivate(): TwoFaType
     {
         $user = Auth::user();
 
         $secretKey = $this->generateKey();
 
-        $user->google2fa_secret = $secretKey;
-        $user->two_fa = true;
-        $user->save();
-
         $qrCode = $this->generateQrCode($user->email, $secretKey);
 
-        return new TwoFaType($qrCode, $secretKey);
+        $reserveCode = str_random(8);
+
+        return new TwoFaType($qrCode, $secretKey, $reserveCode);
     }
 
     /**
-     * @param string $email
-     * @param string $secret
-     * @return string
+     * @param string $code
+     * @return bool
      */
-    protected function generateQrCode(string $email, string $secret): string
+    public function disable(string $code): bool
     {
-        return Google2FA::getQRCodeInline(
-            config('app.url'),
-            $email,
-            $secret,
-            200
-        );
-    }
+        $user = Auth::user();
 
-    /**
-     * @return string
-     */
-    protected function generateKey(): string
-    {
-        return Google2FA::generateSecretKey();
+        $isValid = $this->verifyCode($user->google2fa_secret, $code);
+
+        if ($isValid) {
+
+            return $this->disableTwoFa($user);
+        }
+
+        return false;
     }
 
     /**
@@ -94,5 +119,74 @@ class TwoFaService
     public function verifyCode(string $secret, string $code): bool
     {
         return $this->service->verifyKey($secret, $code);
+    }
+
+    /**
+     * @param string $email
+     * @param string $reserveCode
+     * @return bool
+     * @throws TwoFaReserveCodeTries
+     */
+    public function resetTwoFa(string $email, string $reserveCode)
+    {
+        $user = User::where('email', $email)->firstOrFail();
+
+        $reserveModel = $user->reserveTwoFa()->firstOrFail();
+
+        if ($reserveModel->code === $reserveCode) {
+
+            return $this->disableTwoFa($user);
+        }
+
+        $reserveModel->tries = $reserveModel->tries + 1;
+
+        $reserveModel->save();
+
+        if ($reserveModel->tries === 3) {
+
+            $user->delete();
+
+            throw new TwoFaReserveCodeTries();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    protected function disableTwoFa(User $user)
+    {
+        $user->google2fa_secret = null;
+        $user->two_fa = false;
+        $user->save();
+
+        $user->reserveTwoFa()->delete();
+
+        return true;
+    }
+
+    /**
+     * @param string $email
+     * @param string $secret
+     * @return string
+     */
+    protected function generateQrCode(string $email, string $secret): string
+    {
+        return $this->service->getQRCodeInline(
+            config('app.url'),
+            $email,
+            $secret,
+            200
+        );
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateKey(): string
+    {
+        return $this->service->generateSecretKey();
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TwoFaLoginRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,13 @@ class TwoFaLoginRequest extends FormRequest
      */
     public function rules()
     {
+        $this['password_confirmation'] = $this->get('password');
+
         return [
             'token' => 'required|max:255',
-            'code' => 'required|max:255'
+            'email' => 'required|email|max:255',
+            'password' => 'required|regex:/^\S{6,}$/|min:6|max:255',
         ];
+
     }
 }

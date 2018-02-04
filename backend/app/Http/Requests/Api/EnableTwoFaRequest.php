@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TwoFaLoginRequest extends FormRequest
+class EnableTwoFaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class TwoFaLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|max:255',
-            'code' => 'required|max:255'
+            'hash' => 'required|max:255',
+            'code' => 'required|max:255',
+            'reserve_code' => 'required|max:255'
         ];
     }
 }

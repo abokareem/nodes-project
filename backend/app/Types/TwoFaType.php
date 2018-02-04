@@ -10,16 +10,19 @@ class TwoFaType
 {
     private $qrCode;
     private $secretKey;
+    private $reserveCode;
 
     /**
      * TwoFaType constructor.
      * @param string|null $qrCode
      * @param string $secretKey
+     * @param string $reserveCode
      */
-    public function __construct(string $qrCode = null, string $secretKey)
+    public function __construct(string $qrCode = null, string $secretKey, string $reserveCode)
     {
         $this->qrCode = $qrCode;
         $this->secretKey = $secretKey;
+        $this->reserveCode = $reserveCode;
     }
 
     /**
@@ -52,5 +55,21 @@ class TwoFaType
     public function setQrCode(string $qrCode)
     {
         $this->qrCode = $qrCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReserveCode() : string
+    {
+        return $this->reserveCode;
+    }
+
+    /**
+     * @param string $reserveCode
+     */
+    public function setReserveCode(string $reserveCode)
+    {
+        $this->reserveCode = $reserveCode;
     }
 }

@@ -18,3 +18,5 @@ Route::get('/', function () {
 Route::get('/email/confirm/{token}', function ($token) {
     return redirect(route('email.confirm.backend',[$token]));
 })->name('email.confirm.frontend');
+
+Route::get('password/reset/{token}')->name('reset.password');
