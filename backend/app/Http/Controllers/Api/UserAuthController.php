@@ -11,7 +11,6 @@ use App\Services\TwoFaService;
 use App\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use PragmaRX\Google2FA\Google2FA;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UserAuthController extends Controller
@@ -155,7 +154,7 @@ class UserAuthController extends Controller
      *              @SWG\Property(
      *                  property="code",
      *                  type="string",
-     *                  description="client id in api db",
+     *                  description="authorize code",
      *                  example="345567",
      *              ),
      *          ),

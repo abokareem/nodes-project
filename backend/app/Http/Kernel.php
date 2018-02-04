@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\TwoFaMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -58,6 +57,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'tfa' => TwoFaMiddleware::class,
+        'tfa' => \App\Http\Middleware\TwoFaMiddleware::class,
+        'confirmEmail' => \App\Http\Middleware\ConfirmEmail::class
     ];
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTwoFaAuthsTable extends Migration
+class CreateTwoFaReserveCodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateTwoFaAuthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('two_fa_auths', function (Blueprint $table) {
+        Schema::create('two_fa_reserve_codes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->unique();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('token');
-            $table->text('auth_user_data');
+            $table->text('code');
+            $table->enum('state' , ['active', 'block'])->default('active');
+            $table->tinyInteger('tries')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateTwoFaAuthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('two_fa_auths');
+        Schema::dropIfExists('two_fa_reserve_codes');
     }
 }

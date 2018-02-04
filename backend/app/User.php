@@ -31,7 +31,8 @@ class User extends Authenticatable
         'email',
         'password',
         'email_confirmed',
-        'two_fa'
+        'two_fa',
+        'google2fa_secret'
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -50,8 +51,44 @@ class User extends Authenticatable
         $this->attributes['password'] = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
     }
 
+    /**
+     * @param $value
+     */
+    public function setGoogle2faSecretAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['google2fa_secret'] = encrypt($value);
+
+            return;
+        }
+
+        $this->attributes['google2fa_secret'] = $value;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getGoogle2faSecretAttribute($value)
+    {
+        if ($value) {
+            return decrypt($value);
+        }
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function twoFa()
     {
-        return $this->hasMany(TwoFaAuth::class);
+        return $this->hasOne(TwoFaAuth::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function reserveTwoFa()
+    {
+        return $this->hasOne(TwoFaReserveCode::class);
     }
 }

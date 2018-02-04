@@ -15,9 +15,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserRegistered' => [
             'App\Listeners\SendRegisterConfirmationEmail',
         ],
-        /*'Laravel\Passport\Events\AccessTokenCreated' => [
-            'App\Listeners\CheckTwoFa',
-        ],*/
+        'App\Events\ResendUserRegisteredEmail' => [
+            'App\Listeners\ResendRegisteredConfirmationEmail',
+        ],
+        'App\Events\ForgottenPasswordRequested'  => [
+            'App\Listeners\SendForgotPasswordEmail',
+        ],
     ];
 
     /**

@@ -44,6 +44,6 @@ class TwoFaLoginFirstStep extends Resource
 
     public function withResponse($request, $response)
     {
-        $response->setStatusCode(Response::HTTP_CONTINUE);
+        $response->setStatusCode(Response::HTTP_PARTIAL_CONTENT);
     }
 }

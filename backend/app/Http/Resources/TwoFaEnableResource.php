@@ -4,6 +4,28 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
+/**
+ * Class TwoFaEnableResource
+ *
+ * @SWG\Definition(
+ *     definition="TwoFaEnable",
+ *     title="TwoFaEnable",
+ *     @SWG\Property(
+ *      property="qr_code",
+ *      type="string",
+ *      description="",
+ *      example="...some qr code..."
+ *     ),
+ *     @SWG\Property(
+ *      property="hash",
+ *      type="int",
+ *      description="",
+ *      example="some secret code"
+ *     ),
+ * )
+ *
+ */
+
 class TwoFaEnableResource extends Resource
 {
     /**
@@ -16,7 +38,8 @@ class TwoFaEnableResource extends Resource
     {
         return [
             'qr_code' => $this->getQrCode(),
-            'secret_code' => $this->getSecretKey()
+            'hash' => $this->getSecretKey(),
+            'reserve_code' => $this->getReserveCode()
         ];
     }
 }
