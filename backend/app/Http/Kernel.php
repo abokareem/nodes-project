@@ -40,6 +40,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+            'localization'
         ],
     ];
 
@@ -58,6 +59,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'tfa' => \App\Http\Middleware\TwoFaMiddleware::class,
-        'confirmEmail' => \App\Http\Middleware\ConfirmEmail::class
+        'confirmEmail' => \App\Http\Middleware\ConfirmEmail::class,
+        'localization' => \App\Http\Middleware\SetLocaleMiddleware::class
     ];
 }

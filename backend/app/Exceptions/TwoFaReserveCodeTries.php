@@ -11,7 +11,7 @@ class TwoFaReserveCodeTries extends Exception
     {
         if ($request->expectsJson()) {
 
-            return response(['message' => 'Your account is blocked. Please contact support.'],
+            return response(['message' => trans('exceptions.two_fa.reserve')],
                 Response::HTTP_FORBIDDEN);
 
         }

@@ -11,7 +11,8 @@ class TwoFaInvalidCode extends Exception
     {
         if ($request->expectsJson()) {
 
-            return response(['message' => 'invalid code'],Response::HTTP_FORBIDDEN);
+            return response(['message' => trans('exceptions.two_fa.code')],
+                Response::HTTP_FORBIDDEN);
 
         }
     }

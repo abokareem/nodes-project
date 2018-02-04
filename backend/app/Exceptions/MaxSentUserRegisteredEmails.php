@@ -11,7 +11,7 @@ class MaxSentUserRegisteredEmails extends Exception
     {
         if ($request->expectsJson()) {
 
-            return response(['message' => 'You have sent the maximum number of mail'],
+            return response(['message' => trans('exceptions.emails.registered')],
                 Response::HTTP_LOCKED);
 
         }

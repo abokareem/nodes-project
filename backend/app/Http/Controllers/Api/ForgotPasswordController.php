@@ -51,6 +51,6 @@ class ForgotPasswordController extends Controller
 
         event(new ForgottenPasswordRequested($user, $token));
 
-        return new ForgotPasswordResource('password reset link sent');
+        return new ForgotPasswordResource(trans('passwords.sent'));
     }
 }

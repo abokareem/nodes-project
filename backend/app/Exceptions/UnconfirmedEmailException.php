@@ -11,7 +11,7 @@ class UnconfirmedEmailException extends Exception
     {
         if ($request->expectsJson()) {
 
-            return response(['message' => 'Please, confirm your email'],
+            return response(['message' => trans('exceptions.emails.confirm')],
                 Response::HTTP_FAILED_DEPENDENCY);
 
         }

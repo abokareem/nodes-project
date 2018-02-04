@@ -205,6 +205,7 @@ class UserAuthController extends Controller
 
         }
 
-        throw OAuthServerException::invalidCredentials();
+        throw new OAuthServerException(trans('auth.failed'), 6,
+            'invalid_credentials', 401);
     }
 }

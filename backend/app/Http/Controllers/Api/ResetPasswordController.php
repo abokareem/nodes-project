@@ -57,19 +57,19 @@ class ResetPasswordController extends Controller
         switch ($result) {
             case Password::PASSWORD_RESET:
 
-                return new ResetPasswordResource('Password has been changed');
+                return new ResetPasswordResource(trans('passwords.reset'));
             case Password::INVALID_USER:
 
-                throw new HttpException(422, 'This user is invalid');
+                throw new HttpException(422, trans('passwords.user'));
             case Password::INVALID_PASSWORD:
 
-                throw new HttpException(422, 'This password is invalid');
+                throw new HttpException(422, trans('passwords.password'));
             case Password::INVALID_TOKEN:
 
-                throw new HttpException(422, 'This token is invalid');
+                throw new HttpException(422, trans('passwords.token'));
             default:
 
-                throw new HttpException(422, 'System error');
+                throw new HttpException(422, trans('passwords.server'));
         }
     }
 

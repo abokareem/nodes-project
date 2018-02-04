@@ -106,7 +106,7 @@ class UserController extends Controller
 
         $token->delete();
 
-        return new UserResource($user);
+        return response(trans('mails.confirmed'));
     }
 
     /**
@@ -153,7 +153,7 @@ class UserController extends Controller
 
         event(new ResendUserRegisteredEmail($confirmation));
 
-        return response('');
+        return response(trans('emails.reconfirm'));
     }
 
     /**
@@ -276,7 +276,7 @@ class UserController extends Controller
         $result = $service2FA->enable($hash, $code, $reserveCode);
 
         if ($result) {
-            return response('');
+            return response(trans('twofa.enabled'));
         }
 
         throw new TwoFaInvalidCode();
@@ -345,7 +345,7 @@ class UserController extends Controller
 
         if ($result) {
 
-            return response('');
+            return response(trans('twofa.disabled'));
         }
 
         throw new TwoFaInvalidCode();
@@ -406,9 +406,9 @@ class UserController extends Controller
         $result = $service2FA->resetTwoFa($email, $reserveCode);
 
         if ($result) {
-            return response('');
+            return response(trans('twofa.disabled'));
         }
 
-        return response('', Response::HTTP_FORBIDDEN);
+        return response(trans('twofa.reset.invalid'), Response::HTTP_FORBIDDEN);
     }
 }
