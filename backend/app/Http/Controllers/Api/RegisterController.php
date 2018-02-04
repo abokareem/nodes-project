@@ -7,6 +7,7 @@ use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\User;
+use Illuminate\Http\Response;
 
 class RegisterController extends Controller
 {
@@ -44,13 +45,11 @@ class RegisterController extends Controller
      *     @SWG\Response(
      *      response=201,
      *      description="Created user",
-     *      @SWG\Schema(
-     *       title="Result",
-     *       @SWG\Property(
-     *        property="data",
-     *        ref="#/definitions/User"
-     *       )
-     *      )
+     *      examples={
+     *           "application/json":{
+     *             "message": "A confirmation email has been sent. Please confirm your mail.",
+     *           },
+     *         },
      *     ),
      *
      *     @SWG\Response(
@@ -80,7 +79,7 @@ class RegisterController extends Controller
 
         event(new UserRegistered($user));
 
-        return new UserResource($user);
+        return response(trans('mails.confirm'),Response::HTTP_CREATED);
 
     }
 }

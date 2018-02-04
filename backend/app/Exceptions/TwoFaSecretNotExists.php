@@ -11,7 +11,8 @@ class TwoFaSecretNotExists extends Exception
     {
         if ($request->expectsJson()) {
 
-            return response(['message' => 'something wrong'],Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response(['message' => trans('exceptions.two_fa.server')],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
 
         }
     }
