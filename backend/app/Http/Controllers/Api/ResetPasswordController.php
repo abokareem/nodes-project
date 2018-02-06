@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ResetPassword;
 use App\Http\Requests\Api\ResetPasswordRequest;
 use App\Http\Resources\ResetPasswordResource;
 use Illuminate\Foundation\Auth\ResetsPasswords;
@@ -45,19 +46,23 @@ class ResetPasswordController extends Controller
      */
     public function update(ResetPasswordRequest $request)
     {
+        $changedUser = null;
         $result = $this->broker()->reset(
             $this->credentials($request),
 
-            function ($user, $password) {
+            function ($user, $password) use (&$changedUser) {
                 $user->password = $password;
                 $user->save();
+                $changedUser = $user;
             }
         );
 
         switch ($result) {
             case Password::PASSWORD_RESET:
 
+                event(new ResetPassword($changedUser));
                 return new ResetPasswordResource(trans('passwords.reset'));
+
             case Password::INVALID_USER:
 
                 throw new HttpException(422, trans('passwords.user'));

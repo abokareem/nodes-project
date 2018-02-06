@@ -13,15 +13,36 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\UserRegistered' => [
-            'App\Listeners\SendRegisterConfirmationEmail',
+            'App\Listeners\WriteLog',
+            'App\Listeners\SendRegisterConfirmationEmail'
         ],
         'App\Events\ResendUserRegisteredEmail' => [
-            'App\Listeners\ResendRegisteredConfirmationEmail',
+            'App\Listeners\WriteLog',
+            'App\Listeners\ResendRegisteredConfirmationEmail'
         ],
         'App\Events\ForgottenPasswordRequested'  => [
             'App\Listeners\SendForgotPasswordEmail',
         ],
+        'App\Events\ResetPassword'  => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\Login'  => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\ConfirmedEmail'  => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\TwoFaEnable'  => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\TwoFaDisable'  => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\TwoFaReset'  => [
+            'App\Listeners\WriteLog',
+        ],
     ];
+
 
     /**
      * Register any events for your application.

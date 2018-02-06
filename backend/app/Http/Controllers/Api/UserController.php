@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\EmailConfirmation;
+use App\Events\ConfirmedEmail;
 use App\Events\ResendUserRegisteredEmail;
+use App\Events\TwoFaDisable;
+use App\Events\TwoFaEnable;
+use App\Events\TwoFaReset;
 use App\Exceptions\MaxSentUserRegisteredEmails;
 use App\Exceptions\TwoFaInvalidCode;
 use App\Http\Controllers\Controller;
@@ -13,6 +17,7 @@ use App\Http\Requests\Api\TwoFaResetRequest;
 use App\Http\Resources\TwoFaEnableResource;
 use App\Http\Resources\UserResource;
 use App\Services\TwoFaService;
+use App\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,6 +110,8 @@ class UserController extends Controller
         $user->save();
 
         $token->delete();
+
+        event(new ConfirmedEmail($user));
 
         return response(trans('mails.confirmed'));
     }
@@ -276,6 +283,7 @@ class UserController extends Controller
         $result = $service2FA->enable($hash, $code, $reserveCode);
 
         if ($result) {
+            event(new TwoFaEnable());
             return response(trans('twofa.enabled'));
         }
 
@@ -344,7 +352,7 @@ class UserController extends Controller
         $result = $service2FA->disable($code);
 
         if ($result) {
-
+            event(new TwoFaDisable());
             return response(trans('twofa.disabled'));
         }
 
@@ -397,6 +405,7 @@ class UserController extends Controller
      * @param TwoFaResetRequest $request
      * @param TwoFaService $service2FA
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \App\Exceptions\TwoFaReserveCodeTries
      */
     public function resetTwoFa(TwoFaResetRequest $request, TwoFaService $service2FA)
     {
@@ -406,6 +415,10 @@ class UserController extends Controller
         $result = $service2FA->resetTwoFa($email, $reserveCode);
 
         if ($result) {
+
+            $user = User::where('email',$email)->firstOrFail();
+
+            event(new TwoFaReset($user));
             return response(trans('twofa.disabled'));
         }
 
