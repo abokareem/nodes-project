@@ -91,4 +91,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(TwoFaReserveCode::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function actions()
+    {
+        return $this->hasMany(UserAction::class);
+    }
 }

@@ -12,6 +12,7 @@ use App\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ServerRequestInterface;
+use App\Events\Login as LoginEvent;
 
 class UserAuthController extends Controller
 {
@@ -104,7 +105,8 @@ class UserAuthController extends Controller
      * @param ServerRequestInterface $request
      * @param AccessTokenController $accessToken
      * @param TwoFaService $service2FA
-     * @return TwoFaLoginFirstStep|\Illuminate\Http\Response
+     * @return Login|TwoFaLoginFirstStep
+     * @throws \App\Exceptions\TwoFaSecretNotExists
      */
     public function login(
         ServerRequestInterface $request,
@@ -128,6 +130,8 @@ class UserAuthController extends Controller
 
                 return new TwoFaLoginFirstStep($userLoginRecord);
             }
+
+            event(new LoginEvent($user));
         }
 
         return new Login($tokens);
@@ -200,6 +204,8 @@ class UserAuthController extends Controller
         if ($isValid) {
 
             $tokens = $user->twoFa()->latest()->firstOrFail();
+
+            event(new LoginEvent($user));
 
             return new TwoFaLoginSecondStep($tokens);
 

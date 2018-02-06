@@ -8,24 +8,20 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class UserRegistered
+class ResetPassword
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $tries;
     public $message;
 
     /**
-     * Create a new event instance.
-     *
+     * ResetPassword constructor.
      * @param User $user
-     * @param int $tries
      */
-    public function __construct(User $user, int $tries = 0)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->tries = $tries;
-        $this->message = UserAction::REGISTER;
+        $this->message = UserAction::RESET_PASSWORD;
     }
 }
