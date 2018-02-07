@@ -8,6 +8,7 @@ use App\Events\ResendUserRegisteredEmail;
 use App\Events\TwoFaDisable;
 use App\Events\TwoFaEnable;
 use App\Events\TwoFaReset;
+use App\Events\UpdatedUserProfile;
 use App\Exceptions\MaxSentUserRegisteredEmails;
 use App\Exceptions\TwoFaInvalidCode;
 use App\Http\Controllers\Controller;
@@ -15,7 +16,9 @@ use App\Http\Requests\Api\DisableTwoFaRequest;
 use App\Http\Requests\Api\EnableTwoFaRequest;
 use App\Http\Requests\Api\TwoFaResetRequest;
 use App\Http\Requests\Api\UpdateUserRequest;
+use App\Http\Resources\MessageResource;
 use App\Http\Resources\TwoFaEnableResource;
+use App\Http\Resources\UserActionsResource;
 use App\Http\Resources\UserResource;
 use App\Services\TwoFaService;
 use App\User;
@@ -151,11 +154,58 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request)
     {
         $user = $request->only(['name', 'email', 'password', 'language']);
-
         Auth::user()->update($user);
+        event(new UpdatedUserProfile());
 
         return new UserResource(Auth::user());
 
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     *
+     * @SWG\Get(
+     *     path="/users/actions",
+     *     summary="Get User actions",
+     *     tags={"Users"},
+     *     description="This request cannot be done without authorization.",
+     *     operationId="getUser",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Response(
+     *      response=200,
+     *      description="actions object",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/UserActions"
+     *       )
+     *      )
+     *     ),
+     *     @SWG\Response(
+     *         response=401,
+     *         description="Token is expired or blacklisted.",
+     *         examples={
+     *           "application/json":{
+     *               "message":"Unauthenticated"
+     *           },
+     *         },
+     *     ),
+     * )
+     *
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getActions()
+    {
+        $user = Auth::user();
+
+        return UserActionsResource::collection($user->actions);
     }
 
     /**
@@ -188,9 +238,8 @@ class UserController extends Controller
      * )
      *
      * @param EmailConfirmation $token
-     * @return UserResource
+     * @return MessageResource
      * @throws \Exception
-     *
      */
     public function confirmEmail(EmailConfirmation $token)
     {
@@ -202,7 +251,7 @@ class UserController extends Controller
 
         event(new ConfirmedEmail($user));
 
-        return response(trans('mails.confirmed'));
+        return new MessageResource(trans('mails.confirmed'));
     }
 
     /**
@@ -233,7 +282,7 @@ class UserController extends Controller
      *     ),
      * )
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return MessageResource
      * @throws MaxSentUserRegisteredEmails
      */
     public function resendConfirmEmail()
@@ -249,7 +298,7 @@ class UserController extends Controller
 
         event(new ResendUserRegisteredEmail($confirmation));
 
-        return response(trans('emails.reconfirm'));
+        return new MessageResource(trans('emails.reconfirm'));
     }
 
     /**
@@ -360,7 +409,7 @@ class UserController extends Controller
      *
      * @param EnableTwoFaRequest $request
      * @param TwoFaService $service2FA
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return MessageResource
      * @throws TwoFaInvalidCode
      */
     public function enableTwoFa(EnableTwoFaRequest $request, TwoFaService $service2FA)
@@ -373,7 +422,7 @@ class UserController extends Controller
 
         if ($result) {
             event(new TwoFaEnable());
-            return response(trans('twofa.enabled'));
+            return new MessageResource(trans('twofa.enabled'));
         }
 
         throw new TwoFaInvalidCode();
@@ -431,7 +480,7 @@ class UserController extends Controller
      *
      * @param DisableTwoFaRequest $request
      * @param TwoFaService $service2FA
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return MessageResource
      * @throws TwoFaInvalidCode
      */
     public function disableTwoFa(DisableTwoFaRequest $request, TwoFaService $service2FA)
@@ -442,7 +491,7 @@ class UserController extends Controller
 
         if ($result) {
             event(new TwoFaDisable());
-            return response(trans('twofa.disabled'));
+            return new MessageResource(trans('twofa.disabled'));
         }
 
         throw new TwoFaInvalidCode();
@@ -493,7 +542,7 @@ class UserController extends Controller
      *
      * @param TwoFaResetRequest $request
      * @param TwoFaService $service2FA
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return MessageResource|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      * @throws \App\Exceptions\TwoFaReserveCodeTries
      */
     public function resetTwoFa(TwoFaResetRequest $request, TwoFaService $service2FA)
@@ -508,7 +557,7 @@ class UserController extends Controller
             $user = User::where('email', $email)->firstOrFail();
 
             event(new TwoFaReset($user));
-            return response(trans('twofa.disabled'));
+            return new MessageResource(trans('twofa.disabled'));
         }
 
         return response(trans('twofa.reset.invalid'), Response::HTTP_FORBIDDEN);

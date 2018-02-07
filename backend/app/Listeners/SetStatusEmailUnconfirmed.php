@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UpdatedUserEmail;
+use App\User;
 
 class SetStatusEmailUnconfirmed
 {
@@ -15,7 +16,9 @@ class SetStatusEmailUnconfirmed
     public function handle(UpdatedUserEmail $event)
     {
         $user = $event->user;
-        $user->email_confirmed = false;
-        $user->save();
+
+        User::find($user->id)->update([
+            'email_confirmed' => false
+        ]);
     }
 }
