@@ -24,9 +24,9 @@ class EnableTwoFaRequest extends FormRequest
     public function rules()
     {
         return [
-            'hash' => 'required|max:255',
-            'code' => 'required|max:255',
-            'reserve_code' => 'required|max:255'
+            'hash' => 'required|max:255|min:2',
+            'code' => 'required|max:255|min:2',
+            'reserve_code' => 'required|max:255|min:2'
         ];
     }
 }

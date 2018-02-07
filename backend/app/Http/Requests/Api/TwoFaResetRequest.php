@@ -24,8 +24,8 @@ class TwoFaResetRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:255',
-            'reserve_code' =>  'required|max:255'
+            'email' => 'required|email|max:255|min:4',
+            'reserve_code' =>  'required|max:255|min:2'
         ];
     }
 }

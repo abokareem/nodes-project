@@ -28,6 +28,12 @@ class RegisterController extends Controller
      *          required=true,
      *          @SWG\Schema(
      *              @SWG\Property(
+     *                  property="name",
+     *                  type="string",
+     *                  description="",
+     *                  example="test",
+     *              ),
+     *              @SWG\Property(
      *                  property="email",
      *                  type="string",
      *                  description="",
@@ -38,6 +44,12 @@ class RegisterController extends Controller
      *                  type="string",
      *                  description="",
      *                  example="12341234",
+     *              ),
+     *              @SWG\Property(
+     *                  property="language",
+     *                  type="string",
+     *                  description="",
+     *                  example="ru",
      *              ),
      *          ),
      *     ),

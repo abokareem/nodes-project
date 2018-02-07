@@ -43,6 +43,7 @@ class UserResource extends Resource
     public function toArray($request)
     {
         return [
+            'name' => $this->name,
             'email' => $this->email,
             'email_confirmed' => (bool) $this->email_confirmed,
             'two_fa' => (bool) $this->two_fa

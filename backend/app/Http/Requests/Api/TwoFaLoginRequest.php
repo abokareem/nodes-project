@@ -24,8 +24,8 @@ class TwoFaLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|max:255',
-            'code' => 'required|max:255'
+            'token' => 'required|max:255|min:4',
+            'code' => 'required|max:255|min:4'
         ];
     }
 }

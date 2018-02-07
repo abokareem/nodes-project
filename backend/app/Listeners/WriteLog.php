@@ -28,7 +28,7 @@ class WriteLog
      * @param  ResetPassword $event
      * @return void
      */
-    public function handle(ResetPassword $event)
+    public function handle($event)
     {
         if ($event->user) {
             $this->log->setUser($event->user);

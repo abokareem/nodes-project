@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\TwoFaInvalidCode;
+use App\Services\TwoFaService;
 use Closure;
-use PragmaRX\Google2FA\Google2FA;
+use Illuminate\Support\Facades\Auth;
 
 class TwoFaMiddleware
 {
@@ -13,13 +15,16 @@ class TwoFaMiddleware
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
      * @return mixed
+     * @throws TwoFaInvalidCode
      */
     public function handle($request, Closure $next)
     {
-        $google2FA = app(Google2FA::class);
+        $google2FA = app(TwoFaService::class);
+        dd(Auth::user());
+        if ($google2FA->verifyCode(Auth::user()->google2fa_secret, $request->get('twofa'))) {
+            return $next($request);
+        }
 
-
-
-        return $next($request);
+        throw new TwoFaInvalidCode();
     }
 }

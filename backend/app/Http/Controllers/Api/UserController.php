@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DisableTwoFaRequest;
 use App\Http\Requests\Api\EnableTwoFaRequest;
 use App\Http\Requests\Api\TwoFaResetRequest;
+use App\Http\Requests\Api\UpdateUserRequest;
 use App\Http\Resources\TwoFaEnableResource;
 use App\Http\Resources\UserResource;
 use App\Services\TwoFaService;
@@ -67,6 +68,94 @@ class UserController extends Controller
     public function show()
     {
         return new UserResource(Auth::user());
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     *
+     * @SWG\Patch(
+     *     path="/users",
+     *     summary="Update User",
+     *     tags={"Users"},
+     *     description="Update user",
+     *     operationId="updateUser",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="body",
+     *          in="body",
+     *          required=true,
+     *          @SWG\Schema(
+     *              @SWG\Property(
+     *                  property="name",
+     *                  type="string",
+     *                  description="",
+     *                  example="first",
+     *              ),
+     *              @SWG\Property(
+     *                  property="email",
+     *                  type="string",
+     *                  description="",
+     *                  example="test@example.com",
+     *              ),
+     *              @SWG\Property(
+     *                  property="password",
+     *                  type="string",
+     *                  description="",
+     *                  example="12341234",
+     *              ),
+     *          ),
+     *     ),
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Updated user",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/User"
+     *       )
+     *      )
+     *     ),
+     *     @SWG\Response(
+     *         response="401",
+     *         description="Token is expired or blacklisted.",
+     *         examples={
+     *                  "application/json":{
+     *                              "message":"Unauthenticated."
+     *                  },
+     *         },
+     *     ),
+     *     @SWG\Response(
+     *         response="422",
+     *         description="Provided data is invalid and can not be used (validator error)",
+     *         examples={
+     *                  "application/json":{
+     *                          "message": "The given data was invalid",
+     *                          "errors":{
+     *                              "name":{"The last name must be at least 2 characters."}
+     *                          },
+     *                  },
+     *         },
+     *     ),
+     * )
+     *
+     * @param UpdateUserRequest $request
+     * @return UserResource
+     *
+     */
+    public function update(UpdateUserRequest $request)
+    {
+        $user = $request->only(['name', 'email', 'password', 'language']);
+
+        Auth::user()->update($user);
+
+        return new UserResource(Auth::user());
+
     }
 
     /**
@@ -416,7 +505,7 @@ class UserController extends Controller
 
         if ($result) {
 
-            $user = User::where('email',$email)->firstOrFail();
+            $user = User::where('email', $email)->firstOrFail();
 
             event(new TwoFaReset($user));
             return response(trans('twofa.disabled'));

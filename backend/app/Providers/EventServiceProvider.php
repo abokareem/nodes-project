@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Observers\UserObserver;
+use App\User;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -20,27 +22,37 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\WriteLog',
             'App\Listeners\ResendRegisteredConfirmationEmail'
         ],
-        'App\Events\ForgottenPasswordRequested'  => [
+        'App\Events\ForgottenPasswordRequested' => [
             'App\Listeners\SendForgotPasswordEmail',
         ],
-        'App\Events\ResetPassword'  => [
+        'App\Events\ResetPassword' => [
             'App\Listeners\WriteLog',
         ],
-        'App\Events\Login'  => [
+        'App\Events\Login' => [
             'App\Listeners\WriteLog',
         ],
-        'App\Events\ConfirmedEmail'  => [
+        'App\Events\ConfirmedEmail' => [
             'App\Listeners\WriteLog',
         ],
-        'App\Events\TwoFaEnable'  => [
+        'App\Events\TwoFaEnable' => [
             'App\Listeners\WriteLog',
         ],
-        'App\Events\TwoFaDisable'  => [
+        'App\Events\TwoFaDisable' => [
             'App\Listeners\WriteLog',
         ],
-        'App\Events\TwoFaReset'  => [
+        'App\Events\TwoFaReset' => [
             'App\Listeners\WriteLog',
         ],
+        'App\Events\UpdatedUserEmail' => [
+            'App\Listeners\SendRegisterConfirmationEmail',
+            'App\Listeners\SetStatusEmailUnconfirmed'
+        ]
+    ];
+
+    protected $observers = [
+        User::class => [
+            UserObserver::class,
+        ]
     ];
 
 
@@ -55,4 +67,19 @@ class EventServiceProvider extends ServiceProvider
 
         //
     }
+
+    /**
+     * Register observers for Eloquent models.
+     *
+     * @return void
+     */
+    protected function registerObservers()
+    {
+        foreach ($this->observers as $model => $observers) {
+            foreach ($observers as $observer) {
+                $model::observe($observer);
+            }
+        }
+    }
+
 }

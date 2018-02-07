@@ -26,8 +26,8 @@ class ResetPasswordRequest extends FormRequest
         $this['password_confirmation'] = $this->get('password');
 
         return [
-            'token' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'token' => 'required|max:255|min:4',
+            'email' => 'required|email|max:255|min:4',
             'password' => 'required|regex:/^\S{6,}$/|min:6|max:255',
         ];
 
