@@ -24,7 +24,7 @@ class DisableTwoFaRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required|max:255'
+            'code' => 'required|max:255|min:2'
         ];
     }
 }
