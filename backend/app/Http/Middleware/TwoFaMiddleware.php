@@ -19,12 +19,24 @@ class TwoFaMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $google2FA = app(TwoFaService::class);
-        dd(Auth::user());
-        if ($google2FA->verifyCode(Auth::user()->google2fa_secret, $request->get('twofa'))) {
-            return $next($request);
-        }
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->two_fa) {
 
-        throw new TwoFaInvalidCode();
+                $google2FA = app(TwoFaService::class);
+
+                if (is_null($request->get('twofa'))){
+                    throw new TwoFaInvalidCode();
+                }
+
+                if ($google2FA->verifyCode(Auth::user()->google2fa_secret, $request->get('twofa'))) {
+
+                    return $next($request);
+                }
+
+                throw new TwoFaInvalidCode();
+            }
+        }
+        return $next($request);
     }
 }

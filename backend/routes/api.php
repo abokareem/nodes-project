@@ -20,11 +20,13 @@ Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')
 Route::post('users/auth', 'UserAuthController@login');
 Route::post('users/auth/twofa', 'UserAuthController@twoFaLogin');
 
-Route::middleware(['auth:api', 'confirmEmail','tfa'])->group(function (Router $router) {
+Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router) {
     $router->get('users', 'UserController@show');
     $router->post('users/twofa', 'UserController@enableTwoFa');
     $router->delete('users/twofa', 'UserController@disableTwoFa');
     $router->get('users/twofa', 'UserController@twoFaDataForActivate');
+    $router->get('users/actions','UserController@getActions');
+    $router->patch('users','UserController@update')->middleware('tfa');
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {

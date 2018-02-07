@@ -9,6 +9,7 @@ return [
         'login' => 'You are signed in to your account.',
         'twofaEnabled' => 'Two-factor authorization is enabled.',
         'twofaDisabled' => 'Two-factor authentication is disabled.',
-        'twofaReset' => 'Two-factor authentication is disabled, through recovery.'
+        'twofaReset' => 'Two-factor authentication is disabled, through recovery.',
+        'update' => 'You are update your profile.'
     ]
 ];

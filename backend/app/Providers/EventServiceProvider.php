@@ -40,12 +40,18 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\TwoFaDisable' => [
             'App\Listeners\WriteLog',
         ],
+
         'App\Events\TwoFaReset' => [
             'App\Listeners\WriteLog',
         ],
+
         'App\Events\UpdatedUserEmail' => [
             'App\Listeners\SendRegisterConfirmationEmail',
             'App\Listeners\SetStatusEmailUnconfirmed'
+        ],
+
+        'App\Events\UpdatedUserProfile' => [
+            'App\Listeners\WriteLog'
         ]
     ];
 
@@ -65,7 +71,7 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        $this->registerObservers();
     }
 
     /**

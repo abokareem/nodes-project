@@ -30,7 +30,7 @@ class WriteLog
      */
     public function handle($event)
     {
-        if ($event->user) {
+        if (isset($event->user)) {
             $this->log->setUser($event->user);
         }
 

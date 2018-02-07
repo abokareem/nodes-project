@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Events\UserRegistered;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\MessageResource;
+use App\Http\Resources\RegisterResource;
 use App\User;
-use Illuminate\Http\Response;
 
 class RegisterController extends Controller
 {
@@ -82,8 +82,7 @@ class RegisterController extends Controller
      *
      * @param  RegisterRequest $request
      *
-     * @return UserResource
-     *
+     * @return RegisterResource
      */
     public function store(RegisterRequest $request)
     {
@@ -91,7 +90,7 @@ class RegisterController extends Controller
 
         event(new UserRegistered($user));
 
-        return response(trans('mails.confirm'),Response::HTTP_CREATED);
+        return new RegisterResource(trans('mails.confirm'));
 
     }
 }
