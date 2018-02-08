@@ -20,6 +20,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected $routePatterns = [
         'token' => '\w+',
+        'currency' => '\d+'
     ];
 
 
