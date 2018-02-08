@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Events\UserRegistered;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MessageResource;
 use App\Http\Resources\RegisterResource;
 use App\User;
 

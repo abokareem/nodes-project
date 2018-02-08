@@ -10,5 +10,8 @@ return [
         'code' => 'Code is invalid.',
         'reserve' => 'Code is invalid.',
         'server' => 'Internal error. Please contact support.'
+    ],
+    'admin' => [
+        'access' => 'Access denied.'
     ]
 ];
