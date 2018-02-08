@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'tfa' => \App\Http\Middleware\TwoFaMiddleware::class,
         'confirmEmail' => \App\Http\Middleware\ConfirmEmail::class,
-        'localization' => \App\Http\Middleware\SetLocaleMiddleware::class
+        'localization' => \App\Http\Middleware\SetLocaleMiddleware::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class
     ];
 }

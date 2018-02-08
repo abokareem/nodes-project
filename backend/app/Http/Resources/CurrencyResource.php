@@ -14,6 +14,12 @@ use Illuminate\Http\Resources\Json\Resource;
  *      property="name",
  *      type="string",
  *      description="",
+ *      example="dollars"
+ *     ),
+ *     @SWG\Property(
+ *      property="code",
+ *      type="string",
+ *      description="",
  *      example="USD"
  *     ),
  *     @SWG\Property(

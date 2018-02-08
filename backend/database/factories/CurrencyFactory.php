@@ -5,7 +5,8 @@ use App\Currency;
 
 $factory->define(Currency::class, function (Faker $faker) {
     return [
-        'name' => $faker->currencyCode,
+        'name' => $faker->word,
+        'code' => $faker->currencyCode,
         'symbol' => '$'
     ];
 });

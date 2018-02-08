@@ -31,6 +31,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'group_id',
+        'language',
         'email_confirmed',
         'two_fa',
         'google2fa_secret'
@@ -99,5 +101,16 @@ class User extends Authenticatable
     public function actions()
     {
         return $this->hasMany(UserAction::class);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin() : bool
+    {
+        if ($this->group_id === config('admin.id')) {
+            return true;
+        }
+        return false;
     }
 }
