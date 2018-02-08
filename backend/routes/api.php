@@ -29,6 +29,17 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->patch('users','UserController@update')->middleware('tfa');
 });
 
+/*TODO admin middleware*/
+Route::get('currency','CurrencyController@index');
+Route::get('currency/{currency}','CurrencyController@show');
+
+Route::middleware('auth:api')->group(function (Router $router) {
+    $router->post('currency','CurrencyController@store');
+    $router->patch('currency/{currency}','CurrencyController@update');
+});
+
+
+
 Route::middleware('auth:api')->group(function (Router $router) {
     $router->get('users/email/resend', 'UserController@resendConfirmEmail');
 });
