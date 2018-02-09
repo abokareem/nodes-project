@@ -104,9 +104,25 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bills()
+    {
+        return $this->hasMany(UserBill::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function shares()
+    {
+        return $this->belongsToMany(MasternodeShare::class,'user_shares');
+    }
+
+    /**
      * @return bool
      */
-    public function isAdmin() : bool
+    public function isAdmin(): bool
     {
         if ($this->group_id === config('admin.id')) {
             return true;

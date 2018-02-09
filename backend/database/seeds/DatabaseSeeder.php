@@ -14,11 +14,12 @@ class DatabaseSeeder extends Seeder
     {
         app(UserGroup::class)->create(['name' => 'admin']);
         app(UserGroup::class)->create(['name' => 'user']);
-
         factory(\App\Currency::class, 20)->create();
 
-        $masternode = factory(\App\Masternode::class)->create([
-
+        $this->call([
+            MasternodeSeeder::class,
+            UserSeeder::class
         ]);
+
     }
 }

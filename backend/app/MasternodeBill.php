@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Masternode extends Model
+class MasternodeBill extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -20,15 +20,10 @@ class Masternode extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function share()
+    public function currency()
     {
-        return $this->hasOne(MasternodeShare::class);
-    }
-
-    public function bill()
-    {
-        return $this->hasOne(MasternodeBill::class);
+        return $this->belongsTo(Currency::class);
     }
 }
