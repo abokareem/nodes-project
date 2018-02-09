@@ -50,3 +50,5 @@ Route::middleware('throttle:15')->group(function (Router $router) {
         ->name('password.reset');
     $router->patch('users/twofa', 'UserController@resetTwoFa');
 });
+
+Route::post('test','ShareController@buy');

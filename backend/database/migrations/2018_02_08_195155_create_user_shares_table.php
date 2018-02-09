@@ -15,11 +15,13 @@ class CreateUserSharesTable extends Migration
     {
         Schema::create('user_shares', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->unique();
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('share_id')->unsigned()->unique();
+            $table->integer('share_id')->unsigned();
             $table->foreign('share_id')->references('id')->on('masternode_shares');
             $table->string('count');
+
+            $table->unique(['share_id', 'user_id']);
             $table->timestamps();
         });
     }

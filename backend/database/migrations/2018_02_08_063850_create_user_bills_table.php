@@ -19,6 +19,7 @@ class CreateUserBillsTable extends Migration
             $table->foreign('currency_id')->references('id')->on('currencies');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->text('uuid');
             $table->string('amount');
             $table->unique(['currency_id', 'user_id']);
             $table->timestamps();

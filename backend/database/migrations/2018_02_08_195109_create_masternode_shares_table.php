@@ -15,8 +15,8 @@ class CreateMasternodeSharesTable extends Migration
     {
         Schema::create('masternode_shares', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('node_id')->unsigned()->unique();
-            $table->foreign('node_id')->references('id')->on('masternodes');
+            $table->integer('masternode_id')->unsigned()->unique();
+            $table->foreign('masternode_id')->references('id')->on('masternodes');
             $table->string('price');
             $table->string('count');
             $table->timestamps();

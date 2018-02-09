@@ -16,4 +16,9 @@ class MasternodeShare extends Model
         'price',
         'count'
     ];
+
+    public function masternode()
+    {
+        return $this->belongsTo(Masternode::class);
+    }
 }
