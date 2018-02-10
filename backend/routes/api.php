@@ -27,6 +27,8 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->get('users/twofa', 'UserController@twoFaDataForActivate');
     $router->get('users/actions','UserController@getActions');
     $router->patch('users','UserController@update')->middleware('tfa');
+
+    $router->post('shares/buy','ShareController@buy');
 });
 
 Route::get('currency','CurrencyController@index');
@@ -50,5 +52,3 @@ Route::middleware('throttle:15')->group(function (Router $router) {
         ->name('password.reset');
     $router->patch('users/twofa', 'UserController@resetTwoFa');
 });
-
-Route::post('test','ShareController@buy');

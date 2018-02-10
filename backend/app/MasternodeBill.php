@@ -12,11 +12,8 @@ class MasternodeBill extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
-        'state',
-        'income',
-        'price'
+        'currency_id',
+        'amount'
     ];
 
     /**

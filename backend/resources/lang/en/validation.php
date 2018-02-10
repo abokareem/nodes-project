@@ -118,4 +118,5 @@ return [
 
     'attributes' => [],
 
+    'buyShares' => 'You can not buy more than it was stated.'
 ];

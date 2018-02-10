@@ -13,5 +13,11 @@ return [
     ],
     'admin' => [
         'access' => 'Access denied.'
+    ],
+    'server' => [
+        'extension' => ':extension extension not installed.'
+    ],
+    'user' => [
+        'insolvent' => 'You do not have enough money in your account.'
     ]
 ];

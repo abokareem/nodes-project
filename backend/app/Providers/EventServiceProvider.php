@@ -52,7 +52,15 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Events\UpdatedUserProfile' => [
             'App\Listeners\WriteLog'
-        ]
+        ],
+
+        'App\Events\BoughtShares' => [
+            'App\Listeners\WriteLog'
+        ],
+
+        'App\Events\MasternodeReadyToCreate' => [
+
+        ],
     ];
 
     protected $observers = [

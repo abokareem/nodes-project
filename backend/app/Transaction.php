@@ -17,4 +17,29 @@ class Transaction extends Model
         'data',
         'amount'
     ];
+
+    /**
+     * @param $value
+     */
+    public function setDataAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['data'] = json_encode($value);
+
+            return;
+        }
+
+        $this->attributes['data'] = $value;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getDataAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value);
+        }
+    }
 }

@@ -15,6 +15,7 @@ class UserAction extends Model
     const TWO_FA_DISABLED = 'logs.user.twofaDisabled';
     const TWO_FA_RESET = 'logs.user.twofaReset';
     const UPDATE_PROFILE = 'logs.user.update';
+    const BUY_SHARES = 'logs.share.buy';
 
     /**
      * The attributes that are mass assignable.

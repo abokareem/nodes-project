@@ -11,5 +11,8 @@ return [
         'twofaDisabled' => 'Two-factor authentication is disabled.',
         'twofaReset' => 'Two-factor authentication is disabled, through recovery.',
         'update' => 'You are update your profile.'
+    ],
+    'share' => [
+        'buy' => 'You bought a share in the masternode.'
     ]
 ];
