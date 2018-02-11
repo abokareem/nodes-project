@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserSharesTable extends Migration
+class CreateActiveMasternodeSharesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateUserSharesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_shares', function (Blueprint $table) {
+        Schema::create('active_masternode_shares', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('share_id')->unsigned();
-            $table->foreign('share_id')->references('id')->on('masternode_shares');
+            $table->integer('node_id')->unsigned()->unique();
+            $table->foreign('node_id')->references('id')->on('active_masternodes');
+            $table->string('price');
             $table->string('count');
-
-            $table->unique(['share_id', 'user_id']);
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ class CreateUserSharesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_shares');
+        Schema::dropIfExists('active_masternode_shares');
     }
 }
