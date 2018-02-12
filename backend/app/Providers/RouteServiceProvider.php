@@ -16,6 +16,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected $namespace = 'App\Http\Controllers';
 
+    protected $apiNamespace = 'App\Http\Controllers\Api';
+
+    protected $routePatterns = [
+        'token' => '\w+',
+        'currency' => '\d+'
+    ];
+
+
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -23,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::patterns($this->routePatterns);
 
         parent::boot();
     }
@@ -67,7 +75,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace($this->apiNamespace)
              ->group(base_path('routes/api.php'));
     }
 }

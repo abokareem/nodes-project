@@ -6,11 +6,17 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "bacon/bacon-qr-code": "^1.0",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0"
+        "laravel/passport": "^4.0",
+        "laravel/tinker": "~1.0",
+        "pragmarx/google2fa": "^2.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "darkaonline/l5-swagger": "^5.5",
+        "doctrine/dbal": "^2.6",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
