@@ -27,7 +27,8 @@ class CurrencyController extends Controller
      *       title="Result",
      *       @SWG\Property(
      *        property="data",
-     *        ref="#/definitions/Currency"
+     *        type="array",
+     *        @SWG\Items(ref="#/definitions/Currency")
      *       )
      *      )
      *     ),

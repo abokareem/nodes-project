@@ -14,8 +14,15 @@ class Masternode extends Model
     protected $fillable = [
         'name',
         'description',
-        'state',
         'income',
         'price'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function share()
+    {
+        return $this->hasOne(MasternodeShare::class);
+    }
 }
