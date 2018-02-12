@@ -19,7 +19,7 @@ class CreateMasternodeBillsTable extends Migration
             $table->foreign('node_id')->references('id')->on('active_masternodes');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currencies');
-            $table->string('amount');
+            $table->string('amount')->default("0");
             $table->timestamps();
         });
     }

@@ -17,7 +17,8 @@ class CreateActiveMasternodesTable extends Migration
             $table->increments('id');
             $table->integer('masternode_id')->unsigned()->unique();
             $table->foreign('masternode_id')->references('id')->on('masternodes');
-            $table->enum('state', ['new', 'processing', 'deactivate', 'active']);
+            $table->enum('state', ['processing', 'stable', 'unstable', 'disbanded']);
+            $table->enum('type', ['single', 'party']);
             $table->timestamps();
         });
     }
