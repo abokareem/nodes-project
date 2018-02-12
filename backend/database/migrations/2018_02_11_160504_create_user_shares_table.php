@@ -15,7 +15,7 @@ class CreateUserSharesTable extends Migration
     {
         Schema::create('user_shares', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('share_id')->unsigned();
             $table->foreign('share_id')->references('id')->on('active_masternode_shares');

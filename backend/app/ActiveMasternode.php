@@ -14,4 +14,20 @@ class ActiveMasternode extends Model
     protected $fillable = [
         'masternode_id'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function share()
+    {
+        return $this->hasOne(ActiveMasternodeShares::class, 'node_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function bill()
+    {
+        return $this->hasOne(MasternodeBill::class, 'node_id', 'id');
+    }
 }

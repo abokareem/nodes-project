@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\ActiveMasternode;
+use App\ActiveMasternodeShares;
 use App\Currency;
 use App\Exceptions\InsolventException;
-use App\Masternode;
-use App\MasternodeShare;
 use App\Services\Math\MathInterface;
 use App\Types\ShareBuyType;
 use App\User;
@@ -45,10 +45,11 @@ class ShareService
     /**
      * Buy shares for masternode.
      *
-     * @param MasternodeShare $share
+     * @param ActiveMasternodeShares $share
      * @param int $count
+     * @throws InsolventException
      */
-    public function buy(MasternodeShare $share, int $count)
+    public function buy(ActiveMasternodeShares $share, int $count)
     {
         $currency = $share->masternode->bill->currency;
         $userBill = $this->getUserBill($currency);
@@ -79,7 +80,7 @@ class ShareService
             $share = $buyType->getShare();
             $masternode = $share->masternode;
             $count = $buyType->getSharesCount();
-            $existsShare = $this->user->shares()->where('share_id', $share->id)->first();
+            $existsUserShare = $this->user->shares()->where('share_id', $share->id)->first();
 
             $userBill->amount = $this->math->sub($userBill->amount, $price);
 
@@ -95,9 +96,9 @@ class ShareService
                 'amount' => $this->math->add($masternode->bill->amount, $price)
             ]);
 
-            if ($existsShare) {
-                $existsShare->update([
-                    'count' => $this->math->add($existsShare->count, $count)
+            if ($existsUserShare) {
+                $existsUserShare->update([
+                    'count' => $this->math->add($existsUserShare->count, $count)
                 ]);
             } else {
                 $this->user->shares()->create([
@@ -115,11 +116,11 @@ class ShareService
     /**
      * Get metadata for transaction record.
      *
-     * @param Masternode $masternode
+     * @param ActiveMasternode $masternode
      * @param User $user
      * @return array
      */
-    protected function getDataForTransaction(Masternode $masternode, User $user)
+    protected function getDataForTransaction(ActiveMasternode $masternode, User $user)
     {
         return [
             'masternode' => $masternode->toArray(),

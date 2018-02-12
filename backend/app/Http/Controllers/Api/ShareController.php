@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActiveMasternodeShares;
 use App\Events\BoughtShares;
 use App\Events\MasternodeReadyToCreate;
 use App\Http\Requests\Api\BuySharesRequest;
 use App\Http\Resources\MessageResource;
-use App\MasternodeShare;
 use App\Http\Controllers\Controller;
 use App\Services\ShareService;
 
@@ -72,11 +72,12 @@ class ShareController extends Controller
      * @param BuySharesRequest $request
      * @param ShareService $shareService
      * @return MessageResource
+     * @throws \App\Exceptions\InsolventException
      */
     public function buy(BuySharesRequest $request, ShareService $shareService)
     {
         $count = $request->get('share_count');
-        $share = MasternodeShare::findOrFail($request->get('share_id'));
+        $share = ActiveMasternodeShares::findOrFail($request->get('share_id'));
 
         $shareService->buy($share, $count);
 

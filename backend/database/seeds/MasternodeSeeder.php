@@ -19,10 +19,16 @@ class MasternodeSeeder extends Seeder
             'income' => '0.001',
             'price' => '10'
         ]);
+
+        $first = \App\ActiveMasternode::create([
+            'masternode_id' => $first->id
+        ]);
+
         $first->share()->create([
             'price' => '0.1',
             'count' => '100'
         ]);
+
         $first->bill()->create([
             'currency_id' => 1,
             'amount' => '1'
@@ -35,6 +41,11 @@ class MasternodeSeeder extends Seeder
             'income' => '0.0001',
             'price' => '15'
         ]);
+
+        $second = \App\ActiveMasternode::create([
+            'masternode_id' => $second->id
+        ]);
+
         $second->share()->create([
             'price' => '1',
             'count' => '15'
@@ -44,9 +55,12 @@ class MasternodeSeeder extends Seeder
             'amount' => '5'
         ]);
 
-        factory(Masternode::class, 3)->create()->each(function ($node) {
-            $node->share()->save(factory(\App\MasternodeShare::class)->make());
-            $node->bill()->save(factory(\App\MasternodeBill::class)->make());
+        factory(\App\Masternode::class, 3)->create()->each(function ($node) {
+            $newActiveNode = \App\ActiveMasternode::create([
+                'masternode_id' => $node->id
+            ]);
+            $newActiveNode->share()->save(factory(\App\ActiveMasternodeShares::class)->make());
+            $newActiveNode->bill()->save(factory(\App\MasternodeBill::class)->make());
         });
     }
 }

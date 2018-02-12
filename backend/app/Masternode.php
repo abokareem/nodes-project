@@ -18,17 +18,4 @@ class Masternode extends Model
         'income',
         'price'
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function share()
-    {
-        return $this->hasOne(MasternodeShare::class);
-    }
-
-    public function bill()
-    {
-        return $this->hasOne(MasternodeBill::class);
-    }
 }
