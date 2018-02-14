@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MasternodeShare extends Model
+class Share extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,13 +12,8 @@ class MasternodeShare extends Model
      * @var array
      */
     protected $fillable = [
-        'node_id',
-        'price',
-        'count'
+        'currency_id',
+        'min_price',
+        'full_price'
     ];
-
-    public function masternode()
-    {
-        return $this->belongsTo(Masternode::class);
-    }
 }

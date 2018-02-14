@@ -12,55 +12,38 @@ class MasternodeSeeder extends Seeder
      */
     public function run()
     {
-        $first = Masternode::create([
-            'currency_id' => 1,
-            'name' => 'first',
-            'description' => 'first description',
-            'income' => '0.001',
-            'price' => '10'
-        ]);
+        factory(\App\Currency::class, 1)->create()->each(function ($currency) {
 
-        $first = \App\ActiveMasternode::create([
-            'masternode_id' => $first->id
-        ]);
-
-        $first->share()->create([
-            'price' => '0.1',
-            'count' => '100'
-        ]);
-
-        $first->bill()->create([
-            'currency_id' => 1,
-            'amount' => '1'
-        ]);
-
-        $second = Masternode::create([
-            'currency_id' => 1,
-            'name' => 'second',
-            'description' => 'second description',
-            'income' => '0.0001',
-            'price' => '15'
-        ]);
-
-        $second = \App\ActiveMasternode::create([
-            'masternode_id' => $second->id
-        ]);
-
-        $second->share()->create([
-            'price' => '1',
-            'count' => '15'
-        ]);
-        $second->bill()->create([
-            'currency_id' => 2,
-            'amount' => '5'
-        ]);
-
-        factory(\App\Masternode::class, 3)->create()->each(function ($node) {
-            $newActiveNode = \App\ActiveMasternode::create([
-                'masternode_id' => $node->id
+            $share = $currency->share()->create([
+                'currency_id' => $currency->id,
+                'min_price' => 2,
+                'full_price' => 200
             ]);
-            $newActiveNode->share()->save(factory(\App\ActiveMasternodeShares::class)->make());
-            $newActiveNode->bill()->save(factory(\App\MasternodeBill::class)->make());
+            $node = $currency->nodes()->create([
+                'state' => Masternode::NEW_STATE,
+                'type' => Masternode::PARTY_TYPE,
+                'price' => $share->min_price
+            ]);
+            $node->bill()->create([
+                'amount' => $share->min_price
+            ]);
+        });
+
+        factory(\App\Currency::class, 1)->create()->each(function ($currency) {
+
+            $share = $currency->share()->create([
+                'currency_id' => $currency->id,
+                'min_price' => 2,
+                'full_price' => 200
+            ]);
+            $node = $currency->nodes()->create([
+                'state' => Masternode::PROCESSING_STATE,
+                'type' => Masternode::SINGLE_TYPE,
+                'price' => $share->full_price
+            ]);
+            $node->bill()->create([
+                'amount' => $share->full_price
+            ]);
         });
     }
 }

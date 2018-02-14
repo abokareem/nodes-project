@@ -3,30 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\ActiveMasternode;
+use App\Currency;
 use App\Http\Requests\Api\ActivateMasternodeRequest;
 use App\Masternode;
 use App\Http\Controllers\Controller;
+use App\Services\ActiveNodeService;
 
 class ActiveMasternodeController extends Controller
 {
-    public function activate(ActivateMasternodeRequest $request)
+    public function activate(ActivateMasternodeRequest $request, ActiveNodeService $nodeService)
     {
-        $masternode = Masternode::where('currency_id', $request->get('currency_id'))
-            ->firstOrFail();
+        $currency = Currency::findOrFail($request->get('currency_id'));
 
-        $activeNode = ActiveMasternode::create([
-            'masternode_id' => $masternode->id,
-            'state' => 'processing',
-            'type' => $request->get('type')
-        ]);
+        $nodeService->create($currency, $request->get('type'));
 
-        $activeNode->share()->create([
-            'price' => $masternode->share->price,
-            'count' => $masternode->share->count
-        ]);
-
-        $activeNode->bill()->create([
-            'currency_id' => $request->get('currency_id')
-        ]);
+        return response('good',200);
     }
 }

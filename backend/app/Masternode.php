@@ -6,23 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Masternode extends Model
 {
+    const SINGLE_TYPE = 'single';
+    const PARTY_TYPE = 'party';
+    const PROCESSING_STATE = 'processing';
+    const STABLE_STATE = 'stable';
+    const UNSTABLE_STATE = 'unstable';
+    const DISBAND_STATE = 'disband';
+    const NEW_STATE = 'new';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
-        'income',
+        'currency_id',
+        'state',
+        'type',
         'price'
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function share()
+    public function bill()
     {
-        return $this->hasOne(MasternodeShare::class);
+        return $this->hasOne(MasternodeBill::class, 'node_id', 'id');
     }
 }

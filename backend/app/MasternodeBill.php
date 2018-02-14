@@ -12,7 +12,6 @@ class MasternodeBill extends Model
      * @var array
      */
     protected $fillable = [
-        'currency_id',
         'amount'
     ];
 

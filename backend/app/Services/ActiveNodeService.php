@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\ActiveMasternode;
+use App\Currency;
 use App\Exceptions\InsolventException;
 use App\Exceptions\UnsupportedMasternodeType;
 use App\Masternode;
 use App\Services\Math\MathInterface;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class ActiveNodeService
@@ -21,18 +22,18 @@ class ActiveNodeService
         $this->math = $math;
     }
 
-    public function activate(Masternode $node, string $type)
+    public function create(Currency $currency, string $type)
     {
         switch ($type) {
 
-            case ActiveMasternode::SINGLE_TYPE :
+            case Masternode::SINGLE_TYPE :
 
-                $this->activateSingle($node);
+                $this->createSingle($currency);
                 return;
 
-            case ActiveMasternode::PARTY_TYPE :
+            case Masternode::PARTY_TYPE :
 
-                $this->activateParty($node);
+                $this->createParty($currency);
                 return;
 
             default:
@@ -41,68 +42,92 @@ class ActiveNodeService
 
     }
 
-    protected function activateSingle(Masternode $node)
+    protected function createSingle(Currency $currency)
     {
-        $userBill = $this->getUserBill($node->currency_id);
+        $userBill = $this->getUserBill($currency);
 
-        $this->payable($node->price, $userBill->amount);
+        $this->payable($currency->share->full_price, $userBill->amount);
 
-        $node->getConnection()->transaction($this->getSingleClosure($node));
+        $currency->getConnection()->transaction($this->getSingleClosure($currency));
     }
 
-    protected function getSingleClosure(Masternode $node)
+    protected function getSingleClosure(Currency $currency)
     {
-        return function () use ($node) {
+        return function () use ($currency) {
 
-            $userBill = $this->getUserBill($node->currency_id);
+            $userBill = $this->getUserBill($currency->id);
 
-            $userBill->amount = $this->math->sub($userBill->amount, $node->price);
+            $userBill->amount = $this->math->sub($userBill->amount, $currency->share->full_price);
             $userBill->save();
 
-            $activeNode = ActiveMasternode::create([
-                'masternode_id' => $node->id,
-                'state' => ActiveMasternode::PROCESSING_STATE,
-                'type' => ActiveMasternode::SINGLE_TYPE
+            $node = $currency->nodes()->create([
+                'state' => Masternode::PROCESSING_STATE,
+                'type' => Masternode::SINGLE_TYPE,
+                'price' => $currency->share->full_price
             ]);
 
-            $activeNode->share()->create([
-                'price' => $node->share->price,
-                'count' => $node->share->count
+            $node->bill()->create([
+                'amount' => $currency->share->full_price
             ]);
 
-            $activeNode->bill()->create([
-                'currency_id' => $node->currency_id,
-                'amount' => $node->price
-            ]);
-        };
-    }
-
-    protected function activateParty(Masternode $node)
-    {
-
-    }
-
-    protected function getPartyClosure(Masternode $node)
-    {
-        return function () use ($node) {
-
-            $activeNode = ActiveMasternode::create([
-                'masternode_id' => $node->id,
-                'state' => 'processing',
-                'type' => ActiveMasternode::PARTY_TYPE
-            ]);
-
-            $activeNode->share()->create([
-                'price' => $node->share->price,
-                'count' => $node->share->count
-            ]);
-
-            $activeNode->bill()->create([
-                'currency_id' => $node->currency_id
+            $this->user->transactions()->create([
+                'currency_id' => $currency->id,
+                'data' => $this->getDataForTransaction($node, $this->user),
+                'amount' => $currency->share->full_price
             ]);
         };
     }
 
+    protected function createParty(Currency $currency)
+    {
+        $userBill = $this->getUserBill($currency);
+
+        $this->payable($currency->share->min_price, $userBill->amount);
+
+        $currency->getConnection()->transaction($this->getPartyClosure($currency));
+    }
+
+    protected function getPartyClosure(Currency $currency)
+    {
+        return function () use ($currency) {
+
+            $userBill = $this->getUserBill($currency->id);
+
+            $userBill->amount = $this->math->sub($userBill->amount, $currency->share->min_price);
+            $userBill->save();
+
+            $node = $currency->nodes()->create([
+                'state' => Masternode::NEW_STATE,
+                'type' => Masternode::PARTY_TYPE,
+                'price' => $currency->share->full_price
+            ]);
+
+            $node->bill()->create([
+                'amount' => $currency->share->min_price
+            ]);
+
+            $this->user->transactions()->create([
+                'currency_id' => $currency->id,
+                'data' => $this->getDataForTransaction($node, $this->user),
+                'amount' => $currency->share->min_price
+            ]);
+        };
+    }
+
+    /**
+     * Get metadata for transaction record.
+     *
+     * @param Masternode $masternode
+     * @param User $user
+     * @return array
+     */
+    protected function getDataForTransaction(Masternode $masternode, User $user)
+    {
+        return [
+            'masternode' => $masternode->toArray(),
+            'user' => $user->toArray()
+        ];
+    }
     /**
      * Check user payable.
      *
@@ -120,17 +145,17 @@ class ActiveNodeService
     /**
      * Get user bill.
      *
-     * @param int $id
+     * @param Currency $currency
      * @return mixed
      * @throws InsolventException
      */
-    private function getUserBill(int $id)
+    private function getUserBill(Currency $currency)
     {
         if (isset($this->userBill)) {
             return $this->userBill;
         }
 
-        $this->userBill = $this->user->bills()->where('currency_id', $id)->first();
+        $this->userBill = $this->user->bills()->where('currency_id', $currency->id)->first();
 
         if (!$this->userBill) {
             throw new InsolventException();

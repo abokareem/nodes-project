@@ -116,8 +116,8 @@ class MasternodeController extends Controller
      */
     public function store(CreateMasternodeRequest $request)
     {
-        $newNode = Masternode::create($request->get('masternode'));
-        $newNode->share()->create($request->get('share'));
+        /*$newNode = Masternode::create($request->get('masternode'));
+        $newNode->share()->create($request->get('share'));*/
 
         return new MessageResource(trans('masternode.create'));
     }
