@@ -13,7 +13,7 @@ class ActivateMasternodeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class ActivateMasternodeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'currency_id' => 'required|numeric',
+            'type' => 'required|in:single,party'
         ];
     }
 }

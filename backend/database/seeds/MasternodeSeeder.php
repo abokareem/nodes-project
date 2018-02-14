@@ -13,9 +13,9 @@ class MasternodeSeeder extends Seeder
     public function run()
     {
         $first = Masternode::create([
+            'currency_id' => 1,
             'name' => 'first',
             'description' => 'first description',
-            'state' => 'new',
             'income' => '0.001',
             'price' => '10'
         ]);
@@ -35,9 +35,9 @@ class MasternodeSeeder extends Seeder
         ]);
 
         $second = Masternode::create([
+            'currency_id' => 1,
             'name' => 'second',
             'description' => 'second description',
-            'state' => 'active',
             'income' => '0.0001',
             'price' => '15'
         ]);

@@ -19,5 +19,8 @@ return [
     ],
     'user' => [
         'insolvent' => 'You do not have enough money in your account.'
+    ],
+    'node' => [
+        'type' => 'This masternode type is not supported.'
     ]
 ];
