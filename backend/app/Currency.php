@@ -25,7 +25,7 @@ class Currency extends Model
      */
     public function share()
     {
-        return $this->belongsTo(Share::class);
+        return $this->hasOne(Share::class);
     }
 
     /**

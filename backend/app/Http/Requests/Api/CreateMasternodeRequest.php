@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Masternode;
+use App\Rules\NodePartyPrice;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateMasternodeRequest extends FormRequest
@@ -24,13 +26,9 @@ class CreateMasternodeRequest extends FormRequest
     public function rules()
     {
         return [
-                'masternode.currency_id' => 'required|numeric',
-                'masternode.name' => 'required|max:255|min:2',
-                'masternode.description' => 'required|max:65535|min:2',
-                'masternode.income' => 'max:255',
-                'masternode.price' => 'required|max:255|min:1',
-                'share.price' => 'required|max:255|min:1',
-                'share.count' => 'required|max:255|min:1'
+            'currency_id' => 'required|numeric',
+            'type' => 'required|in:' . Masternode::types(),
+            'price' => ['numeric', new NodePartyPrice]
         ];
     }
 }

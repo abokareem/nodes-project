@@ -8,6 +8,7 @@ class Masternode extends Model
 {
     const SINGLE_TYPE = 'single';
     const PARTY_TYPE = 'party';
+
     const PROCESSING_STATE = 'processing';
     const STABLE_STATE = 'stable';
     const UNSTABLE_STATE = 'unstable';
@@ -32,5 +33,34 @@ class Masternode extends Model
     public function bill()
     {
         return $this->hasOne(MasternodeBill::class, 'node_id', 'id');
+    }
+
+    /**
+     * @return string
+     */
+    public static function states()
+    {
+        $states = [
+            self::PROCESSING_STATE,
+            self::STABLE_STATE,
+            self::UNSTABLE_STATE,
+            self::DISBAND_STATE,
+            self::NEW_STATE
+        ];
+
+        return implode(',', $states);
+    }
+
+    /**
+     * @return string
+     */
+    public static function types()
+    {
+        $types = [
+            self::SINGLE_TYPE,
+            self::PARTY_TYPE
+        ];
+
+        return implode(',', $types);
     }
 }

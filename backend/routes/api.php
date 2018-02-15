@@ -37,12 +37,15 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->post('shares/buy', 'ShareController@buy');
 });
 
+Route::middleware(['auth:api', 'confirmEmail', 'node'])->group(function (Router $router) {
+    $router->post('nodes', 'MasternodeController@store');
+});
+
 Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
 
     $router->post('currency', 'CurrencyController@store');
     $router->patch('currency/{currency}', 'CurrencyController@update');
-    $router->patch('nodes/{node}','MasternodeController@update');
-    $router->post('nodes', 'MasternodeController@store');
+    $router->patch('nodes/{node}', 'MasternodeController@update');
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Masternode;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMasternodeRequest extends FormRequest
@@ -24,13 +25,9 @@ class UpdateMasternodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'masternode.currency_id' => 'numeric',
-            'masternode.name' => 'max:255|min:2',
-            'masternode.description' => 'max:65535|min:2',
-            'masternode.income' => 'max:255',
-            'masternode.price' => 'max:255|min:1',
-            'share.price' => 'max:255|min:1',
-            'share.count' => 'max:255|min:1'
+            'state' => 'in:' . Masternode::states(),
+            'type' => 'in:' . Masternode::types(),
+            'price' => 'numeric'
         ];
     }
 }

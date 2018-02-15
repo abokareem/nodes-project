@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Currency;
 use App\Http\Requests\Api\CreateMasternodeRequest;
 use App\Http\Requests\Api\UpdateMasternodeRequest;
 use App\Http\Resources\MasternodeResource;
 use App\Http\Resources\MessageResource;
 use App\Masternode;
 use App\Http\Controllers\Controller;
+use App\Services\NodeService;
 
 class MasternodeController extends Controller
 {
@@ -63,25 +65,16 @@ class MasternodeController extends Controller
      *          required=true,
      *          @SWG\Schema(
      *              @SWG\Property(
-     *                  property="masternode",
-     *                  type="object",
-     *                  description="masternode object",
-     *                  example={
-     *                     "currency_id"=1,
-     *                     "name"="test",
-     *                     "description"="test description",
-     *                     "income"="0.1",
-     *                     "price"=10
-     *                  }
+     *                  property="currency_id",
+     *                  type="integer",
+     *                  description="currency id",
+     *                  example=1
      *              ),
      *              @SWG\Property(
-     *                  property="share",
-     *                  type="object",
-     *                  description="share object",
-     *                  example={
-     *                      "price"=10,
-     *                      "count"=5
-     *                  }
+     *                  property="type",
+     *                  type="string",
+     *                  description="masternode type",
+     *                  example="single",
      *              ),
      *          ),
      *     ),
@@ -103,7 +96,7 @@ class MasternodeController extends Controller
      *           "application/json":{
      *             "message": "The given data was invalid",
      *             "errors":{
-     *                 "masternode.name": {"The masternode.name field is required."},
+     *                 "type": {"The type field is required."},
      *             },
      *           },
      *         },
@@ -111,13 +104,16 @@ class MasternodeController extends Controller
      * )
      *
      * @param CreateMasternodeRequest $request
+     * @param NodeService $nodeService
      * @return MessageResource
      *
      */
-    public function store(CreateMasternodeRequest $request)
+    public function store(CreateMasternodeRequest $request, NodeService $nodeService)
     {
-        /*$newNode = Masternode::create($request->get('masternode'));
-        $newNode->share()->create($request->get('share'));*/
+
+        $currency = Currency::findOrFail($request->get('currency_id'));
+
+        $nodeService->create($currency);
 
         return new MessageResource(trans('masternode.create'));
     }
@@ -188,20 +184,9 @@ class MasternodeController extends Controller
      *                  type="object",
      *                  description="masternode object",
      *                  example={
-     *                     "currency_id"=1,
-     *                     "name"="test",
-     *                     "description"="test description",
-     *                     "income"="0.1",
+     *                     "type"="single",
+     *                     "state"="new",
      *                     "price"=10
-     *                  }
-     *              ),
-     *              @SWG\Property(
-     *                  property="share",
-     *                  type="object",
-     *                  description="share object",
-     *                  example={
-     *                      "price"=10,
-     *                      "count"=5
      *                  }
      *              ),
      *          ),
@@ -224,7 +209,7 @@ class MasternodeController extends Controller
      *           "application/json":{
      *             "message": "The given data was invalid",
      *             "errors":{
-     *                 "masternode.name": {"The masternode.name field is required."},
+     *                 "price": {"The price field must be numeric."},
      *             },
      *           },
      *         },
@@ -237,17 +222,8 @@ class MasternodeController extends Controller
      */
     public function update(UpdateMasternodeRequest $request, Masternode $node)
     {
-        $newData = $request->only(
-            'masternode.price', 'masternode.income', 'masternode.description',
-            'masternode.name', 'masternode.currency_id', 'share.price', 'share.count'
-        );
-
-        if ($request->has('masternode')) {
-            $node->update($newData['masternode']);
-        }
-        if ($request->has('share')) {
-            $node->share()->update($newData['share']);
-        }
+        $request = $request->only('state', 'type', 'price');
+        $node->update($request);
 
         return new MessageResource(trans('masternode.update'));
     }
