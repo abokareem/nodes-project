@@ -21,6 +21,7 @@ return [
         'insolvent' => 'You do not have enough money in your account.'
     ],
     'node' => [
+        'free' => 'Free share price exceeded.',
         'type' => 'This masternode type is not supported.',
         'max' => 'In the system for this coin, it is possible to create only :count incomplete masternode.'
     ]

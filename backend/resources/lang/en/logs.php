@@ -14,5 +14,8 @@ return [
     ],
     'share' => [
         'buy' => 'You bought a share in the masternode.'
+    ],
+    'node' =>[
+        'create' => 'Creating the masternode.'
     ]
 ];

@@ -118,7 +118,7 @@ return [
 
     'attributes' => [],
 
-    'buyShares' => 'You can not buy more than it was stated.',
+    'buyShares' => 'You can buy a stake in the range from :min to :max coins.',
 
     'node' => [
         'partyPrice' => 'Maximum purchase price :max coins. Minimum purchase price :min coins.'

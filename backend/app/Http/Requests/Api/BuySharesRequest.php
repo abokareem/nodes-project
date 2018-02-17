@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Rules\SharesBuyCount;
+use App\Rules\SharesBuyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BuySharesRequest extends FormRequest
@@ -25,8 +25,8 @@ class BuySharesRequest extends FormRequest
     public function rules()
     {
         return [
-            'share_id' => 'required|numeric',
-            'share_count' => ['required','numeric', new SharesBuyCount]
+            'node_id' => 'required|integer',
+            'count' => ['required', 'integer', new SharesBuyRule()]
         ];
     }
 }

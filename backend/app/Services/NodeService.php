@@ -72,7 +72,10 @@ class NodeService
     {
         $userBill = $this->getUserBill($currency);
 
-        $this->payable($currency->share->min_price, $userBill->amount);
+        $price = $this->math->multiply($this->request->get('count') ?? 1,
+            $currency->share->share_price);
+
+        $this->payable($price, $userBill->amount);
 
         $currency->getConnection()->transaction($this->getPartyClosure($currency));
     }
@@ -125,7 +128,8 @@ class NodeService
 
             $userBill = $this->getUserBill($currency);
 
-            $price = $this->request->get('price') ?? $currency->share->min_price;
+            $price = $this->math->multiply($this->request->get('count') ?? 1,
+                $currency->share->share_price);
 
             $userBill->amount = $this->math->sub($userBill->amount, $price);
             $userBill->save();

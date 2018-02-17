@@ -17,4 +17,12 @@ class UserBill extends Model
         'uuid',
         'amount'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

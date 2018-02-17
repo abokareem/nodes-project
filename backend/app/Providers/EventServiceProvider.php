@@ -58,8 +58,8 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\WriteLog'
         ],
 
-        'App\Events\MasternodeReadyToCreate' => [
-
+        'App\Events\MasternodeCreated' => [
+            'App\Listeners\WriteLog'
         ],
     ];
 

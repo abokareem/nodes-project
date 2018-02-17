@@ -28,6 +28,21 @@ use Illuminate\Http\Resources\Json\Resource;
  *      description="",
  *      example=false
  *     ),
+ *     @SWG\Property(
+ *      property="invest",
+ *      description="",
+ *      ref="#/definitions/UserInvestments"
+ *     ),
+ *     @SWG\Property(
+ *      property="actions",
+ *      description="",
+ *      ref="#/definitions/UserActions"
+ *     ),
+ *     @SWG\Property(
+ *      property="bills",
+ *      description="",
+ *      ref="#/definitions/UserBills"
+ *     ),
  * )
  *
  * @mixin \App\User
@@ -37,7 +52,7 @@ class UserResource extends Resource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -45,8 +60,19 @@ class UserResource extends Resource
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'email_confirmed' => (bool) $this->email_confirmed,
-            'two_fa' => (bool) $this->two_fa
+            'email_confirmed' => (bool)$this->email_confirmed,
+            'two_fa' => (bool)$this->two_fa,
+            'invest' => UserInvestResource::collection($this->investments),
+            'actions' => UserActionsResource::collection($this->getActions()),
+            'bills' => UserBillsResource::collection($this->bills)
         ];
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getActions()
+    {
+        return $this->actions()->latest()->limit(5)->get();
     }
 }

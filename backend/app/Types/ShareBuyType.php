@@ -3,6 +3,7 @@
 namespace App\Types;
 
 use App\ActiveMasternodeShares;
+use App\Masternode;
 use App\UserBill;
 
 /**
@@ -22,11 +23,7 @@ class ShareBuyType
     /**
      * @var
      */
-    private $count;
-    /**
-     * @var
-     */
-    private $share;
+    private $node;
 
     /**
      * @return mixed
@@ -48,28 +45,6 @@ class ShareBuyType
     public function setPrice(string $price)
     {
         $this->price = $price;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getSharesCount()
-    {
-        if (isset($this->count)) {
-
-            return $this->count;
-        }
-
-        $this->generateException();
-    }
-
-    /**
-     * @param string $count
-     */
-    public function setSharesCount(string $count)
-    {
-        $this->count = $count;
     }
 
     /**
@@ -98,22 +73,22 @@ class ShareBuyType
      * @return mixed
      * @throws \Exception
      */
-    public function getShare()
+    public function getNode()
     {
-        if (isset($this->share)) {
+        if (isset($this->node)) {
 
-            return $this->share;
+            return $this->node;
         }
 
         $this->generateException();
     }
 
     /**
-     * @param ActiveMasternodeShares $share
+     * @param Masternode $node
      */
-    public function setShare(ActiveMasternodeShares $share)
+    public function setNode(Masternode $node)
     {
-        $this->share = $share;
+        $this->node = $node;
     }
 
     /**

@@ -16,16 +16,16 @@ class MasternodeSeeder extends Seeder
 
             $share = $currency->share()->create([
                 'currency_id' => $currency->id,
-                'min_price' => 2,
+                'share_price' => 2,
                 'full_price' => 200
             ]);
             $node = $currency->nodes()->create([
                 'state' => Masternode::NEW_STATE,
                 'type' => Masternode::PARTY_TYPE,
-                'price' => $share->min_price
+                'price' => $share->share_price
             ]);
             $node->bill()->create([
-                'amount' => $share->min_price
+                'amount' => $share->share_price
             ]);
         });
 
@@ -33,7 +33,7 @@ class MasternodeSeeder extends Seeder
 
             $share = $currency->share()->create([
                 'currency_id' => $currency->id,
-                'min_price' => 2,
+                'share_price' => 2,
                 'full_price' => 200
             ]);
             $node = $currency->nodes()->create([

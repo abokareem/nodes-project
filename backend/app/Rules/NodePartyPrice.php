@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Currency;
+use App\Services\Math\MathInterface;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Request;
 
@@ -11,6 +12,7 @@ class NodePartyPrice implements Rule
     private $currency;
     private $full;
     private $min;
+    private $math;
 
     /**
      * Create a new rule instance.
@@ -20,6 +22,7 @@ class NodePartyPrice implements Rule
     public function __construct()
     {
         $this->currency = Currency::find(Request::get('currency_id'));
+        $this->math = app(MathInterface::class);
     }
 
     /**
@@ -36,11 +39,12 @@ class NodePartyPrice implements Rule
         }
 
         $share = $this->currency->share;
+        $price = $this->math->multiply($share->share_price, $value);
 
-        if ($value > $share->full_price || $value < $share->min_price) {
+        if ($price > $share->full_price || $price < $share->share_price) {
 
             $this->full = $share->full_price;
-            $this->min = $share->min_price;
+            $this->min = $share->share_price;
 
             return false;
         }

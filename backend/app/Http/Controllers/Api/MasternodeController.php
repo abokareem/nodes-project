@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Currency;
+use App\Events\MasternodeCreated;
 use App\Http\Requests\Api\CreateMasternodeRequest;
 use App\Http\Requests\Api\UpdateMasternodeRequest;
 use App\Http\Resources\MasternodeResource;
@@ -76,6 +77,12 @@ class MasternodeController extends Controller
      *                  description="masternode type",
      *                  example="single",
      *              ),
+     *              @SWG\Property(
+     *                  property="count",
+     *                  type="integer",
+     *                  description="shares count",
+     *                  example=5,
+     *              ),
      *          ),
      *     ),
      *
@@ -114,6 +121,8 @@ class MasternodeController extends Controller
         $currency = Currency::findOrFail($request->get('currency_id'));
 
         $nodeService->create($currency);
+
+        event(new MasternodeCreated());
 
         return new MessageResource(trans('masternode.create'));
     }

@@ -26,9 +26,9 @@ class CreateMasternodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'currency_id' => 'required|numeric',
+            'currency_id' => 'required|integer',
             'type' => 'required|in:' . Masternode::types(),
-            'price' => ['numeric', new NodePartyPrice]
+            'count' => ['integer', new NodePartyPrice]
         ];
     }
 }

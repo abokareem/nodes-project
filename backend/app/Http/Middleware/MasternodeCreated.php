@@ -16,9 +16,14 @@ class MasternodeCreated
      */
     public function handle($request, Closure $next)
     {
+        if ($request->get('type') === Masternode::SINGLE_TYPE) {
+            return $next($request);
+        }
+
         $masternode = Masternode::where([
             ['currency_id', $request->get('currency_id')],
-            ['state', Masternode::NEW_STATE]
+            ['state', Masternode::NEW_STATE],
+            ['type', Masternode::PARTY_TYPE]
         ])->count();
 
         if ($masternode >= config('masternode.max')) {

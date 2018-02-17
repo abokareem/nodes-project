@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\ActiveMasternodeShares;
 use App\Events\BoughtShares;
 use App\Events\MasternodeReadyToCreate;
 use App\Http\Requests\Api\BuySharesRequest;
 use App\Http\Resources\MessageResource;
 use App\Http\Controllers\Controller;
+use App\Masternode;
 use App\Services\ShareService;
 
 class ShareController extends Controller
@@ -26,18 +26,18 @@ class ShareController extends Controller
      *         }
      *     },
      *     @SWG\Parameter(
-     *          name="shares",
+     *          name="node",
      *          in="body",
      *          required=true,
      *          @SWG\Schema(
      *              @SWG\Property(
-     *                  property="share_id",
+     *                  property="node_id",
      *                  type="integer",
      *                  description="",
-     *                  example=2,
+     *                  example=1,
      *              ),
      *              @SWG\Property(
-     *                  property="share_count",
+     *                  property="count",
      *                  type="integer",
      *                  description="",
      *                  example=3,
@@ -76,13 +76,16 @@ class ShareController extends Controller
      */
     public function buy(BuySharesRequest $request, ShareService $shareService)
     {
-        $count = $request->get('share_count');
-        $share = ActiveMasternodeShares::findOrFail($request->get('share_id'));
+        $count = $request->get('count');
+        $node = Masternode::findOrFail($request->get('node_id'));
 
-        $shareService->buy($share, $count);
+        $shareService->buy($node, $count);
+
+        if ($node->price === $node->bill->amount) {
+            event(new MasternodeReadyToCreate());
+        }
 
         event(new BoughtShares());
-        event(new MasternodeReadyToCreate());
 
         return new MessageResource(trans('monetary.share.buy'));
     }

@@ -18,33 +18,22 @@ use Illuminate\Http\Resources\Json\Resource;
  *      example=1
  *     ),
  *     @SWG\Property(
- *      property="name",
+ *      property="state",
  *      type="string",
  *      description="",
- *      example="some name"
+ *      example="new"
  *     ),
  *     @SWG\Property(
- *      property="description",
+ *      property="type",
  *      type="string",
- *      description="Masternode description",
- *      example="some description"
- *     ),
- *     @SWG\Property(
- *      property="income",
- *      type="integer",
- *      description="",
- *      example="0.1"
+ *      description="Masternode type",
+ *      example="single"
  *     ),
  *     @SWG\Property(
  *      property="price",
  *      type="integer",
  *      description="",
  *      example=150
- *     ),
- *     @SWG\Property(
- *      property="share",
- *      description="",
- *      ref="#/definitions/MasternodeShares"
  *     ),
  * )
  *
@@ -62,11 +51,9 @@ class MasternodeResource extends Resource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'income' => $this->income,
-            'price' => $this->price,
-            'share' => new MasternodeShareResource($this->share)
+            'state' => $this->state,
+            'type' => $this->type,
+            'price' => $this->price
         ];
     }
 }

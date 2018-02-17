@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\ActiveMasternode;
-use App\ActiveMasternodeShares;
 use App\Currency;
 use App\Exceptions\InsolventException;
+use App\Exceptions\NoFreeSharesException;
+use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Types\ShareBuyType;
 use App\User;
@@ -45,21 +45,21 @@ class ShareService
     /**
      * Buy shares for masternode.
      *
-     * @param ActiveMasternodeShares $share
+     * @param Masternode $node
      * @param int $count
      * @throws InsolventException
      */
-    public function buy(ActiveMasternodeShares $share, int $count)
+    public function buy(Masternode $node, int $count = 1)
     {
-        $currency = $share->masternode->bill->currency;
+        $currency = $node->currency;
         $userBill = $this->getUserBill($currency);
-        $price = $this->math->multiply($share->price, $count);
+        $price = $this->math->multiply($count, $currency->share->share_price);
 
+        $this->freeShare($node, $price);
         $this->payable($price, $userBill->amount);
 
         $this->buyType->setPrice($price);
-        $this->buyType->setShare($share);
-        $this->buyType->setSharesCount($count);
+        $this->buyType->setNode($node);
         $this->buyType->setUserBill($userBill);
 
         $this->user->getConnection()->transaction(
@@ -77,50 +77,46 @@ class ShareService
 
             $userBill = $buyType->getUserBill();
             $price = $buyType->getPrice();
-            $share = $buyType->getShare();
-            $masternode = $share->masternode;
-            $count = $buyType->getSharesCount();
-            $existsUserShare = $this->user->shares()->where('share_id', $share->id)->first();
+            $node = $buyType->getNode();
+
+            $invest = $this->getUserInvest($node->currency, $node);
 
             $userBill->amount = $this->math->sub($userBill->amount, $price);
 
             $userBill->save();
 
             $this->user->transactions()->create([
-                'currency_id' => $masternode->bill->currency->id,
-                'data' => $this->getDataForTransaction($masternode, $this->user),
+                'currency_id' => $node->currency_id,
+                'data' => $this->getDataForTransaction($node, $this->user),
                 'amount' => $price
             ]);
 
-            $masternode->bill()->update([
-                'amount' => $this->math->add($masternode->bill->amount, $price)
+            $node->bill()->update([
+                'amount' => $this->math->add($node->bill->amount, $price)
             ]);
 
-            if ($existsUserShare) {
-                $existsUserShare->update([
-                    'count' => $this->math->add($existsUserShare->count, $count)
+            if ($invest) {
+                $invest->update([
+                    'amount' => $this->math->add($invest->amount, $price)
                 ]);
             } else {
-                $this->user->shares()->create([
-                    'share_id' => $share->id,
-                    'count' => $buyType->getSharesCount()
+                $this->user->investments()->create([
+                    'currency_id' => $node->currency_id,
+                    'node_id' => $node->id,
+                    'amount' => $price
                 ]);
             }
-
-            $share->update([
-                'count' => $this->math->sub($share->count, $count)
-            ]);
         };
     }
 
     /**
      * Get metadata for transaction record.
      *
-     * @param ActiveMasternode $masternode
+     * @param Masternode $masternode
      * @param User $user
      * @return array
      */
-    protected function getDataForTransaction(ActiveMasternode $masternode, User $user)
+    protected function getDataForTransaction(Masternode $masternode, User $user)
     {
         return [
             'masternode' => $masternode->toArray(),
@@ -144,6 +140,34 @@ class ShareService
         }
 
         return $userBill;
+    }
+
+    /**
+     * @param Currency $currency
+     * @param Masternode $node
+     * @return mixed
+     */
+    private function getUserInvest(Currency $currency, Masternode $node)
+    {
+        return $this->user->investments()->where([
+            ['currency_id', $currency->id],
+            ['node_id', $node->id]
+        ])->first();
+    }
+
+    /**
+     * @param Masternode $node
+     * @param int $price
+     * @throws NoFreeSharesException
+     */
+    private function freeShare(Masternode $node, int $price)
+    {
+        $nodeFullPrice = $node->price;
+        $nodeBillAmount = $node->bill->amount;
+        $freeShare = $this->math->sub($nodeFullPrice, $nodeBillAmount);
+        if ($freeShare < $price) {
+            throw new NoFreeSharesException();
+        }
     }
 
     /**
