@@ -15,7 +15,12 @@ return [
     'share' => [
         'buy' => 'You bought a share in the masternode.'
     ],
-    'node' =>[
+    'node' => [
         'create' => 'Creating the masternode.'
+    ],
+
+    'bill' => [
+        'put' => 'You put money in the account.',
+        'withdrawal' => 'You withdrew money from your account.'
     ]
 ];

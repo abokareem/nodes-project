@@ -17,6 +17,8 @@ class UserAction extends Model
     const UPDATE_PROFILE = 'logs.user.update';
     const BUY_SHARES = 'logs.share.buy';
     const MASTERNODE_CREATED = 'logs.node.create';
+    const PUT_MONEY = 'logs.bill.put';
+    const WITHDRAWAL_MONEY = 'logs.bill.withdrawal';
 
     /**
      * The attributes that are mass assignable.

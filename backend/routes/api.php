@@ -14,6 +14,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('money','UserBillController@putMoney');
+Route::post('money/accept','UserBillController@acceptPutMoney');
+Route::delete('money','UserBillController@withdrawalMoney');
+
 Route::post('users', 'RegisterController@store');
 Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')->name('email.confirm.backend');
 Route::post('users/auth', 'UserAuthController@login');
