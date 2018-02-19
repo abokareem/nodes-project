@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Currency;
 use App\Events\MasternodeCreated;
 use App\Http\Requests\Api\CreateMasternodeRequest;
+use App\Http\Requests\Api\LeaveNodeRequest;
 use App\Http\Requests\Api\UpdateMasternodeRequest;
 use App\Http\Resources\MasternodeResource;
 use App\Http\Resources\MessageResource;
 use App\Masternode;
 use App\Http\Controllers\Controller;
+use App\Services\LeaveNodeService;
+use App\Services\Math\MathInterface;
 use App\Services\NodeService;
+use Illuminate\Support\Facades\Auth;
 
 class MasternodeController extends Controller
 {
@@ -235,5 +239,13 @@ class MasternodeController extends Controller
         $node->update($request);
 
         return new MessageResource(trans('masternode.update'));
+    }
+
+    public function leaveNode(LeaveNodeRequest $request, LeaveNodeService $leaveNodeService)
+    {
+        $node = Masternode::findOrFail($request->get('node_id'));
+
+        $leaveNodeService->out($node);
+
     }
 }

@@ -4,6 +4,10 @@ namespace App\Services\Math;
 
 interface MathInterface
 {
+    const EQUAL = 0;
+    const LARGE = 1;
+    const LESS = -1;
+
     /**
      * @param string $left
      * @param string $right
