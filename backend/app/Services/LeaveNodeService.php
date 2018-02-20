@@ -20,39 +20,9 @@ class LeaveNodeService
         $this->user = Auth::user();
     }
 
-    public function out(Masternode $mainNode)
+    public function out(Masternode $node)
     {
-        $sameNode = Masternode::where([
-            ['type', Masternode::PARTY_TYPE],
-            ['state', Masternode::NEW_STATE]
-        ])->first();
 
-        if ($sameNode) {
-            $this->handle($sameNode, $mainNode);
-        }
-    }
-
-    protected function handle(Masternode $sameNode, Masternode $mainNode)
-    {
-        $invest = $this->user->investments()->where('node_id', $mainNode->id)->firstOrFail();
-
-        switch ((int)$this->math->comparison($sameNode->bill->amount, $invest->amount)) {
-
-            case MathInterface::EQUAL:
-
-                $this->equal($sameNode, $mainNode);
-                break;
-            case MathInterface::LARGE:
-
-                $this->larger($sameNode, $mainNode);
-                break;
-            case MathInterface::LESS:
-
-                $this->less($sameNode, $mainNode);
-                break;
-            default:
-                throw new \Exception('', 500);
-        }
     }
 
     protected function equal(Masternode $sameNode, Masternode $mainNode)

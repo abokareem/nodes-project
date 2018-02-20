@@ -14,9 +14,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('money','UserBillController@putMoney');
-Route::post('money/accept','UserBillController@acceptPutMoney');
-Route::delete('money','UserBillController@withdrawalMoney');
+Route::post('money', 'UserBillController@putMoney');
+Route::post('money/accept', 'UserBillController@acceptPutMoney');
+Route::delete('money', 'UserBillController@withdrawalMoney');
 
 Route::post('users', 'RegisterController@store');
 Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')->name('email.confirm.backend');
@@ -62,4 +62,11 @@ Route::middleware('throttle:15')->group(function (Router $router) {
     $router->post('users/password', 'ForgotPasswordController@store');
     $router->patch('users/password', 'ResetPasswordController@update')->name('password.reset');
     $router->patch('users/twofa', 'UserController@resetTwoFa');
+});
+
+Route::middleware(['auth:api', 'leaveNode'])->group(function (Router $router) {
+
+    $router->post('test', function () {
+        echo 'hello';
+    });
 });

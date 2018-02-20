@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'confirmEmail' => \App\Http\Middleware\ConfirmEmail::class,
         'localization' => \App\Http\Middleware\SetLocaleMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'node' => \App\Http\Middleware\MasternodeCreated::class
+        'node' => \App\Http\Middleware\MasternodeCreated::class,
+        'leaveNode' => \App\Http\Middleware\LeaveNodeMiddleware::class
     ];
 }

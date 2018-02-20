@@ -128,6 +128,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawals::class);
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin(): bool

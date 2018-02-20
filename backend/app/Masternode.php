@@ -48,7 +48,7 @@ class Masternode extends Model
      */
     public function investments()
     {
-        return $this->hasMany(Investment::class);
+        return $this->hasMany(Investment::class, 'node_id', 'id');
     }
 
     /**

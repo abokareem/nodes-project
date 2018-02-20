@@ -16,7 +16,13 @@ Route::get('/', function () {
 });
 
 Route::get('/email/confirm/{token}', function ($token) {
-    return redirect(route('email.confirm.backend',[$token]));
+    return redirect(route('email.confirm.backend', [$token]));
 })->name('email.confirm.frontend');
 
 Route::get('password/reset/{token}')->name('reset.password');
+
+Route::get('test', function (\App\Services\Settlement\SettlementHandler $handler) {
+    $node = \App\Masternode::find(4);
+    $user = \App\User::find(3);
+    $handler->handle($node, $user)->solve();
+});

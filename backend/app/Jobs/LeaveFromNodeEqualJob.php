@@ -49,6 +49,7 @@ class LeaveFromNodeEqualJob implements ShouldQueue
     {
         $mainInvestors = $this->mainNode->investments;
         $sameInvestors = $this->sameNode->investments;
+
         $invest = $this->user->investments()->where('node_id',
             $this->mainNode->id)->firstOrFail();
 
