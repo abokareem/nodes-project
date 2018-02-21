@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Masternode extends Model
 {
+    use SoftDeletes;
+
     const SINGLE_TYPE = 'single';
     const PARTY_TYPE = 'party';
 

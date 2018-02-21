@@ -6,11 +6,12 @@ use App\Events\AcceptedLeaveFromNode;
 use App\Masternode;
 use App\Types\SettlementType;
 
+
 /**
- * Class EqualService
+ * Class LargeService
  * @package App\Services\Settlement
  */
-class EqualService implements SettlementInterface
+class LargeService implements SettlementInterface
 {
     /**
      * @var SettlementType
@@ -18,7 +19,7 @@ class EqualService implements SettlementInterface
     private $type;
 
     /**
-     * EqualService constructor.
+     * LargeService constructor.
      * @param SettlementType $type
      */
     public function __construct(SettlementType $type)
@@ -54,10 +55,6 @@ class EqualService implements SettlementInterface
             $mainNodeService->migrate($investors);
 
             $secondaryNodeService->deleteGivenInvestors();
-
-            $this->type->getSecondaryNode()->bill()->delete();
-            $this->type->getSecondaryNode()->investments()->delete();
-            $this->type->getSecondaryNode()->delete();
 
             $this->type->getMainNode()->update([
                 'state' => Masternode::STABLE_STATE

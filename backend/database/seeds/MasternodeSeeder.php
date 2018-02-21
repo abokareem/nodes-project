@@ -22,10 +22,10 @@ class MasternodeSeeder extends Seeder
             $node = $currency->nodes()->create([
                 'state' => Masternode::NEW_STATE,
                 'type' => Masternode::PARTY_TYPE,
-                'price' => $share->share_price
+                'price' => $share->full_price
             ]);
             $node->bill()->create([
-                'amount' => $share->share_price
+                'amount' => 50
             ]);
         });
 

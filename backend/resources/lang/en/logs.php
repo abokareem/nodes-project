@@ -16,6 +16,7 @@ return [
         'buy' => 'You bought a share in the masternode.'
     ],
     'node' => [
+        'gone' => 'Your request to exit the masternode is confirmed.',
         'create' => 'Creating the masternode.'
     ],
 

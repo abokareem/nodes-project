@@ -18,6 +18,7 @@ class CreateMasternodeBillsTable extends Migration
             $table->integer('node_id')->unsigned()->unique();
             $table->foreign('node_id')->references('id')->on('masternodes');
             $table->string('amount')->default("0");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -69,6 +69,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\MoneyWithdrawn' => [
             'App\Listeners\WriteLog'
         ],
+        'App\Events\AcceptedLeaveFromNode' => [
+            'App\Listeners\WriteLog'
+        ],
     ];
 
     protected $observers = [

@@ -20,6 +20,7 @@ class CreateMasternodesTable extends Migration
             $table->enum('state', ['new','processing', 'stable', 'unstable', 'disbanded']);
             $table->enum('type', ['single', 'party']);
             $table->string('price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

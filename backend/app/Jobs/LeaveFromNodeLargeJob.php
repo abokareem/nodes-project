@@ -31,12 +31,9 @@ class LeaveFromNodeLargeJob implements ShouldQueue
      * @param Masternode $mainNode
      * @param User $user
      */
-    public function __construct(Masternode $sameNode, Masternode $mainNode, User $user)
+    public function __construct()
     {
-        $this->user = $user;
-        $this->sameNode = $sameNode;
-        $this->mainNode = $mainNode;
-        $this->math = app(MathInterface::class);
+
     }
 
     /**
@@ -46,81 +43,6 @@ class LeaveFromNodeLargeJob implements ShouldQueue
      */
     public function handle()
     {
-        $invest = $this->user->investments()->where('node_id',
-            $this->mainNode->id)->firstOrFail();
-        $neededAmount = $invest->amount;
-        $sameUsers = $this->sameNode->investments()->orderBy('created_at', 'desc');
-        $mainUsers = $this->mainNode->investments;
-
-        $transferInvestors = [];
-
-        foreach ($sameUsers as $sameUser) {
-            if ($neededAmount === 0) {
-                break;
-            }
-
-            if ((int)$this->math->comparison($neededAmount, $sameUser->amount) ===
-                MathInterface::EQUAL
-            ) {
-                $sameUsers->node_id = $this->mainNode->id;
-                $transferInvestors[] = $sameUsers;
-                break;
-            }
-
-            if ((int)$this->math->comparison($neededAmount, $sameUser->amount) ===
-                MathInterface::LARGE
-            ) {
-                $sameUsers->node_id = $this->mainNode->id;
-                $transferInvestors[] = $sameUsers;
-                $neededAmount = $this->math->sub($neededAmount, $sameUser->amount);
-                continue;
-            }
-
-            if ((int)$this->math->comparison($neededAmount, $sameUser->amount) ===
-                MathInterface::LESS
-            ) {
-                $sameUsers->node_id = $this->mainNode->id;
-                $sameUsers->amount = $this->math->sub($sameUser->amount, $neededAmount);
-                $transferInvestors[] = $sameUsers;
-                $neededAmount = 0;
-                break;
-            }
-        }
-        $newInvesters = [];
-        foreach ($transferInvestors as $transferInvestor) {
-            $newInvesters[] = $transferInvestor;
-            foreach ($mainUsers as $mainUser) {
-                if ($transferInvestor->user_id === $mainUser->user_id) {
-                    $this->updateInvestors($transferInvestor, $mainUser);
-                    array_pop($newInvesters);
-                    continue;
-                }
-            }
-        }
-
-        Investment::createMany($newInvesters);
-
-        $userBill = $this->user->bills()->where('currency_id',
-            $this->mainNode->bill->currency_id)->first();
-
-        $userBill->amount = $this->math->add($userBill->amount, $invest->amount);
-
-        $userBill->save();
-
-        $invest->delete();
-    }
-
-    private function updateInvestors(Investment $sameInvestor, Investment $mainInvestor)
-    {
-        $mainInvestor->getConnection()->transaction(
-            function () use ($sameInvestor, $mainInvestor) {
-
-                $mainInvestor->amount = $this->math
-                    ->add($mainInvestor->amount, $sameInvestor->amount);
-
-                $mainInvestor->save();
-
-                $sameInvestor->delete();
-            });
+        //
     }
 }

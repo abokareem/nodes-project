@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
                     'price' => $share->full_price
                 ]);
                 $node->bill()->create([
-                    'amount' => 18
+                    'amount' => 100
                 ]);
                 $first->investments()->create([
                     'node_id' => $node->id,
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
                 $second->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,
-                    'amount' => 6
+                    'amount' => 88
                 ]);
                 $third->investments()->create([
                     'node_id' => $node->id,
@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
             function ($currency) use ($first, $second, $third) {
 
                 $share = $currency->share()->create([
-                    'currency_id' => $currency->id,
+                    'currency_id' => 1,
                     'share_price' => 2,
                     'full_price' => 200
                 ]);
@@ -133,11 +133,12 @@ class UserSeeder extends Seeder
             function ($currency) use ($first, $second, $third) {
 
                 $share = $currency->share()->create([
-                    'currency_id' => $currency->id,
+                    'currency_id' => 3,
                     'share_price' => 2,
                     'full_price' => 250
                 ]);
-                $node = $currency->nodes()->create([
+                $node = \App\Masternode::create([
+                    'currency_id' => 3,
                     'state' => Masternode::STABLE_STATE,
                     'type' => Masternode::PARTY_TYPE,
                     'price' => $share->full_price
@@ -148,13 +149,13 @@ class UserSeeder extends Seeder
                 $first->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,
-                    'amount' => 100
+                    'amount' => 150
                 ]);
-                $second->investments()->create([
+                /*$second->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,
-                    'amount' => 50
-                ]);
+                    'amount' => 150
+                ]);*/
                 $third->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,

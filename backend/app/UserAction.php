@@ -19,6 +19,7 @@ class UserAction extends Model
     const MASTERNODE_CREATED = 'logs.node.create';
     const PUT_MONEY = 'logs.bill.put';
     const WITHDRAWAL_MONEY = 'logs.bill.withdrawal';
+    const ACCEPTED_LEAVE_FROM_NODE = 'logs.node.gone';
 
     /**
      * The attributes that are mass assignable.
