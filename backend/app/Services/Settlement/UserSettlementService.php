@@ -15,7 +15,7 @@ class UserSettlementService
         $this->type = $type;
     }
 
-    public function updateBill()
+    public function updateBill($amount)
     {
         $math = app(MathInterface::class);
 
@@ -29,7 +29,7 @@ class UserSettlementService
             ]);
         }
 
-        $userBill->amount = $math->add($userBill->amount, $this->type->getInvestment()->amount);
+        $userBill->amount = $math->add($userBill->amount, $amount);
 
         $userBill->save();
 
@@ -37,7 +37,7 @@ class UserSettlementService
             'user_id' => $this->type->getUser()->id,
             'currency_id' => $userBill->currency_id,
             'data' => ['from' => $this->type->getSecondaryNode(), 'to' => $userBill],
-            'amount' => $this->type->getInvestment()->amount
+            'amount' => $amount
         ]);
     }
 }

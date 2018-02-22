@@ -5,6 +5,7 @@ namespace App\Types;
 use App\Investment;
 use App\Masternode;
 use App\User;
+use App\Withdrawals;
 
 /**
  * Class SettlementType
@@ -28,6 +29,27 @@ class SettlementType
      * @var
      */
     private $investment;
+
+    /**
+     * @var
+     */
+    private $withdrawal;
+
+    /**
+     * @return mixed
+     */
+    public function getWithdrawal(): Withdrawals
+    {
+        return $this->withdrawal;
+    }
+
+    /**
+     * @param mixed $withdrawal
+     */
+    public function setWithdrawal(Withdrawals $withdrawal)
+    {
+        $this->withdrawal = $withdrawal;
+    }
 
     /**
      * @param Masternode $node

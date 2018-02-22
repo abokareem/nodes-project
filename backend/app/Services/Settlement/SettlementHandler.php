@@ -6,10 +6,15 @@ use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Types\SettlementType;
 use App\User;
+use App\Withdrawals;
 
+/**
+ * Class SettlementHandler
+ * @package App\Services\Settlement
+ */
 class SettlementHandler
 {
-    public function handle(Masternode $node, User $user)
+    public function handle(Masternode $node, User $user, Withdrawals $withdrawal)
     {
         $secondaryNode = Masternode::where([
             ['currency_id', $node->currency_id],
@@ -26,8 +31,25 @@ class SettlementHandler
             $settlementType->setMainNode($node);
             $settlementType->setSecondaryNode($secondaryNode);
             $settlementType->setInvestment($invest);
+            $settlementType->setWithdrawal($withdrawal);
 
             return $this->makeService($settlementType);
+        }
+
+        return false;
+    }
+
+    public static function hasSecondaryNode(Masternode $node)
+    {
+        $secondaryNode = Masternode::where([
+            ['currency_id', $node->currency_id],
+            ['type', Masternode::PARTY_TYPE],
+            ['state', Masternode::NEW_STATE]
+        ])->first();
+
+        if ($secondaryNode) {
+
+            return true;
         }
 
         return false;
@@ -43,7 +65,11 @@ class SettlementHandler
 
             case MathInterface::LARGE:
 
+                return new LargeService($type);
+
             case MathInterface::LESS:
+
+                return new LessService($type);
 
             default:
                 throw new \Exception('', 500);

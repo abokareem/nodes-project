@@ -72,6 +72,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\AcceptedLeaveFromNode' => [
             'App\Listeners\WriteLog'
         ],
+        'App\Events\CreatedWithdrawal' => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\DeclinedWithdrawal' => [
+            'App\Listeners\WriteLog'
+        ],
     ];
 
     protected $observers = [

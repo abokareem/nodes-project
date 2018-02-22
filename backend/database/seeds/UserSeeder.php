@@ -149,7 +149,7 @@ class UserSeeder extends Seeder
                 $first->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,
-                    'amount' => 150
+                    'amount' => 10
                 ]);
                 /*$second->investments()->create([
                     'node_id' => $node->id,
@@ -159,7 +159,7 @@ class UserSeeder extends Seeder
                 $third->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,
-                    'amount' => 100
+                    'amount' => 240
                 ]);
             });
     }

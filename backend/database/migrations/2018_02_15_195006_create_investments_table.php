@@ -21,7 +21,7 @@ class CreateInvestmentsTable extends Migration
             $table->foreign('node_id')->references('id')->on('masternodes');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('amount');
+            $table->integer('amount')->unsigned();
             $table->timestamps();
 
             $table->unique(['currency_id', 'node_id', 'user_id']);

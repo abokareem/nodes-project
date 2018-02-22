@@ -11,6 +11,7 @@ class SecondaryNodeService
     private $investorsForDelete;
     private $transferInvestors;
     private $node;
+    const ZERO = 0;
 
     public function __construct(Masternode $node)
     {
@@ -23,7 +24,7 @@ class SecondaryNodeService
             ->orderBy('created_at', 'desc')->get();
 
         foreach ($investors as $investor) {
-            if ($amount === 0) {
+            if ($amount === self::ZERO) {
                 break;
             }
             $handler = $this->getHandle($amount, $investor->amount);
@@ -38,6 +39,21 @@ class SecondaryNodeService
         if ($this->investorsForDelete) {
             Investment::whereIn('id', $this->investorsForDelete)->delete();
         }
+    }
+
+    public function getTransferAmount(array $investors)
+    {
+        if (!isset($this->transferInvestors)) {
+            return self::ZERO;
+        }
+        $math = app(MathInterface::class);
+        $amount = 0;
+
+        foreach ($investors as $investor) {
+            $amount = $math->add($amount, $investor->amount);
+        }
+
+        return $amount;
     }
 
     protected function getHandle(string $needed, string $amount)
@@ -62,15 +78,20 @@ class SecondaryNodeService
         $this->transferInvestors[] = $investor;
         $this->investorsForDelete[] = $investor->id;
 
-        return 0;
+        return self::ZERO;
     }
 
     protected function less($amount, $investor)
     {
+        $math = app(MathInterface::class);
+
+        $investor->amount = $math->sub($investor->amount, $amount);
+        $investor->save();
+
         $investor->amount = $amount;
         $this->transferInvestors[] = $investor;
 
-        return 0;
+        return self::ZERO;
     }
 
     protected function large($amount, $investor)

@@ -26,6 +26,7 @@ return [
         'max' => 'In the system for this coin, it is possible to create only :count incomplete masternode.'
     ],
     'withdrawal' => [
-        'max' => 'The application for withdrawal can be submitted only by one investor per day.'
+        'max' => 'The application for withdrawal can be submitted only by one investor per day.',
+        'not_processing' => 'This withdrawal not processing already.'
     ]
 ];

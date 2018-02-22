@@ -22,14 +22,21 @@ class LeaveNodeMiddleware
     {
         $node = Masternode::find($request->get('node_id'));
 
-        if ($node) {
-            $createdTime = Withdrawals::where('node_id', $node->id)
-                ->latest()->first()->created_at;
-            if ($createdTime->addHours(24)->lt(Carbon::now())) {
-                throw new MaxMasternodeWithdrawals();
-            }
-
+        if (!$node) {
+            return $next($request);
         }
+
+        $withdrawal = Withdrawals::where('node_id', $node->id)
+            ->latest()->first();
+
+        if (!$withdrawal) {
+            return $next($request);
+        }
+
+        if ($withdrawal->created_at->addHours(24)->gt(Carbon::now())) {
+            throw new MaxMasternodeWithdrawals();
+        }
+
         return $next($request);
     }
 }

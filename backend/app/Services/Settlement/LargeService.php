@@ -5,6 +5,7 @@ namespace App\Services\Settlement;
 use App\Events\AcceptedLeaveFromNode;
 use App\Masternode;
 use App\Types\SettlementType;
+use App\Withdrawals;
 
 
 /**
@@ -31,24 +32,24 @@ class LargeService implements SettlementInterface
     {
         $this->type->getMainNode()->getConnection()->transaction(function () {
 
-            $userService = app(UserSettlementService::class,[
+            $userService = app(UserSettlementService::class, [
                 'type' => $this->type
             ]);
-
-            $userService->updateBill();
 
             $secondaryNodeService = app(SecondaryNodeService::class, [
                 'node' => $this->type->getSecondaryNode()
             ]);
 
             $mainNodeService = app(MainNodeService::class, [
-                'node' => $this->type->getMainNode(),
-                'secondaryNode' => $this->type->getSecondaryNode()
+                'type' => $this->type
             ]);
+
 
             $investors = $secondaryNodeService->getInvestorsByAmount(
                 $this->type->getInvestment()->amount
             );
+
+            $userService->updateBill($secondaryNodeService->getTransferAmount($investors));
 
             $this->type->getInvestment()->delete();
 
@@ -58,6 +59,10 @@ class LargeService implements SettlementInterface
 
             $this->type->getMainNode()->update([
                 'state' => Masternode::STABLE_STATE
+            ]);
+
+            $this->type->getWithdrawal()->update([
+                'state' => Withdrawals::APPROVE_STATE
             ]);
 
             event(new AcceptedLeaveFromNode($this->type->getUser()));

@@ -3,9 +3,9 @@
 namespace App\Services\Settlement;
 
 use App\Investment;
-use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Transaction;
+use App\Types\SettlementType;
 use Carbon\Carbon;
 
 /**
@@ -14,24 +14,15 @@ use Carbon\Carbon;
  */
 class MainNodeService
 {
-    /**
-     * @var Masternode
-     */
-    private $node;
-    /**
-     * @var Masternode
-     */
-    private $secondaryNode;
+    private $type;
 
     /**
      * MainNodeService constructor.
-     * @param Masternode $node
-     * @param Masternode $secondaryNode
+     * @param SettlementType $type
      */
-    public function __construct(Masternode $node, Masternode $secondaryNode)
+    public function __construct(SettlementType $type)
     {
-        $this->node = $node;
-        $this->secondaryNode = $secondaryNode;
+        $this->type = $type;
     }
 
     /**
@@ -41,6 +32,7 @@ class MainNodeService
     {
         $newInvestors = $this->updateInvestors($investors);
         $this->createNewInvestors($newInvestors);
+        $this->updateBills($investors);
     }
 
     /**
@@ -49,7 +41,7 @@ class MainNodeService
      */
     protected function updateInvestors(array $transferInvestors)
     {
-        $mainInvestors = $this->node->investments;
+        $mainInvestors = $this->type->getMainNode()->investments;
         $math = app(MathInterface::class);
         $newInvestors = [];
 
@@ -93,7 +85,7 @@ class MainNodeService
         foreach ($investors as $investor) {
             unset($investor->id);
 
-            $investor->node_id = $this->node->id;
+            $investor->node_id = $this->type->getMainNode()->id;
             $investor->created_at = Carbon::now();
             $investor->updated_at = Carbon::now();
             $newInvestors[] = $investor->toArray();
@@ -102,8 +94,8 @@ class MainNodeService
                 'user_id' => $investor->user_id,
                 'currency_id' => $investor->currency_id,
                 'data' => json_encode([
-                    'from' => $this->secondaryNode,
-                    'to' => $this->node
+                    'from' => $this->type->getSecondaryNode(),
+                    'to' => $this->type->getMainNode()
                 ]),
                 'amount' => $investor->amount,
                 'created_at' => Carbon::now(),
@@ -113,5 +105,40 @@ class MainNodeService
 
         Transaction::insert($transactions);
         Investment::insert($newInvestors);
+    }
+
+    /**
+     * @param array $investors
+     */
+    protected function updateBills(array $investors)
+    {
+        $math = app(MathInterface::class);
+        $amount = 0;
+
+        foreach ($investors as $investor) {
+            $amount = $math->add($amount, $investor->amount);
+        }
+
+        $mainNodeAmount = $math->sub(
+            $this->type->getMainNode()->bill->amount, $this->type->getInvestment()->amount
+        );
+
+        $this->type->getMainNode()->bill()->update([
+            'amount' => $math->add($amount, $mainNodeAmount)
+        ]);
+
+        $this->type->getSecondaryNode()->bill()->update([
+            'amount' => $math->sub($this->type->getSecondaryNode()->bill->amount, $amount)
+        ]);
+
+        Transaction::create([
+            'user_id' => $this->type->getUser()->id,
+            'currency_id' => $this->type->getMainNode()->currency_id,
+            'data' => [
+                'from' => $this->type->getSecondaryNode(),
+                'to' => $this->type->getMainNode()
+            ],
+            'amount' => $amount
+        ]);
     }
 }

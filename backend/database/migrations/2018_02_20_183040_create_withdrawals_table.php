@@ -20,7 +20,7 @@ class CreateWithdrawalsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->enum('state', ['processing', 'approve', 'decline']);
-            $table->integer('amount');
+            $table->integer('amount')->unsigned();
             $table->timestamps();
         });
     }

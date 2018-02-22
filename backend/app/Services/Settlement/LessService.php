@@ -2,16 +2,10 @@
 
 namespace App\Services\Settlement;
 
-use App\Events\AcceptedLeaveFromNode;
 use App\Masternode;
 use App\Types\SettlementType;
-use App\Withdrawals;
 
-/**
- * Class EqualService
- * @package App\Services\Settlement
- */
-class EqualService implements SettlementInterface
+class LessService implements SettlementInterface
 {
     /**
      * @var SettlementType
@@ -31,7 +25,7 @@ class EqualService implements SettlementInterface
     {
         $this->type->getMainNode()->getConnection()->transaction(function () {
 
-            $userService = app(UserSettlementService::class,[
+            $userService = app(UserSettlementService::class, [
                 'type' => $this->type
             ]);
 
@@ -60,14 +54,9 @@ class EqualService implements SettlementInterface
             $this->type->getSecondaryNode()->delete();
 
             $this->type->getMainNode()->update([
-                'state' => Masternode::STABLE_STATE
+                'state' => Masternode::UNSTABLE_STATE
             ]);
 
-            $this->type->getWithdrawal()->update([
-                'state' => Withdrawals::APPROVE_STATE
-            ]);
-
-            event(new AcceptedLeaveFromNode($this->type->getUser()));
         });
     }
 }

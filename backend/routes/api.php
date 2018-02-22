@@ -39,6 +39,8 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->patch('users', 'UserController@update')->middleware('tfa');
 
     $router->post('shares/buy', 'ShareController@buy');
+
+    $router->delete('withdrawals/decline/{withdrawal}','WithdrawalController@decline');
 });
 
 Route::middleware(['auth:api', 'confirmEmail', 'node'])->group(function (Router $router) {
@@ -50,6 +52,8 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
     $router->post('currency', 'CurrencyController@store');
     $router->patch('currency/{currency}', 'CurrencyController@update');
     $router->patch('nodes/{node}', 'MasternodeController@update');
+
+    $router->patch('withdrawals/approve/{withdrawal}','WithdrawalController@approve');
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {
@@ -65,8 +69,5 @@ Route::middleware('throttle:15')->group(function (Router $router) {
 });
 
 Route::middleware(['auth:api', 'leaveNode'])->group(function (Router $router) {
-
-    $router->post('test', function () {
-        echo 'hello';
-    });
+    $router->post('withdrawals','WithdrawalController@store');
 });
