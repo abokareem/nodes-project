@@ -18,12 +18,4 @@ class MasternodeBill extends Model
     protected $fillable = [
         'amount'
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
 }

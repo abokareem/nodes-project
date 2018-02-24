@@ -91,7 +91,7 @@ class ShareService
                 'amount' => $price
             ]);
 
-            $node->bill()->update([
+            $node->bill->update([
                 'amount' => $this->math->add($node->bill->amount, $price)
             ]);
 

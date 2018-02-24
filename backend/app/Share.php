@@ -13,7 +13,7 @@ class Share extends Model
      */
     protected $fillable = [
         'currency_id',
-        'min_price',
+        'share_price',
         'full_price'
     ];
 }

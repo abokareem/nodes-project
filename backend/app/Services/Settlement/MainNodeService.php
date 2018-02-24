@@ -119,14 +119,6 @@ class MainNodeService
             $amount = $math->add($amount, $investor->amount);
         }
 
-        $mainNodeAmount = $math->sub(
-            $this->type->getMainNode()->bill->amount, $this->type->getInvestment()->amount
-        );
-
-        $this->type->getMainNode()->bill()->update([
-            'amount' => $math->add($amount, $mainNodeAmount)
-        ]);
-
         $this->type->getSecondaryNode()->bill()->update([
             'amount' => $math->sub($this->type->getSecondaryNode()->bill->amount, $amount)
         ]);

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Events\AcceptedLeaveFromNode;
-use App\Events\CreatedWithdrawal;
 use App\Exceptions\WithdrawalAlreadyNotProcessing;
 use App\Jobs\LeaveNodeJob;
 use App\Masternode;
@@ -13,10 +12,10 @@ use App\Withdrawals;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class LeaveNodeService
+ * Class WithdrawalService
  * @package App\Services
  */
-class LeaveNodeService
+class WithdrawalService
 {
     /**
      * @var \Illuminate\Contracts\Auth\Authenticatable|null
@@ -28,13 +27,15 @@ class LeaveNodeService
     private $math;
 
     /**
-     * LeaveNodeService constructor.
+     * WithdrawalService constructor.
      * @param MathInterface $math
+     * @param ShareService $shareService
      */
-    public function __construct(MathInterface $math)
+    public function __construct(MathInterface $math, ShareService $shareService)
     {
         $this->math = $math;
         $this->user = Auth::user();
+        $this->share = $shareService;
     }
 
     /**
@@ -61,6 +62,28 @@ class LeaveNodeService
             LeaveNodeJob::dispatch($this->user, $node, $withdrawal);
             return;
         }
+    }
+
+    /**
+     * @param Withdrawals $withdrawal
+     * @throws WithdrawalAlreadyNotProcessing
+     */
+    public function buy(Withdrawals $withdrawal)
+    {
+        if ($withdrawal->state !== Withdrawals::PROCESSING_STATE) {
+            throw new WithdrawalAlreadyNotProcessing();
+        }
+
+        $withdrawal->getConnection()->transaction(function () use ($withdrawal) {
+
+            $this->approve($withdrawal);
+
+            $math = app(MathInterface::class);
+            $share = $withdrawal->node->currency->share;
+            $shareCount = $math->divide($withdrawal->amount, $share->share_price);
+
+            $this->share->buy($withdrawal->node, $shareCount);
+        });
     }
 
     /**

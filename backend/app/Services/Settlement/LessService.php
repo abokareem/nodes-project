@@ -3,6 +3,7 @@
 namespace App\Services\Settlement;
 
 use App\Masternode;
+use App\Services\Math\MathInterface;
 use App\Types\SettlementType;
 
 class LessService implements SettlementInterface
@@ -25,6 +26,10 @@ class LessService implements SettlementInterface
     {
         $this->type->getMainNode()->getConnection()->transaction(function () {
 
+            $math = app(MathInterface::class);
+            $leavedInvestor = $this->type->getInvestment();
+            $secondaryNode = $this->type->getSecondaryNode();
+
             $userService = app(UserSettlementService::class, [
                 'type' => $this->type
             ]);
@@ -37,24 +42,31 @@ class LessService implements SettlementInterface
                 'type' => $this->type
             ]);
 
-            $investors = $secondaryNodeService->getInvestorsByAmount(
-                $this->type->getInvestment()->amount
-            );
+            $investors = $secondaryNodeService->getInvestorsByAmount($leavedInvestor->amount);
 
-            $userService->updateBill($secondaryNodeService->getTransferAmount($investors));
-
-            $this->type->getInvestment()->delete();
+            $transferAmount = $secondaryNodeService->getTransferAmount($investors);
+            $userService->updateBill($transferAmount);
 
             $mainNodeService->migrate($investors);
 
             $secondaryNodeService->deleteGivenInvestors();
 
-            $this->type->getSecondaryNode()->bill()->delete();
-            $this->type->getSecondaryNode()->investments()->delete();
-            $this->type->getSecondaryNode()->delete();
+            $secondaryNode->bill()->delete();
+            $secondaryNode->investments()->delete();
+            $secondaryNode->delete();
+
 
             $this->type->getMainNode()->update([
                 'state' => Masternode::UNSTABLE_STATE
+            ]);
+
+            $this->type->getInvestment()->update([
+                'amount' => $math->sub($leavedInvestor->amount, $transferAmount)
+            ]);
+
+            $withdrawal = $this->type->getWithdrawal();
+            $withdrawal->update([
+                'amount' => $math->sub($withdrawal->amount, $transferAmount)
             ]);
 
         });

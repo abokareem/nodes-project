@@ -41,6 +41,7 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->post('shares/buy', 'ShareController@buy');
 
     $router->delete('withdrawals/decline/{withdrawal}','WithdrawalController@decline');
+    $router->post('withdrawals/buy/{withdrawal}','WithdrawalController@buy');
 });
 
 Route::middleware(['auth:api', 'confirmEmail', 'node'])->group(function (Router $router) {
