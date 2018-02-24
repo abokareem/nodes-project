@@ -2,7 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Services\Math\MathInterface;
+use App\Withdrawals;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class MasternodeResource
@@ -38,13 +41,12 @@ use Illuminate\Http\Resources\Json\Resource;
  * )
  *
  */
-
 class MasternodeResource extends Resource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -53,7 +55,55 @@ class MasternodeResource extends Resource
             'id' => $this->id,
             'state' => $this->state,
             'type' => $this->type,
-            'price' => $this->price
+            'price' => $this->price,
+            'free_shares' => $this->getFreeShares(),
+            'bill' => new MasternodeBillResource($this->bill),
+            'currency' => new CurrencyResource($this->currency),
+            'withdrawals' => WithdrawalResource::collection($this->getWithdrawals()),
+            'investor' => $this->getInvestor()
         ];
+    }
+
+    /**
+     * @return UserInvestResource
+     */
+    private function getInvestor()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $investor = $user->investments()->where('node_id', $this->id)->first();
+
+            if ($investor) {
+                return new UserInvestResource($investor);
+            }
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getWithdrawals()
+    {
+        return $this->withdrawals()->where('state', Withdrawals::PROCESSING_STATE)->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getFreeShares()
+    {
+        $math = app(MathInterface::class);
+        $withdrawals = $this->withdrawals()->where('state', Withdrawals::PROCESSING_STATE)->get();
+        $freeAmount = 0;
+        $freeNodeAmount = $math->sub($this->price, $this->bill->amount);
+
+        foreach ($withdrawals as $withdrawal) {
+            $freeAmount = $math->add($freeAmount, $withdrawal->amount);
+        }
+
+        $freeAmount = $math->add($freeAmount, $freeNodeAmount);
+        $freeShares = $math->divide($freeAmount, $this->currency->share->share_price);
+
+        return $freeShares;
     }
 }

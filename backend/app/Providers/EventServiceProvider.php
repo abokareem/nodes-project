@@ -78,6 +78,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\DeclinedWithdrawal' => [
             'App\Listeners\WriteLog'
         ],
+        'App\Events\NewWithdrawal' => [
+            'App\Listeners\SendEmailNewWithdrawal'
+        ],
     ];
 
     protected $observers = [

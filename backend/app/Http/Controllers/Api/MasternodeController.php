@@ -41,7 +41,10 @@ class MasternodeController extends Controller
      */
     public function index()
     {
-        return MasternodeResource::collection(Masternode::paginate());
+        return MasternodeResource::collection(
+            Masternode::where('state', Masternode::NEW_STATE)
+                ->orWhere('state', Masternode::UNSTABLE_STATE)->paginate()
+        );
     }
 
     /**

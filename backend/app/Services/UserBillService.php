@@ -113,8 +113,8 @@ class UserBillService
     private function getDataForTransaction(Currency $currency, User $user)
     {
         return [
-            'currency' => $currency,
-            'user' => $user
+            'from' => $currency,
+            'to' => $user
         ];
     }
 }

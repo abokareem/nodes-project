@@ -44,8 +44,8 @@ class MasternodeShareResource extends Resource
     {
         return [
             'id' => $this->id,
-            'price' => $this->price,
-            'count' => $this->count
+            'share_price' => $this->share_price,
+            'full_price' => $this->full_price
         ];
     }
 }

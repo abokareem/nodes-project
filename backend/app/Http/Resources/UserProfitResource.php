@@ -8,30 +8,24 @@ use Illuminate\Http\Resources\Json\Resource;
  * Class CurrencyResource
  *
  * @SWG\Definition(
- *     definition="Currency",
+ *     definition="UserProfit",
  *     title="Currency",
  *     @SWG\Property(
- *      property="name",
+ *      property="per_day",
  *      type="string",
  *      description="",
- *      example="dollars"
+ *      example="0.43"
  *     ),
  *     @SWG\Property(
- *      property="code",
+ *      property="full",
  *      type="string",
  *      description="",
- *      example="USD"
- *     ),
- *     @SWG\Property(
- *      property="symbol",
- *      type="string",
- *      description="symbol of currency",
- *      example="$"
+ *      example="1.23"
  *     )
  * )
  *
  */
-class CurrencyResource extends Resource
+class UserProfitResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -42,11 +36,8 @@ class CurrencyResource extends Resource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'symbol' => $this->symbol,
-            'share' => new MasternodeShareResource($this->share)
+            'per_day' => $this->per_day,
+            'full' => $this->full
         ];
     }
 }

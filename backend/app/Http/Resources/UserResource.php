@@ -62,7 +62,7 @@ class UserResource extends Resource
             'email' => $this->email,
             'email_confirmed' => (bool)$this->email_confirmed,
             'two_fa' => (bool)$this->two_fa,
-            'invest' => UserInvestResource::collection($this->investments),
+            'invest' => MasternodeResource::collection($this->nodes),
             'actions' => UserActionsResource::collection($this->getActions()),
             'bills' => UserBillsResource::collection($this->bills)
         ];

@@ -128,11 +128,27 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function nodes()
+    {
+        return $this->belongsToMany(Masternode::class, 'investments', 'user_id', 'node_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function withdrawals()
     {
         return $this->hasMany(Withdrawals::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function profits()
+    {
+        return $this->hasMany(UserProfit::class);
     }
 
     /**

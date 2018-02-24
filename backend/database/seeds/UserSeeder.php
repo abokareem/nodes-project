@@ -79,6 +79,21 @@ class UserSeeder extends Seeder
                     'currency_id' => $currency->id,
                     'amount' => 8
                 ]);
+                $first->profits()->create([
+                    'node_id' => $node->id,
+                    'per_day' => '0.43',
+                    'full' => '1.564'
+                ]);
+                $first->profits()->create([
+                    'node_id' => $node->id,
+                    'per_day' => '0.43',
+                    'full' => '1.564'
+                ]);
+                $first->profits()->create([
+                    'node_id' => $node->id,
+                    'per_day' => '0.43',
+                    'full' => '1.564'
+                ]);
                 $second->investments()->create([
                     'node_id' => $node->id,
                     'currency_id' => $currency->id,

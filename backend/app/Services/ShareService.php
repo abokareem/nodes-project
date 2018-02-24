@@ -7,6 +7,7 @@ use App\Exceptions\InsolventException;
 use App\Exceptions\NoFreeSharesException;
 use App\Masternode;
 use App\Services\Math\MathInterface;
+use App\Transaction;
 use App\Types\ShareBuyType;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -87,7 +88,9 @@ class ShareService
 
             $this->user->transactions()->create([
                 'currency_id' => $node->currency_id,
-                'data' => $this->getDataForTransaction($node, $this->user),
+                'type' => Transaction::BUY_SHARE_TYPE,
+                'message' => Transaction::BUY_SHARE_MESSAGE,
+                'data' => $this->getDataForTransaction($node),
                 'amount' => $price
             ]);
 
@@ -113,14 +116,12 @@ class ShareService
      * Get metadata for transaction record.
      *
      * @param Masternode $masternode
-     * @param User $user
      * @return array
      */
-    protected function getDataForTransaction(Masternode $masternode, User $user)
+    protected function getDataForTransaction(Masternode $masternode)
     {
         return [
-            'masternode' => $masternode->toArray(),
-            'user' => $user->toArray()
+            'from' => $masternode->toArray()
         ];
     }
 

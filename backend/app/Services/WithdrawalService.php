@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Events\AcceptedLeaveFromNode;
+use App\Events\NewWithdrawal;
 use App\Exceptions\WithdrawalAlreadyNotProcessing;
 use App\Jobs\LeaveNodeJob;
 use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Services\Settlement\SettlementHandler;
+use App\Transaction;
 use App\Withdrawals;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,6 +64,8 @@ class WithdrawalService
             LeaveNodeJob::dispatch($this->user, $node, $withdrawal);
             return;
         }
+
+        event(new NewWithdrawal($withdrawal));
     }
 
     /**
@@ -123,9 +127,10 @@ class WithdrawalService
 
             $user->transactions()->create([
                 'currency_id' => $node->currency_id,
+                'type' => Transaction::WITHDRAWAL_NODE_TYPE,
+                'message' => Transaction::WITHDRAWAL_NODE_MESSAGE,
                 'data' => [
-                    'from' => $node,
-                    'to' => $userBill
+                    'from' => $node
                 ],
                 'amount' => $withdrawal->amount
             ]);

@@ -7,6 +7,7 @@ use App\Exceptions\InsolventException;
 use App\Exceptions\UnsupportedMasternodeType;
 use App\Masternode;
 use App\Services\Math\MathInterface;
+use App\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -106,7 +107,9 @@ class NodeService
 
             $this->user->transactions()->create([
                 'currency_id' => $currency->id,
-                'data' => $this->getDataForTransaction($node, $this->user),
+                'type' => Transaction::BUY_SHARE_TYPE,
+                'message' => Transaction::BUY_SHARE_MESSAGE,
+                'data' => $this->getDataForTransaction($node),
                 'amount' => $price
             ]);
 
@@ -146,6 +149,8 @@ class NodeService
 
             $this->user->transactions()->create([
                 'currency_id' => $currency->id,
+                'type' => Transaction::BUY_SHARE_TYPE,
+                'message' => Transaction::BUY_SHARE_MESSAGE,
                 'data' => $this->getDataForTransaction($node),
                 'amount' => $price
             ]);
@@ -167,8 +172,7 @@ class NodeService
     protected function getDataForTransaction(Model $masternode)
     {
         return [
-            'masternode' => $masternode->toArray(),
-            'user' => $this->user->toArray()
+            'from' => $masternode->toArray()
         ];
     }
 

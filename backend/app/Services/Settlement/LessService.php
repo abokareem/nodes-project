@@ -2,6 +2,7 @@
 
 namespace App\Services\Settlement;
 
+use App\Events\NewWithdrawal;
 use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Types\SettlementType;
@@ -69,6 +70,7 @@ class LessService implements SettlementInterface
                 'amount' => $math->sub($withdrawal->amount, $transferAmount)
             ]);
 
+            event(new NewWithdrawal($withdrawal));
         });
     }
 }

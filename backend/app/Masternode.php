@@ -55,6 +55,14 @@ class Masternode extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawals::class, 'node_id', 'id');
+    }
+
+    /**
      * @return string
      */
     public static function states()

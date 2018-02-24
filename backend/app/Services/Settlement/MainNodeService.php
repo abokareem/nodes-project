@@ -60,7 +60,9 @@ class MainNodeService
                     Transaction::create([
                         'user_id' => $mainInvestor->user_id,
                         'currency_id' => $mainInvestor->currency_id,
-                        'data' => ['from' => $transferInvestor, 'to' => $mainInvestor],
+                        'type' => Transaction::SETTLEMENT_TYPE,
+                        'message' => Transaction::SETTLEMENT_MESSAGE,
+                        'data' => ['from' => $this->type->getMainNode()],
                         'amount' => $transferInvestor->amount
                     ]);
 
@@ -93,9 +95,10 @@ class MainNodeService
             $transactions[] = [
                 'user_id' => $investor->user_id,
                 'currency_id' => $investor->currency_id,
+                'type' => Transaction::SETTLEMENT_TYPE,
+                'message' => Transaction::SETTLEMENT_MESSAGE,
                 'data' => json_encode([
-                    'from' => $this->type->getSecondaryNode(),
-                    'to' => $this->type->getMainNode()
+                    'from' => $this->type->getMainNode()
                 ]),
                 'amount' => $investor->amount,
                 'created_at' => Carbon::now(),
@@ -126,9 +129,10 @@ class MainNodeService
         Transaction::create([
             'user_id' => $this->type->getUser()->id,
             'currency_id' => $this->type->getMainNode()->currency_id,
+            'type' => Transaction::SETTLEMENT_TYPE,
+            'message' => Transaction::SETTLEMENT_MESSAGE,
             'data' => [
-                'from' => $this->type->getSecondaryNode(),
-                'to' => $this->type->getMainNode()
+                'from' => $this->type->getMainNode()
             ],
             'amount' => $amount
         ]);

@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('language');
+            $table->boolean('subscribe')->default(false);
             $table->boolean('email_confirmed')->default(false);
             $table->boolean('two_fa')->default(false);
             $table->string('google2fa_secret')->nullable();

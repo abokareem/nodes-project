@@ -26,8 +26,11 @@ Route::post('users/auth/twofa', 'UserAuthController@twoFaLogin');
 Route::get('currency', 'CurrencyController@index');
 Route::get('currency/{currency}', 'CurrencyController@show');
 
-Route::get('nodes', 'MasternodeController@index');
-Route::get('nodes/{node}', 'MasternodeController@show');
+Route::get('nodes/{node}', 'MasternodeController@show')->name('show.node');
+
+Route::middleware('tryAuth:api')->group(function (Router $router) {
+    $router->get('nodes', 'MasternodeController@index');
+});
 
 Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router) {
 
@@ -37,6 +40,9 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->get('users/twofa', 'UserController@twoFaDataForActivate');
     $router->get('users/actions', 'UserController@getActions');
     $router->patch('users', 'UserController@update')->middleware('tfa');
+    $router->get('users/nodes','UserController@getNodes');
+    $router->get('users/transactions','UserController@getTransactions');
+    $router->get('users/withdrawals','UserController@getWithdrawals');
 
     $router->post('shares/buy', 'ShareController@buy');
 

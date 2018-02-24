@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'localization' => \App\Http\Middleware\SetLocaleMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'node' => \App\Http\Middleware\MasternodeCreated::class,
-        'leaveNode' => \App\Http\Middleware\LeaveNodeMiddleware::class
+        'leaveNode' => \App\Http\Middleware\LeaveNodeMiddleware::class,
+        'tryAuth' => \App\Http\Middleware\TryAuth::class
     ];
 }

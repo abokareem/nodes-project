@@ -36,7 +36,9 @@ class UserSettlementService
         Transaction::create([
             'user_id' => $this->type->getUser()->id,
             'currency_id' => $userBill->currency_id,
-            'data' => ['from' => $this->type->getSecondaryNode(), 'to' => $userBill],
+            'type' => Transaction::SETTLEMENT_TYPE,
+            'message' => Transaction::SETTLEMENT_MESSAGE,
+            'data' => ['from' => $this->type->getSecondaryNode()],
             'amount' => $amount
         ]);
     }

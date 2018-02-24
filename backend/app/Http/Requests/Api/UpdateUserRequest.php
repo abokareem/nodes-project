@@ -27,6 +27,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'max:255',
             'email' => 'string|email|min:4|max:255|unique:users,email',
             'password' => 'regex:/^\S{6,}$/|max:255',
+            'subscribe' => 'boolean',
             'language' => 'in:ru,en',
         ];
     }
