@@ -12,13 +12,16 @@ return [
         'server' => 'Internal error. Please contact support.'
     ],
     'admin' => [
-        'access' => 'Access denied.'
+        'access' => 'Access denied.',
+        'wallets' => 'Min length wallet must be ' . config('admin.wallet_length') . ' symbols.'
     ],
     'server' => [
         'extension' => ':extension extension not installed.'
     ],
     'user' => [
-        'insolvent' => 'You do not have enough money in your account.'
+        'insolvent' => 'You do not have enough money in your account.',
+        'bill' => 'The wallet for this currency does not exist. Please create a new one.',
+        'free_wallet' => 'Free wallets not exist now. Please try again later.'
     ],
     'node' => [
         'free' => 'Free share price exceeded.',
@@ -28,5 +31,8 @@ return [
     'withdrawal' => [
         'max' => 'The application for withdrawal can be submitted only by one investor per day.',
         'not_processing' => 'This withdrawal not processing already.'
+    ],
+    'bill' => [
+        'not_processing' => 'This withdrawal not processing.'
     ]
 ];

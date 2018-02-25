@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Api\System;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WithdrawalMoneyRequest extends FormRequest
+class UpdateUserBillRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class WithdrawalMoneyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,9 +24,7 @@ class WithdrawalMoneyRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_id' => 'required|integer',
-            'wallet' => 'required|max:65535|min:5',
-            'price' => 'numeric'
+            //
         ];
     }
 }

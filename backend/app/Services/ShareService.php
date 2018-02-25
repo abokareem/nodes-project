@@ -9,7 +9,6 @@ use App\Masternode;
 use App\Services\Math\MathInterface;
 use App\Transaction;
 use App\Types\ShareBuyType;
-use App\User;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -81,6 +80,9 @@ class ShareService
             $node = $buyType->getNode();
 
             $invest = $this->getUserInvest($node->currency, $node);
+
+            $this->freeShare($node, $price);
+            $this->payable($price, $userBill->amount);
 
             $userBill->amount = $this->math->sub($userBill->amount, $price);
 

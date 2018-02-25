@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Currency;
 use App\Exceptions\InsolventException;
+use App\Exceptions\MaxMasternodes;
 use App\Exceptions\UnsupportedMasternodeType;
 use App\Masternode;
 use App\Services\Math\MathInterface;
@@ -136,6 +137,17 @@ class NodeService
 
             $userBill->amount = $this->math->sub($userBill->amount, $price);
             $userBill->save();
+
+
+            $masternode = Masternode::where([
+                ['currency_id', $currency->id],
+                ['state', Masternode::NEW_STATE],
+                ['type', Masternode::PARTY_TYPE]
+            ])->count();
+
+            if ($masternode >= config('masternode.max')) {
+                throw new MaxMasternodes();
+            }
 
             $node = $currency->nodes()->create([
                 'state' => Masternode::NEW_STATE,

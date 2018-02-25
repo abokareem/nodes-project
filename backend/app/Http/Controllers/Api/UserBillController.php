@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Currency;
 use App\Events\AcceptedPutMoney;
 use App\Events\MoneyWithdrawn;
+use App\Exceptions\UserBillNotExist;
+use App\Exceptions\WithdrawalMoneyAlreadyNotProcessing;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AcceptPutMoneyRequest;
-use App\Http\Requests\Api\PutMoneyRequest;
+use App\Http\Requests\Api\CreateUserBillRequest;
 use App\Http\Requests\Api\WithdrawalMoneyRequest;
+use App\Http\Resources\MessageResource;
 use App\Http\Resources\UserBillsResource;
 use App\Services\UserBillService;
 use App\User;
+use App\UserBill;
+use App\WithdrawalMoney;
 
 class UserBillController extends Controller
 {
@@ -19,9 +24,9 @@ class UserBillController extends Controller
      *
      * @SWG\Post(
      *     path="/money",
-     *     summary="Create or take bill",
+     *     summary="Create bill",
      *     tags={"Bills"},
-     *     description="Create or take bill",
+     *     description="Create bill",
      *     operationId="createBill",
      *     security={
      *         {
@@ -68,14 +73,75 @@ class UserBillController extends Controller
      *     ),
      * )
      *
-     * @param PutMoneyRequest $request
+     * @param CreateUserBillRequest $request
      * @param UserBillService $billService
      * @return UserBillsResource
      */
-    public function putMoney(PutMoneyRequest $request, UserBillService $billService)
+    public function store(CreateUserBillRequest $request, UserBillService $billService)
     {
         $currency = Currency::findOrFail($request->get('currency_id'));
+        $bill = $billService->create($currency);
+        return new UserBillsResource($bill);
+    }
+
+    /**
+     *
+     * @SWG\Get(
+     *     path="/money/{currency}",
+     *     summary="Take bill",
+     *     tags={"Bills"},
+     *     description="Take bill",
+     *     operationId="takeBill",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="currency",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *
+     *     @SWG\Response(
+     *      response=201,
+     *      description="bill object",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/UserBills"
+     *       )
+     *      )
+     *     ),
+     *
+     *     @SWG\Response(
+     *         response=422,
+     *         description="bill",
+     *         examples={
+     *           "application/json":{
+     *             "message": "The given data was invalid",
+     *             "errors":{
+     *                 "currency_id": {"The currency_id field is required."},
+     *             },
+     *           },
+     *         },
+     *     ),
+     * )
+     *
+     * @param Currency $currency
+     * @param UserBillService $billService
+     * @return UserBillsResource
+     * @throws UserBillNotExist
+     */
+    public function getBill(Currency $currency, UserBillService $billService)
+    {
         $wallet = $billService->put($currency);
+
+        if (!$wallet) {
+            throw new UserBillNotExist();
+        }
 
         return new UserBillsResource($wallet);
     }
@@ -88,6 +154,7 @@ class UserBillController extends Controller
      *     tags={"Bills"},
      *     description="accept transaction",
      *     operationId="acceptTransaction",
+     *     deprecated=true,
      *     security={
      *         {
      *             "Bearer": {}
@@ -174,10 +241,16 @@ class UserBillController extends Controller
      *          required=true,
      *          @SWG\Schema(
      *              @SWG\Property(
-     *                  property="currency_id",
+     *                  property="bill_id",
      *                  type="integer",
-     *                  description="currency id",
+     *                  description="bill id",
      *                  example=1
+     *              ),
+     *              @SWG\Property(
+     *                  property="wallet",
+     *                  type="integer",
+     *                  description="wallet hash",
+     *                  example="some hash"
      *              ),
      *              @SWG\Property(
      *                  property="price",
@@ -220,13 +293,137 @@ class UserBillController extends Controller
      */
     public function withdrawalMoney(WithdrawalMoneyRequest $request, UserBillService $billService)
     {
-        $currency = Currency::findOrFail($request->get('currency_id'));
-        $price = $request->get('price');
+        $bill = UserBill::findOrFail($request->get('bill_id'));
+        $price = $request->get('price') ?? $bill->amount;
+        $externalWallet = $request->get('wallet');
 
-        $wallet = $billService->withdrawalMoney($currency, $price);
+        $wallet = $billService->withdrawalMoney($bill, $externalWallet, $price);
 
         event(new MoneyWithdrawn());
 
         return new UserBillsResource($wallet);
+    }
+
+    /**
+     *
+     * @SWG\Delete(
+     *     path="/money/decline/{withdrawal}",
+     *     summary="Decline withdrawal",
+     *     tags={"Bills"},
+     *     description="Decline withdrawal",
+     *     operationId="declineWithdrawal",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="withdrawal",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Declined withdrawal",
+     *      examples={
+     *           "application/json":{
+     *             "message": "Withdrawal declined.",
+     *           },
+     *         },
+     *     ),
+     *
+     *     @SWG\Response(
+     *         response=422,
+     *         description="withdrawal",
+     *         examples={
+     *           "application/json":{
+     *             "message": "The given data was invalid",
+     *             "errors":{
+     *                 "withdrawal": {"The withdrawal field is required."},
+     *             },
+     *           },
+     *         },
+     *     ),
+     * )
+     *
+     * @param WithdrawalMoney $withdrawal
+     * @return MessageResource
+     * @throws WithdrawalMoneyAlreadyNotProcessing
+     */
+    public function decline(WithdrawalMoney $withdrawal)
+    {
+
+        if ($withdrawal->state !== WithdrawalMoney::PROCESSING) {
+            throw new WithdrawalMoneyAlreadyNotProcessing();
+        }
+
+        $withdrawal->update([
+            'state' => WithdrawalMoney::DECLINE
+        ]);
+
+        return new MessageResource(trans('monetary.bill.withdrawal.decline'));
+    }
+
+    /**
+     *
+     * @SWG\Patch(
+     *     path="/money/approve/{withdrawal}",
+     *     summary="Approve withdrawal",
+     *     tags={"Bills"},
+     *     description="Approve withdrawal",
+     *     operationId="approveWithdrawal",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="withdrawal",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Approve withdrawal",
+     *      examples={
+     *           "application/json":{
+     *             "message": "Withdrawal approve.",
+     *           },
+     *         },
+     *     ),
+     *
+     *     @SWG\Response(
+     *         response=422,
+     *         description="withdrawal",
+     *         examples={
+     *           "application/json":{
+     *             "message": "The given data was invalid",
+     *             "errors":{
+     *                 "withdrawal": {"The withdrawal field is required."},
+     *             },
+     *           },
+     *         },
+     *     ),
+     * )
+     *
+     * @param WithdrawalMoney $withdrawal
+     * @return MessageResource
+     * @throws WithdrawalMoneyAlreadyNotProcessing
+     */
+    public function approve(WithdrawalMoney $withdrawal)
+    {
+        if ($withdrawal->state !== WithdrawalMoney::PROCESSING) {
+            throw new WithdrawalMoneyAlreadyNotProcessing();
+        }
+
+        $withdrawal->update([
+            'state' => WithdrawalMoney::APPROVE
+        ]);
+
+        return new MessageResource(trans('monetary.bill.withdrawal.accept'));
     }
 }

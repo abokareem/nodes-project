@@ -25,4 +25,12 @@ class UserBill extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawal()
+    {
+        return $this->hasMany(WithdrawalMoney::class, 'user_bill_id', 'id');
+    }
 }

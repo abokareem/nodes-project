@@ -4,11 +4,14 @@ namespace App\Services;
 
 use App\Currency;
 use App\Exceptions\InsolventException;
+use App\Exceptions\System\FreeWalletNotExist;
+use App\FreeWallet;
 use App\Services\Math\MathInterface;
+use App\Transaction;
 use App\User;
 use App\UserBill;
+use App\WithdrawalMoney;
 use Illuminate\Support\Facades\Auth;
-use Ixudra\Curl\Facades\Curl;
 
 /**
  * Class UserBillService
@@ -31,30 +34,65 @@ class UserBillService
         $this->math = $math;
     }
 
+    public function create(Currency $currency)
+    {
+        $bill = $this->put($currency);
+        if ($bill) {
+            return $bill;
+        }
+
+        $user = Auth::user();
+
+        $user->getConnection()->transaction(function () use ($currency, $user) {
+
+            $freeWallet = FreeWallet::where([
+                ['currency_id', $currency->id],
+                ['state', FreeWallet::FREE_STATE]
+            ])->lockForUpdate()->first();
+
+            if (!$freeWallet) {
+                throw new FreeWalletNotExist();
+            }
+
+            $userBill = $user->bills()->where('currency_id', $currency->id)->first();
+
+            if ($userBill) {
+
+                $userBill->update([
+                    'uuid' => $freeWallet->hash
+                ]);
+            } else {
+
+                $user->bills()->create([
+                    'currency_id' => $currency->id,
+                    'uuid' => $freeWallet->hash
+                ]);
+            }
+
+            $freeWallet->state = FreeWallet::BUSY_STATE;
+            $freeWallet->save();
+
+        });
+
+        $bill = $user->bills()->where('currency_id', $currency->id)->firstOrFail();
+
+        return $bill;
+    }
+
     /**
      * @param Currency $currency
      * @return UserBill
      */
-    public function put(Currency $currency): UserBill
+    public function put(Currency $currency)
     {
         $user = Auth::user();
         $userBill = $user->bills()->where('currency_id', $currency->id)->first();
 
-        if ($userBill) {
+        if ($userBill && !is_null($userBill->uuid)) {
             return $userBill;
         }
 
-        $wallet = Curl::to(config('wallets.urls.new'))
-            ->withData(['currency' => $currency, 'user' => Auth::user()])
-            ->asJson()
-            ->post();
-
-        $newBill = $user->bills()->create([
-            'currency_id' => $currency->id,
-            'uuid' => $wallet['hash']
-        ]);
-
-        return $newBill;
+        return null;
     }
 
     /**
@@ -71,7 +109,7 @@ class UserBillService
 
         $user->transactions()->create([
             'currency_id' => $currency->id,
-            'data' => $this->getDataForTransaction($currency, $user),
+            'data' => $this->getDataForTransaction($userBill),
             'amount' => $amount
         ]);
 
@@ -79,42 +117,49 @@ class UserBillService
     }
 
     /**
-     * @param Currency $currency
+     * @param UserBill $bill
+     * @param string $wallet
      * @param $price
-     * @return mixed
-     * @throws InsolventException
+     * @return UserBill
      */
-    public function withdrawalMoney(Currency $currency, $price)
+    public function withdrawalMoney(UserBill $bill, string $wallet, $price)
     {
         $user = Auth::user();
+        $user->getConnection()->transaction(function () use ($user, $price, $bill, $wallet) {
 
-        $userBill = $user->bills()->where('currency_id', $currency->id)->firstOrFail();
+            if ((int)$this->math->comparison($price, $bill->amount) === 1) {
+                throw new InsolventException();
+            }
 
-        if ((int)$this->math->comparison($price, $userBill->amount) === 1) {
-            throw new InsolventException();
-        }
+            $bill->amount = $this->math->sub($bill->amount, $price);
+            $bill->save();
 
-        $userBill->amount = $this->math->sub($userBill->amount, $price);
+            $bill->withdrawal()->create([
+                'external_user_wallet' => $wallet,
+                'state' => WithdrawalMoney::PROCESSING,
+                'amount' => $price
+            ]);
 
-        $user->transactions()->create([
-            'currency_id' => $currency->id,
-            'data' => $this->getDataForTransaction($currency, $user),
-            'amount' => $price
-        ]);
+            $user->transactions()->create([
+                'currency_id' => $bill->currency->id,
+                'type' => Transaction::WITHDRAW_BILL_TYPE,
+                'message' => Transaction::WITHDRAW_BILL_MESSAGE,
+                'data' => $this->getDataForTransaction($bill),
+                'amount' => $price
+            ]);
+        });
 
-        return $userBill;
+        return $bill;
     }
 
     /**
-     * @param Currency $currency
-     * @param User $user
+     * @param UserBill $bill
      * @return array
      */
-    private function getDataForTransaction(Currency $currency, User $user)
+    private function getDataForTransaction(UserBill $bill)
     {
         return [
-            'from' => $currency,
-            'to' => $user
+            'from' => $bill
         ];
     }
 }

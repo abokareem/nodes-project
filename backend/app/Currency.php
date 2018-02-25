@@ -35,4 +35,12 @@ class Currency extends Model
     {
         return $this->hasMany(Masternode::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function freeWallets()
+    {
+        return $this->hasMany(FreeWallet::class);
+    }
 }

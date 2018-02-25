@@ -14,9 +14,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('money', 'UserBillController@putMoney');
 Route::post('money/accept', 'UserBillController@acceptPutMoney');
-Route::delete('money', 'UserBillController@withdrawalMoney');
 
 Route::post('users', 'RegisterController@store');
 Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')->name('email.confirm.backend');
@@ -48,12 +46,19 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
 
     $router->delete('withdrawals/decline/{withdrawal}','WithdrawalController@decline');
     $router->post('withdrawals/buy/{withdrawal}','WithdrawalController@buy');
+
+    $router->get('money/{currency}', 'UserBillController@getBill');
+    $router->post('money','UserBillController@store');
+    $router->delete('money', 'UserBillController@withdrawalMoney');
+    $router->patch('money/approve/{withdrawal}', 'UserBillController@approve');
+    $router->delete('money/decline/{withdrawal}', 'UserBillController@decline');
 });
 
 Route::middleware(['auth:api', 'confirmEmail', 'node'])->group(function (Router $router) {
     $router->post('nodes', 'MasternodeController@store');
 });
-
+Route::get('bills', 'Admin\UserBillController@index');
+Route::patch('bills/{bill}', 'Admin\UserBillController@update');
 Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
 
     $router->post('currency', 'CurrencyController@store');
@@ -78,3 +83,5 @@ Route::middleware('throttle:15')->group(function (Router $router) {
 Route::middleware(['auth:api', 'leaveNode'])->group(function (Router $router) {
     $router->post('withdrawals','WithdrawalController@store');
 });
+
+Route::post('systems/wallets','SystemController@loadWallets');

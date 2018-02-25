@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WithdrawalMoneyRequest extends FormRequest
+class CreateUserBillRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class WithdrawalMoneyRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_id' => 'required|integer',
-            'wallet' => 'required|max:65535|min:5',
-            'price' => 'numeric'
+            'currency_id' => 'required|integer'
         ];
     }
 }

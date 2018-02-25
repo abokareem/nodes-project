@@ -42,6 +42,7 @@ class UserBillsResource extends Resource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'currency' => new CurrencyResource($this->currency),
             'bill' => $this->uuid,
             'amount' => $this->amount
