@@ -28,6 +28,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|string|email|min:4|max:255|unique:users,email',
             'password' => 'required|regex:/^\S{6,}$/|max:255',
             'language' => 'required|in:ru,en',
+            'subscribe' => 'required|boolean',
             'two_fa' => 'boolean'
         ];
 

@@ -58,8 +58,28 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\WriteLog'
         ],
 
-        'App\Events\MasternodeReadyToCreate' => [
+        'App\Events\MasternodeCreated' => [
+            'App\Listeners\WriteLog'
+        ],
 
+        'App\Events\AcceptedPutMoney' => [
+            'App\Listeners\WriteLog'
+        ],
+
+        'App\Events\MoneyWithdrawn' => [
+            'App\Listeners\WriteLog'
+        ],
+        'App\Events\AcceptedLeaveFromNode' => [
+            'App\Listeners\WriteLog'
+        ],
+        'App\Events\CreatedWithdrawal' => [
+            'App\Listeners\WriteLog',
+        ],
+        'App\Events\DeclinedWithdrawal' => [
+            'App\Listeners\WriteLog'
+        ],
+        'App\Events\NewWithdrawal' => [
+            'App\Listeners\SendEmailNewWithdrawal'
         ],
     ];
 

@@ -16,10 +16,13 @@ use App\Http\Requests\Api\DisableTwoFaRequest;
 use App\Http\Requests\Api\EnableTwoFaRequest;
 use App\Http\Requests\Api\TwoFaResetRequest;
 use App\Http\Requests\Api\UpdateUserRequest;
+use App\Http\Resources\MasternodeResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\TwoFaEnableResource;
 use App\Http\Resources\UserActionsResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserTransactionsResource;
+use App\Http\Resources\WithdrawalResource;
 use App\Services\TwoFaService;
 use App\User;
 use Illuminate\Http\Response;
@@ -153,7 +156,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request)
     {
-        $user = $request->only(['name', 'email', 'password', 'language']);
+        $user = $request->only(['name', 'email', 'subscribe', 'password', 'language']);
         Auth::user()->update($user);
         event(new UpdatedUserProfile());
 
@@ -561,5 +564,109 @@ class UserController extends Controller
         }
 
         return response(trans('twofa.reset.invalid'), Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     *
+     * @SWG\Get(
+     *     path="/users/nodes",
+     *     summary="Get user nodes'",
+     *     tags={"Users"},
+     *     description="Get user nodes'.",
+     *     operationId="getNodes",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Investments objects",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        type="array",
+     *        @SWG\Items(ref="#/definitions/UserInvestments")
+     *       )
+     *      )
+     *     ),
+     * )
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getNodes()
+    {
+        return MasternodeResource::collection(Auth::user()->nodes);
+    }
+
+    /**
+     *
+     * @SWG\Get(
+     *     path="/users/transactions",
+     *     summary="Get user transactions'",
+     *     tags={"Users"},
+     *     description="Get user transactions.",
+     *     operationId="getTransactions",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Transactions objects",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        type="array",
+     *        @SWG\Items(ref="#/definitions/Transactions")
+     *       )
+     *      )
+     *     ),
+     * )
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getTransactions()
+    {
+        return UserTransactionsResource::collection(
+            Auth::user()->transactions()->orderBy('created_at', 'desc')->limit(5)->get()
+        );
+    }
+
+    /**
+     *
+     * @SWG\Get(
+     *     path="/users/withdrawals",
+     *     summary="Get user withdrawals'",
+     *     tags={"Users"},
+     *     description="Get user withdrawals.",
+     *     operationId="getWithdrawals",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Withdrawals objects",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        type="array",
+     *        @SWG\Items(ref="#/definitions/NodeWithdrawal")
+     *       )
+     *      )
+     *     ),
+     * )
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getWithdrawals()
+    {
+        return WithdrawalResource::collection(Auth::user()->withdrawals()->paginate());
     }
 }

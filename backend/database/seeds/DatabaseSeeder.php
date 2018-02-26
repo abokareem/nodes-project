@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
     {
         app(UserGroup::class)->create(['name' => 'admin']);
         app(UserGroup::class)->create(['name' => 'user']);
-        factory(\App\Currency::class, 20)->create();
 
         $this->call([
             MasternodeSeeder::class,
             UserSeeder::class
         ]);
-
+        \App\Commission::create([
+            'type' => \App\Commission::REPLENISH,
+            'percent' => '20'
+        ]);
     }
 }

@@ -19,6 +19,8 @@ class CreateTransactionsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->string('type');
+            $table->string('message');
             $table->text('data');
             $table->string('amount');
             $table->timestamps();

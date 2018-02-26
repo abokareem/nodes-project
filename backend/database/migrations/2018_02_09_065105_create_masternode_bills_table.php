@@ -16,10 +16,9 @@ class CreateMasternodeBillsTable extends Migration
         Schema::create('masternode_bills', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('node_id')->unsigned()->unique();
-            $table->foreign('node_id')->references('id')->on('active_masternodes');
-            $table->integer('currency_id')->unsigned();
-            $table->foreign('currency_id')->references('id')->on('currencies');
-            $table->string('amount');
+            $table->foreign('node_id')->references('id')->on('masternodes');
+            $table->integer('amount')->default(0)->unsigned();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

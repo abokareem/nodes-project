@@ -45,7 +45,8 @@ class CurrencyResource extends Resource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
-            'symbol' => $this->symbol
+            'symbol' => $this->symbol,
+            'share' => new MasternodeShareResource($this->share)
         ];
     }
 }

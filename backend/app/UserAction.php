@@ -16,6 +16,12 @@ class UserAction extends Model
     const TWO_FA_RESET = 'logs.user.twofaReset';
     const UPDATE_PROFILE = 'logs.user.update';
     const BUY_SHARES = 'logs.share.buy';
+    const MASTERNODE_CREATED = 'logs.node.create';
+    const PUT_MONEY = 'logs.bill.put';
+    const WITHDRAWAL_MONEY = 'logs.bill.withdrawal';
+    const ACCEPTED_LEAVE_FROM_NODE = 'logs.node.gone';
+    const WITHDRAWAL_CREATED = 'logs.node.withdrawal';
+    const WITHDRAWAL_DECLINED = 'logs.node.declined';
 
     /**
      * The attributes that are mass assignable.

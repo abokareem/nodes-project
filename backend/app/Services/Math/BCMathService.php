@@ -84,6 +84,21 @@ class BCMathService implements MathInterface
     /**
      * @param string $left
      * @param string $right
+     * @return string
+     */
+    public function percent(string $left, string $right): string
+    {
+        $scale = $this->getScale($right, 100) + 2;
+        $percentInCoins = bcdiv($right, 100, $scale);
+        $scale = $this->getScale($left, $percentInCoins);
+        $percent = bcmul($left, $percentInCoins, $scale);
+
+        return $percent;
+    }
+
+    /**
+     * @param string $left
+     * @param string $right
      * @return int
      */
     private function getScale(string $left, string $right): int

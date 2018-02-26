@@ -3,32 +3,91 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Masternode extends Model
 {
+    use SoftDeletes;
+
+    const SINGLE_TYPE = 'single';
+    const PARTY_TYPE = 'party';
+
+    const PROCESSING_STATE = 'processing';
+    const STABLE_STATE = 'stable';
+    const UNSTABLE_STATE = 'unstable';
+    const DISBAND_STATE = 'disband';
+    const NEW_STATE = 'new';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
+        'currency_id',
         'state',
-        'income',
+        'type',
         'price'
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function share()
-    {
-        return $this->hasOne(MasternodeShare::class);
-    }
-
     public function bill()
     {
-        return $this->hasOne(MasternodeBill::class);
+        return $this->hasOne(MasternodeBill::class, 'node_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function investments()
+    {
+        return $this->hasMany(Investment::class, 'node_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawals::class, 'node_id', 'id');
+    }
+
+    /**
+     * @return string
+     */
+    public static function states()
+    {
+        $states = [
+            self::PROCESSING_STATE,
+            self::STABLE_STATE,
+            self::UNSTABLE_STATE,
+            self::DISBAND_STATE,
+            self::NEW_STATE
+        ];
+
+        return implode(',', $states);
+    }
+
+    /**
+     * @return string
+     */
+    public static function types()
+    {
+        $types = [
+            self::SINGLE_TYPE,
+            self::PARTY_TYPE
+        ];
+
+        return implode(',', $types);
     }
 }

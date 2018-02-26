@@ -15,11 +15,12 @@ class CreateMasternodesTable extends Migration
     {
         Schema::create('masternodes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->text('description');
-            $table->enum('state', ['new', 'processing', 'deactivate', 'active']);
-            $table->string('income');
+            $table->integer('currency_id')->unsigned();
+            $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->enum('state', ['new','processing', 'stable', 'unstable', 'disbanded']);
+            $table->enum('type', ['single', 'party']);
             $table->string('price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

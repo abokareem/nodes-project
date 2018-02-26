@@ -19,4 +19,28 @@ class Currency extends Model
         'code',
         'symbol'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function share()
+    {
+        return $this->hasOne(Share::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function nodes()
+    {
+        return $this->hasMany(Masternode::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function freeWallets()
+    {
+        return $this->hasMany(FreeWallet::class);
+    }
 }

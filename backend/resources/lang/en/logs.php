@@ -14,5 +14,16 @@ return [
     ],
     'share' => [
         'buy' => 'You bought a share in the masternode.'
+    ],
+    'node' => [
+        'gone' => 'Your request to exit the masternode is confirmed.',
+        'create' => 'Creating the masternode.',
+        'withdrawal' => 'You applied for a way out of the masternode.',
+        'declined' => 'You have canceled the application to exit the node.'
+    ],
+
+    'bill' => [
+        'put' => 'You put money in the account.',
+        'withdrawal' => 'You withdrew money from your account.'
     ]
 ];
