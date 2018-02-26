@@ -22,7 +22,8 @@ class RouteServiceProvider extends ServiceProvider
         'token' => '\w+',
         'currency' => '\d+',
         'node' => '\d+',
-        'withdrawal' => '\d+'
+        'withdrawal' => '\d+',
+        'bill' => '\d+'
     ];
 
 

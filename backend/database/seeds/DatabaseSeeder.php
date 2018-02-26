@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             MasternodeSeeder::class,
             UserSeeder::class
         ]);
-
+        \App\Commission::create([
+            'type' => \App\Commission::REPLENISH,
+            'percent' => '20'
+        ]);
     }
 }

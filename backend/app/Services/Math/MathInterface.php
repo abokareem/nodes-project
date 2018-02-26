@@ -42,4 +42,11 @@ interface MathInterface
      * @return string
      */
     public function comparison(string $left, string $right): string;
+
+    /**
+     * @param string $left
+     * @param string $right
+     * @return string
+     */
+    public function percent(string $left, string $right): string;
 }

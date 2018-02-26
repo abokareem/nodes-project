@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Commission;
+use App\Events\AcceptedPutMoney;
 use App\Http\Requests\Api\System\UpdateUserBillRequest;
 use App\Http\Resources\UserBillsResource;
+use App\Services\Math\MathInterface;
 use App\UserBill;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UserBillController extends Controller
@@ -45,46 +47,45 @@ class UserBillController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @SWG\Get(
+     *     path="/bills/{bill}",
+     *     summary="Get bill",
+     *     tags={"Admin"},
+     *     description="One bill",
+     *     operationId="getBill",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="bill",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *     @SWG\Response(
+     *      response=200,
+     *      description="bill object",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/UserBills"
+     *       )
+     *      )
+     *     ),
+     * )
+     *
+     * @param  UserBill $bill
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function show(UserBill $bill)
     {
-        //
+        return new UserBillsResource($bill);
     }
 
     /**
@@ -103,40 +104,27 @@ class UserBillController extends Controller
      *         }
      *     },
      *     @SWG\Parameter(
+     *          name="bill",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *     @SWG\Parameter(
      *          name="body",
      *          in="body",
      *          required=true,
      *          @SWG\Schema(
      *           @SWG\Property(
-     *                  property="name",
+     *                  property="amount",
      *                  type="string",
      *                  description="",
-     *                  example="first",
-     *              ),
-     *              @SWG\Property(
-     *                  property="code",
-     *                  type="string",
-     *                  description="",
-     *                  example="USD",
-     *              ),
-     *              @SWG\Property(
-     *                  property="symbol",
-     *                  type="string",
-     *                  description="",
-     *                  example="@",
+     *                  example="20",
      *              ),
      *          ),
      *     ),
      *     @SWG\Response(
-     *      response=201,
+     *      response=200,
      *      description="Create currency",
-     *      @SWG\Schema(
-     *       title="Result",
-     *       @SWG\Property(
-     *        property="data",
-     *        ref="#/definitions/Currency"
-     *       )
-     *      )
      *     ),
      *     @SWG\Response(
      *         response="401",
@@ -161,23 +149,23 @@ class UserBillController extends Controller
      *     ),
      * )
      *
-     * @param  UpdateUserBillRequest  $request
-     * @param  UserBill  $bill
+     * @param  UpdateUserBillRequest $request
+     * @param  UserBill $bill
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateUserBillRequest $request, UserBill $bill)
     {
+        $amount = $request->get('amount');
 
-    }
+        $math = app(MathInterface::class);
+        $commission = Commission::where('type', Commission::REPLENISH)->firstOrFail();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $percent = $math->percent($amount, $commission->percent);
+        $bill->amount = $math->add($bill->amount, $math->sub($amount, $percent));
+        $bill->save();
+
+        event(new AcceptedPutMoney($bill->user));
+
+        return response('');
     }
 }

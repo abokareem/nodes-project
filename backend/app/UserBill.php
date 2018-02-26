@@ -33,4 +33,13 @@ class UserBill extends Model
     {
         return $this->hasMany(WithdrawalMoney::class, 'user_bill_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     *
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
