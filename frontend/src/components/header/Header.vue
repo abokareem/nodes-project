@@ -1,102 +1,197 @@
 <template>
-    <div class="header">
-      <header class="site-header is-transparent header-s1 is-sticky">
-        <!-- Navbar -->
-        <div class="navbar navbar-primary">
-          <div class="container relative">
-            <!-- Logo -->
-            <a class="navbar-brand" href="">
-              <img class="logo" alt="logo" src="../../assets/images/site/logo.png">
-              <!--<img class="logo logo-light" alt="logo" src="../../assets/images/site/logo_white.png">-->
-            </a>
-            <!-- #end Logo -->
-            <!--<div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainnav" aria-expanded="false">
-                <span class="sr-only">Menu</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-            </div>-->
-            <!-- MainNav -->
-            <nav class="navbar-collapse collapse" id="mainnav">
-              <ul class="nav navbar-nav">
-                <li><a href="#">Home</a></li>
-                <li class="dropdown" @mouseover="showCoins = true" @mouseleave="showCoins = false">
-                    <a href="#" class="dropdown-toggle">Coins <b class="caret"></b></a>
-                    <transition name="fade">
-                      <ul class="dropdown-menu" v-if="showCoins">
-                        <li><a href="#">Dash</a></li>
-                        <li><a href="#">Arctic</a></li>
-                        <li><a href="#">Solaris</a></li>
-                      </ul>
+    <div class="header" @scroll="handleScroll" @resize="handleResize">
+        <header class="site-header is-transparent header-s1 is-sticky">
+            <!-- Navbar -->
+            <div class="navbar" :class="{ scrolling : scrolled, 'index-menu' : indexMenu }">
+                <div class="nav-container relative">
+                    <!-- Logo -->
+                    <router-link class="navbar-brand" to="/">
+                        <img class="logo" alt="logo" v-bind:src="logoImage">
+                    </router-link>
+                    <!-- #end Logo -->
+                    <div class="navbar-header" @click="showMenu = !showMenu">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                    <!-- MainNav -->
+                    <transition name="main-dropdown-menu" v-on:after-enter="addDropdownEvent">
+                        <nav v-if="showMenu" class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav" v-bind:class="{ 'index-menu-ul': indexMenu }">
+                                <li v-bind:class="{ 'index-menu-el': indexMenu }">
+                                    <a href="#">{{ $t("nav.home") }}</a>
+                                </li>
+                                <li class="dropdown" type="coins">
+                                    <a class="dropdown-toggle" type="coins">{{ $t("nav.coins") }} <b
+                                            class="caret"></b></a>
+                                    <transition name="dropdown-menu">
+                                        <ul class="dropdown-menu" v-if="showCoins">
+                                            <li><a href="#">Dash</a></li>
+                                            <li><a href="#">Arctic</a></li>
+                                            <li><a href="#">Solaris</a></li>
+                                        </ul>
+                                    </transition>
+                                </li>
+                                <li>
+                                    <a href="">{{ $t("nav.faq") }}</a>
+                                </li>
+                                <li>
+                                    <a href="">{{ $t("nav.contact") }}</a>
+                                </li>
+                                <li class="dropdown" type="lang">
+                                    <a class="dropdown-toggle" type="lang">
+                                        <img class="top-icon" v-bind:src="langImage"> <b class="caret"></b>
+                                    </a>
+                                    <transition name="dropdown-menu">
+                                        <ul class="dropdown-menu" v-if="showLang">
+                                            <li v-if="langs.en">
+                                                <a href="#" class="language" @click="changeLang('en')">
+                                                    <img class="top-icon top-dropdown-icon"
+                                                         src="../../assets/images/flags/en.svg">
+                                                    <span>English</span>
+                                                </a>
+                                            </li>
+                                            <li v-if="langs.ru">
+                                                <a href="#" class="language lang-ru" @click="changeLang('ru')">
+                                                    <img class="top-icon top-dropdown-icon"
+                                                         src="../../assets/images/flags/ru.svg">
+                                                    <span>Русский</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </transition>
+                                </li>
+                                <li class="quote-btn">
+                                    <router-link class="btn btn-outline" to="/login">
+                                        {{ $t("nav.login") }}
+                                    </router-link>
+                                </li>
+                            </ul>
+                        </nav>
                     </transition>
-                </li>
-                <li><a href="">FAQ</a></li>
-                <li><a href="">Contact</a></li>
-                <li class="dropdown" @mouseover="showLang = true" @mouseleave="showLang = false">
-                  <a href="#" class="dropdown-toggle">
-                    <img class="top-icon" src="../../assets/images/flags/ru.svg"> <b class="caret"></b>
-                  </a>
-                    <transition name="fade">
-                  <ul class="dropdown-menu" v-if="showLang">
-                    <li>
-                      <a href="#" class="language">
-                        <img class="top-icon top-dropdown-icon" src="../../assets/images/flags/us.svg">
-                        <span>English</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="language">
-                        <img class="top-icon top-dropdown-icon" src="../../assets/images/flags/ru.svg">
-                        <span>Russian</span>
-                      </a>
-                    </li>
-                  </ul>
-                    </transition>
-                </li>
-                <li class="quote-btn"><a class="btn btn-outline" href="">Login</a></li>
-              </ul>
-            </nav>
-            <!-- #end MainNav -->
-          </div>
-        </div>
-        <!-- End Navbar -->
-        <!-- Banner/Slider -->
-        <div id="header" class="banner light row-vm">
-          <div class="imagebg">
-            <!-- <img src="../../assets/images/site/header-bg-c.jpg" alt="bg">-->
-          </div>
-          <div class="container">
-            <div class="banner-content">
-              <div class="row text-center">
-                <div class="col-md-8 col-md-offset-2">
-                  <h1 class="">Запуск мастерноды <br class="hidden-xs" />теперь в разы проще</h1>
+                    <!-- #end MainNav -->
                 </div>
-                <div class="gaps size-1x"></div>
-              </div>
-              <div class="row text-center">
-                <div class="col-md-6 col-md-offset-3">
-                  <p class="lead">NodePub - это сервис по хостингу мастернод с долевым участием</p>
-                  <ul class="btns">
-                    <li><a href="" class="btn">Запустить ноду</a></li><!-- Redirect to members's area if already loggen in instead of signup page-->
-                  </ul>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <!-- End Banner/Slider -->
-      </header>
+            <!-- End Navbar -->
+        </header>
     </div>
 </template>
 <script>
 export default{
-  name: 'Header',
+  name: 'nav-bar',
+  methods: {
+    handleResize () {
+      this.handleIndexPage()
+      if (window.innerWidth > this.$store.state.sizes.medium) {
+        this.showMenu = true
+      }
+    },
+    handleScroll (event) {
+      if (window.scrollY > 0) {
+        this.scrolled = true
+        this.handleIndexPage()
+      } else {
+        this.scrolled = false
+        this.handleIndexPage()
+      }
+    },
+    handleIndexPage () {
+      if (
+        this.$router.currentRoute.name === 'index' &&
+        window.innerWidth > this.$store.state.sizes.medium &&
+        window.scrollY === 0
+      ) {
+        this.indexMenu = true
+        this.logoImage = require('../../assets/images/site/logo_white.png')
+      } else {
+        this.logoImage = require('../../assets/images/site/logo.png')
+        this.indexMenu = false
+      }
+    },
+    changeLang (lang) {
+      for (let i in this.langs) {
+        if (this.langs.hasOwnProperty(i)) {
+          this.langs[i] = true
+        }
+      }
+      this.$i18n.locale = lang
+      this.langImage = require('../../assets/images/flags/' + lang + '.svg')
+      this.langs[lang] = false
+    },
+    showMobileMenu () {
+      if (window.innerWidth < this.$store.state.sizes.medium) {
+        this.showMenu = !this.showMenu
+      }
+    },
+    addDropdownEvent () {
+      if (window.innerWidth < this.$store.state.sizes.medium) {
+        let dropdowns = document.getElementsByClassName('dropdown-toggle')
+        this._setMobileDropdownEvents(dropdowns)
+      } else {
+        let dropdowns = document.getElementsByClassName('dropdown')
+        this._setDeckstopDropdownEvents(dropdowns)
+      }
+    },
+    _setMobileDropdownEvents (dropdowns) {
+      for (let el in dropdowns) {
+        if (dropdowns.hasOwnProperty(el)) {
+          const clickDropDown = () => {
+            this.showCoins = dropdowns[el].type === 'coins' ? !this.showCoins : this.showCoins
+            this.showLang = dropdowns[el].type === 'lang' ? !this.showLang : this.showLang
+          }
+          dropdowns[el].addEventListener('click', clickDropDown)
+        }
+      }
+    },
+    _setDeckstopDropdownEvents (dropdowns) {
+      for (let el in dropdowns) {
+        if (dropdowns.hasOwnProperty(el)) {
+          const mouseOver = () => {
+            this.showCoins = dropdowns[el].type === 'coins'
+            this.showLang = dropdowns[el].type === 'lang'
+          }
+          const mouseLeave = () => {
+            this.showCoins = false
+            this.showLang = false
+          }
+          dropdowns[el].addEventListener('mouseover', mouseOver)
+          dropdowns[el].addEventListener('mouseleave', mouseLeave)
+        }
+      }
+    }
+  },
+  created () {
+    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('resize', this.handleResize)
+    this.showMobileMenu()
+  },
+  mounted () {
+    this.handleIndexPage()
+    this.changeLang('en')
+    this.addDropdownEvent()
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('resize', this.handleResize)
+  },
   data () {
     return {
       showCoins: false,
-      showLang: false
+      showLang: false,
+      showMenu: true,
+      scrolled: false,
+      indexMenu: false,
+      langs: {
+        ru: true,
+        en: true
+      },
+      logoImage: require('../../assets/images/site/logo.png'),
+      langImage: ''
+    }
+  },
+  watch: {
+    $route () {
+      this.handleIndexPage()
     }
   }
 }

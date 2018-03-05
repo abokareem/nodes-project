@@ -5,7 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    result: ['hello']
+    result: ['hello'],
+    sizes: {
+      minimal: 320,
+      medium: 1080,
+      maximum: 1280,
+      end: 1310
+    }
   }
 })
 

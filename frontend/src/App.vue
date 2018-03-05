@@ -1,15 +1,19 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <nav-bar></nav-bar>
+    <router-view></router-view>
+    <foo-ter></foo-ter>
   </div>
 </template>
 
 <script>
-import Header from '@/components/header/Header'
+import NavBar from '@/components/header/Header'
+import FooTer from '@/components/footer/Footer'
 
 export default {
   components: {
-    Header
+    NavBar,
+    FooTer
   },
   name: 'App'
 }
@@ -19,6 +23,7 @@ export default {
 body{
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 #app {
   text-align: center;
