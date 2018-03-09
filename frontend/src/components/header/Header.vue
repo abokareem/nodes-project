@@ -19,7 +19,9 @@
                         <nav v-if="showMenu" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav" v-bind:class="{ 'index-menu-ul': indexMenu }">
                                 <li v-bind:class="{ 'index-menu-el': indexMenu }">
-                                    <a href="#">{{ $t("nav.home") }}</a>
+                                    <router-link to="/">
+                                        {{ $t("nav.home") }}
+                                    </router-link>
                                 </li>
                                 <li class="dropdown" type="coins">
                                     <a class="dropdown-toggle" type="coins">{{ $t("nav.coins") }} <b
@@ -33,10 +35,14 @@
                                     </transition>
                                 </li>
                                 <li>
-                                    <a href="">{{ $t("nav.faq") }}</a>
+                                    <router-link to="/faq">
+                                        {{ $t("nav.faq") }}
+                                    </router-link>
                                 </li>
                                 <li>
-                                    <a href="">{{ $t("nav.contact") }}</a>
+                                    <router-link to="/contact">
+                                        {{ $t("nav.contact") }}
+                                    </router-link>
                                 </li>
                                 <li class="dropdown" type="lang">
                                     <a class="dropdown-toggle" type="lang">

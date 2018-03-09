@@ -6,6 +6,9 @@
 .navbar {
   position: fixed;
   width: 100%;
+  z-index: 9;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 .nav-container {
   width: 1270px;
@@ -128,11 +131,13 @@
   opacity: 0;
 }
 .scrolling {
-  background-color: white;
+  background-color: #ffffff;
 }
 /*index top menu*/
 .index-menu {
   opacity: 1;
+  box-shadow: none;
+  border-bottom: none;
 }
 .index-menu-ul > li > a:not(.btn-outline) {
   color: #ffffff;
