@@ -10,14 +10,14 @@
                     <input type="password" placeholder="Password *" class="login-password-input login-input">
                 </div>
                 <div class="login-captcha-container">
-                    <div class="login-captcha" id="g-recaptcha" :data-sitekey="rcapt_sig_key"></div>
+                    <captcha></captcha>
                 </div>
                 <div class="login-button-container">
                     <button type="submit" class="login-button">{{ $t("login.button") }}</button>
                 </div>
                 <div class="login-redirect-container">
                     <p class="login-redirect-register">{{ $t("login.question") }}
-                        <a href="">{{ $t("login.redirect") }}</a>
+                        <router-link to="/singup">{{ $t("login.redirect") }}</router-link>
                     </p>
                 </div>
             </form>
@@ -25,20 +25,13 @@
     </div>
 </template>
 <script>
+import captcha from '../captcha/Captcha.vue'
+
 export default{
-  name: 'Login',
-  mounted () {
-    if (window.grecaptcha) {
-      this.rcapt_id = window.grecaptcha.render(
-        document.getElementById('g-recaptcha'), {sitekey: this.rcapt_sig_key})
-    }
+  components: {
+    captcha
   },
-  data () {
-    return {
-      rcapt_sig_key: '6LeosEoUAAAAAFTdd7Y1drhe58oDtn14rp_OjB0h',
-      rcapt_id: 0
-    }
-  }
+  name: 'Login'
 }
 </script>
 <style lang="scss">
