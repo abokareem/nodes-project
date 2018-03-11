@@ -39,6 +39,10 @@
 .login-data-container, .login-redirect-container, .login-button-container, .login-captcha-container {
   width: 100%;
   text-align: left;
+  div {
+    margin-left: 32%;
+    margin-bottom: 15px;
+  }
 }
 .login-input {
   @include login-elements;
@@ -100,6 +104,11 @@
     }
     .login-captcha, .login-button, .login-redirect-register {
       @include login-elements-mobile;
+    }
+    .login-captcha-container {
+      div {
+        margin-left: 0;
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="login-captcha" id="g-recaptcha" :data-sitekey="rcapt_sig_key"></div>
+    <div class="captcha" id="g-recaptcha" :data-sitekey="rcapt_sig_key"></div>
 </template>
 <script>
 export default{
@@ -18,3 +18,11 @@ export default{
   }
 }
 </script>
+<style lang="scss">
+.captcha {
+    text-align: left;
+    div {
+        margin: 0 !important;
+    }
+}
+</style>

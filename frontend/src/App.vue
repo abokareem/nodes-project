@@ -1,30 +1,51 @@
 <template>
-  <div id="app">
-    <nav-bar></nav-bar>
-    <router-view></router-view>
-    <foo-ter></foo-ter>
-  </div>
+    <div id="app">
+        <div :class="{'nav-open': $sidebar.showSidebar}">
+            <router-view name="nav"></router-view>
+            <router-view></router-view>
+            <router-view name="footer"></router-view>
+            <side-bar type="navbar" :sidebar-links="$sidebar.sidebarLinks">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="ti-panel"></i>
+                            <p>Stats</p>
+                        </a>
+                    </li>
+                    <drop-down title="5 Notifications" icon="ti-bell">
+
+                        <li><a>Notification 1</a></li>
+                        <li><a>Notification 2</a></li>
+                        <li><a>Notification 3</a></li>
+                        <li><a>Notification 4</a></li>
+                        <li><a>Another notification</a></li>
+
+                    </drop-down>
+                    <li>
+                        <a>
+                            <i class="ti-settings"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                </ul>
+            </side-bar>
+        </div>
+    </div>
 </template>
 
 <script>
-import NavBar from '@/components/header/Header'
-import FooTer from '@/components/footer/Footer'
-
 export default {
-  components: {
-    NavBar,
-    FooTer
-  },
   name: 'App'
 }
 </script>
 
 <style>
-body{
-  margin: 0;
-  padding: 0;
+body {
+    margin: 0;
+    padding: 0;
 }
 #app {
-  text-align: center;
+    text-align: center;
 }
 </style>

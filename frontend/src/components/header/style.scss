@@ -1,16 +1,16 @@
 @import "../../assets/partials/_const.scss";
 @import "../../assets/partials/fonts.css";
-.nav > li {
+.navbar-nav-custom-site > li {
   position: relative;
 }
-.navbar {
+.navbar-custom {
   position: fixed;
   width: 100%;
   z-index: 9;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
-.nav-container {
+.nav-container-custom-site {
   width: 1270px;
   margin-right: auto;
   margin-left: auto;
@@ -18,26 +18,26 @@
   padding-right: 15px;
   text-align: left;
 }
-.navbar-brand {
+.navbar-brand-custom-site {
   display: inline-block;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-left: 0;
-  .logo {
+  .logo-custom-site {
     max-width: 100%;
     max-height: 55px;
   }
 }
-.navbar-collapse {
+.navbar-collapse-custom-site {
   display: inline-block;
   ul > li {
     display: inline-block;
   }
 }
-.top-icon {
+.top-icon-custom-site {
   width: 20px;
 }
-.navbar-nav > li > a {
+.navbar-nav-custom-site > li > a {
   color: #3c3c3c;
   background: transparent;
   text-transform: uppercase;
@@ -50,18 +50,18 @@
   outline: 0;
   text-decoration: none;
   cursor: pointer;
-  &:hover:not(.btn-outline) {
+  &:hover:not(.btn-outline-site-custom) {
     color: #f7921a;
     background: transparent;
   }
   padding-top: 35px;
   padding-bottom: 35px;
 }
-.site-header .navbar-collapse {
+.site-custom-header .navbar-collapse-custom-site {
   float: right;
   width: auto;
 }
-.caret {
+.caret-custom-site {
   display: inline-block;
   margin-left: 2px;
   vertical-align: middle;
@@ -70,7 +70,7 @@
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-.dropdown-menu {
+.dropdown-menu-custom-site {
   position: absolute;
   top: 265%;
   float: left;
@@ -101,20 +101,20 @@
     }
   }
 }
-.navbar-nav .dropdown-menu li a {
+.navbar-nav-custom-site .dropdown-menu-custom-site li a {
   padding: 10px 25px 10px 15px;
 }
-.dropdown-menu > li > a {
+.dropdown-menu-custom-site > li > a {
   display: block;
   padding: 3px 20px;
   font-weight: normal;
   color: #333;
   white-space: nowrap;
 }
-.site-header .navbar-nav > li.quote-btn {
+.site-custom-header .navbar-nav-custom-site > li.quote-btn-site-custom {
   margin-top: 23px;
 }
-.site-header .quote-btn .btn {
+.site-custom-header .quote-btn-site-custom .btn-site-custom {
   background-color: #fff;
   border: 3px solid #f7921a;
   padding: 13px 63px;
@@ -139,7 +139,7 @@
   box-shadow: none;
   border-bottom: none;
 }
-.index-menu-ul > li > a:not(.btn-outline) {
+.index-menu-ul > li > a:not(.btn-outline-site-custom) {
   color: #ffffff;
   position: relative;
   &:hover {
@@ -162,36 +162,36 @@
     transition: opacity .4s ease-out;
   }
 }
-.index-menu-ul > .quote-btn .btn {
+.index-menu-ul > .quote-btn-site-custom .btn-site-custom {
   background: none;
   color: #ffffff;
 }
-.navbar-header {
+.navbar-header-custom-site {
   display: none;
 }
 @media only screen and (min-width: $minimal) and (max-width: $medium) {
-  .navbar {
+  .navbar-custom {
     background-color: #ffffff;
     position: relative;
   }
-  .nav-container {
+  .nav-container-custom-site {
     width: 90%;
     max-width: 720px;
     margin-right: auto;
     margin-left: auto;
     text-align: left;
   }
-  .navbar-collapse {
+  .navbar-collapse-custom-site {
     display: block;
     ul > li {
       display: block;
     }
   }
-  .logo {
+  .logo-custom-site {
     max-width: 100%;
     height: 45px;
   }
-  .navbar-header {
+  .navbar-header-custom-site {
     display: block;
     padding: 5px 15px 10px 15px;
     background-color: #f7921a;
@@ -204,7 +204,7 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  .navbar-header .icon-bar {
+  .navbar-header-custom-site .icon-bar-custom-site {
     background-color: #fff;
     display: block;
     width: 25px;
@@ -213,46 +213,46 @@
     margin-top: 5px;
   }
 
-  .nav-container .navbar-collapse {
+  .nav-container-custom-site .navbar-collapse-custom-site {
     display: block;
     width: 100%;
   }
-  .navbar-nav {
+  .navbar-nav-custom-site {
     width: 100%;
     list-style: none;
     padding-left: 0;
   }
-  .navbar-nav > li {
+  .navbar-nav-custom-site > li {
     display: block;
     width: 100%;
     text-align: left;
     list-style: none;
     border-top: 1px solid #f5f5f5;
   }
-  .navbar-nav > li > a:not(.btn-outline) {
+  .navbar-nav-custom-site > li > a:not(.btn-outline-site-custom) {
     display: block;
     font-weight: 500;
     padding: 27px 0px 27px 5px;
     width: 100%;
   }
-  .navbar-nav .quote-btn {
+  .navbar-nav-custom-site .quote-btn-site-custom {
     text-align: center;
   }
-  .navbar-nav .quote-btn .btn-outline {
+  .navbar-nav-custom-site .quote-btn-site-custom .btn-outline-site-custom {
     margin-top: 10px;
     display: inline-block;
     padding: 17px 65px 17px 65px;
     font-size: 14px;
   }
-  .site-header .navbar-nav > li.quote-btn {
+  .site-custom-header .navbar-nav-custom-site > li.quote-btn-site-custom {
     margin-top: 0;
   }
-  .caret{
+  .caret-custom-site {
     float: right;
     margin-right: 30px;
   }
 
-  .dropdown-menu {
+  .dropdown-menu-custom-site {
     display: block;
     position: static;
     width: 100%;
@@ -270,10 +270,10 @@
       }
     }
   }
-  .navbar-nav .dropdown-menu li a {
+  .navbar-nav-custom-site .dropdown-menu-custom-site li a {
     padding: 10px 25px 10px 15px;
   }
-  .dropdown-menu > li > a {
+  .dropdown-menu-custom-site > li > a {
     display: block;
     padding: 3px 20px;
     clear: both;
@@ -306,12 +306,12 @@
   }
 }
 @media only screen and (min-width: $medium) and (max-width: $maximum) {
-  .nav-container {
+  .nav-container-custom-site {
     width: 1080px;
   }
 }
 @media only screen and (min-width: $maximum) and (max-width: $end) {
-  .nav-container {
+  .nav-container-custom-site {
     width: 1270px;
   }
 }

@@ -18,7 +18,7 @@
                            class="sing-up-password-input sing-up-input">
                 </div>
                 <div class="sing-up-captcha-container">
-                    <captcha></captcha>
+                    <!--<captcha></captcha>-->
                 </div>
                 <div class="sing-up-data-container">
                     <div class="sing-up-term-container">
@@ -56,7 +56,7 @@ export default {
       request.register(creds).then(res => {
         console.log(res)
       }).catch(err => {
-        console.log(err)
+        console.log(err.response)
       })
     }
   },
@@ -113,6 +113,10 @@ export default {
 .sing-up-data-container, .sing-up-redirect-container, .sing-up-button-container, .sing-up-captcha-container {
     width: 100%;
     text-align: left;
+    div {
+        margin-left: 32%;
+        margin-bottom: 15px;
+    }
 }
 .sing-up-input {
     @include sing-up-elements;
@@ -187,6 +191,11 @@ export default {
         }
         .sing-up-captcha, .sing-up-button, .sing-up-redirect-register {
             @include sing-up-elements-mobile;
+        }
+        .sing-up-captcha-container {
+            div {
+                margin-left: 0;
+            }
         }
     }
 }

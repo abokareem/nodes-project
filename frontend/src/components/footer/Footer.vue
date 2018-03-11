@@ -1,10 +1,10 @@
 <template>
-    <div class="footer">
+    <div class="footer-custom-site">
         <div class="footer-copy-container">
             <p>Copyright &copy; 2018 NodePub</p>
         </div>
         <div class="footer-social-container">
-            <ul class="social">
+            <ul class="social-custom-site">
                 <li><a href="#"><em class="fa fa-facebook"></em></a></li>
                 <li><a href="#"><em class="fa fa-twitter"></em></a></li>
                 <li><a href="#"><em class="fa fa-linkedin"></em></a></li>
@@ -19,7 +19,7 @@ export default{
 }
 </script>
 <style lang="scss">
-.footer {
+.footer-custom-site {
     background: #0d1120;
     text-align: center;
     width: 100%;

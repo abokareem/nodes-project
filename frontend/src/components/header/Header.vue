@@ -1,33 +1,33 @@
 <template>
-    <div class="header" @scroll="handleScroll" @resize="handleResize">
-        <header class="site-header is-transparent header-s1 is-sticky">
+    <div @scroll="handleScroll" @resize="handleResize">
+        <header class="site-custom-header">
             <!-- Navbar -->
-            <div class="navbar" :class="{ scrolling : scrolled, 'index-menu' : indexMenu }">
-                <div class="nav-container relative">
+            <div class="navbar-custom" :class="{ scrolling : scrolled, 'index-menu' : indexMenu }">
+                <div class="nav-container-custom-site">
                     <!-- Logo -->
-                    <router-link class="navbar-brand" to="/">
-                        <img class="logo" alt="logo" v-bind:src="logoImage">
+                    <router-link class="navbar-brand-custom-site" to="/">
+                        <img class="logo-custom-site" alt="logo" v-bind:src="logoImage">
                     </router-link>
                     <!-- #end Logo -->
-                    <div class="navbar-header" @click="showMenu = !showMenu">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                    <div class="navbar-header-custom-site" @click="showMenu = !showMenu">
+                        <span class="icon-bar-custom-site"></span>
+                        <span class="icon-bar-custom-site"></span>
+                        <span class="icon-bar-custom-site"></span>
                     </div>
                     <!-- MainNav -->
                     <transition name="main-dropdown-menu" v-on:after-enter="addDropdownEvent">
-                        <nav v-if="showMenu" class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav" v-bind:class="{ 'index-menu-ul': indexMenu }">
+                        <nav v-if="showMenu" class="navbar-collapse-custom-site">
+                            <ul class="navbar-nav-custom-site" v-bind:class="{ 'index-menu-ul': indexMenu }">
                                 <li v-bind:class="{ 'index-menu-el': indexMenu }">
                                     <router-link to="/">
                                         {{ $t("nav.home") }}
                                     </router-link>
                                 </li>
-                                <li class="dropdown" type="coins">
-                                    <a class="dropdown-toggle" type="coins">{{ $t("nav.coins") }} <b
-                                            class="caret"></b></a>
+                                <li class="dropdown-custom-site" type="coins">
+                                    <a class="dropdown-toggle-custom-site" type="coins">{{ $t("nav.coins") }} <b
+                                            class="caret-custom-site"></b></a>
                                     <transition name="dropdown-menu">
-                                        <ul class="dropdown-menu" v-if="showCoins">
+                                        <ul class="dropdown-menu-custom-site" v-if="showCoins">
                                             <li><a href="#">Dash</a></li>
                                             <li><a href="#">Arctic</a></li>
                                             <li><a href="#">Solaris</a></li>
@@ -44,22 +44,22 @@
                                         {{ $t("nav.contact") }}
                                     </router-link>
                                 </li>
-                                <li class="dropdown" type="lang">
-                                    <a class="dropdown-toggle" type="lang">
-                                        <img class="top-icon" v-bind:src="langImage"> <b class="caret"></b>
+                                <li class="dropdown-custom-site" type="lang">
+                                    <a class="dropdown-toggle-custom-site" type="lang">
+                                        <img class="top-icon-custom-site" v-bind:src="langImage"> <b class="caret-custom-site"></b>
                                     </a>
                                     <transition name="dropdown-menu">
-                                        <ul class="dropdown-menu" v-if="showLang">
+                                        <ul class="dropdown-menu-custom-site" v-if="showLang">
                                             <li v-if="langs.en">
                                                 <a href="#" class="language" @click="changeLang('en')">
-                                                    <img class="top-icon top-dropdown-icon"
+                                                    <img class="top-icon-custom-site"
                                                          src="../../assets/images/flags/en.svg">
                                                     <span>English</span>
                                                 </a>
                                             </li>
                                             <li v-if="langs.ru">
                                                 <a href="#" class="language lang-ru" @click="changeLang('ru')">
-                                                    <img class="top-icon top-dropdown-icon"
+                                                    <img class="top-icon-custom-site"
                                                          src="../../assets/images/flags/ru.svg">
                                                     <span>Русский</span>
                                                 </a>
@@ -67,8 +67,8 @@
                                         </ul>
                                     </transition>
                                 </li>
-                                <li class="quote-btn">
-                                    <router-link class="btn btn-outline" to="/login">
+                                <li class="quote-btn-site-custom">
+                                    <router-link class="btn-site-custom btn-outline-site-custom" to="/login">
                                         {{ $t("nav.login") }}
                                     </router-link>
                                 </li>
@@ -131,10 +131,10 @@ export default{
     },
     addDropdownEvent () {
       if (window.innerWidth < this.$store.state.sizes.medium) {
-        let dropdowns = document.getElementsByClassName('dropdown-toggle')
+        let dropdowns = document.getElementsByClassName('dropdown-toggle-custom-site')
         this._setMobileDropdownEvents(dropdowns)
       } else {
-        let dropdowns = document.getElementsByClassName('dropdown')
+        let dropdowns = document.getElementsByClassName('dropdown-custom-site')
         this._setDeckstopDropdownEvents(dropdowns)
       }
     },

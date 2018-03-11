@@ -30,8 +30,8 @@
                     <div class="contact-form-message-container">
                         <textarea name="message" placeholder="Messages *"></textarea>
                     </div>
-                    <div class="form-field col-md-12">
-                        <!--<captcha></captcha>-->
+                    <div class="contact-form-captcha-container">
+                        <captcha></captcha>
                     </div>
                     <button type="submit" class="contact-form-button">{{ $t("contact.button") }}</button>
                 </form>
