@@ -9,7 +9,7 @@ const request = {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Accept-Language': 'en'
+      'Accept-Language': 'ru'
     }
   },
   _getAuthHeaders: {
@@ -34,9 +34,10 @@ const request = {
     return instance.get('/users', this._getAuthHeaders)
   },
   updateUser (creds) {
-    console.log(creds)
     return instance.patch('/users', creds, this._getAuthHeaders)
+  },
+  confirmEmail (token) {
+    return instance.get('/users/email/confirm/' + token)
   }
-
 }
 export default request

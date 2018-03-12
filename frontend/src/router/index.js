@@ -12,6 +12,8 @@ import Icons from '../components/user/paper/Dashboard/Views/Icons.vue'
 import DashboardLayout from '../components/user/paper/Dashboard/Layout/DashboardLayout.vue'
 import UserProfile from '../components/user/paper/Dashboard/Views/UserProfile.vue'
 import Notifications from '../components/user/paper/Dashboard/Views/Notifications.vue'
+import ConfirmEmail from '../components/user/confirmEmail/ConfirmEmail.vue'
+import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue'
 
 Vue.use(Router)
 
@@ -48,6 +50,8 @@ export default new Router({
         }
       ]
     },
-    {path: '/admin/icons', name: 'icons', component: Icons}
+    {path: '/admin/icons', name: 'icons', component: Icons},
+    {path: '/email/confirm/:token', component: ConfirmEmail},
+    {path: '*', component: NotFoundPage}
   ]
 })

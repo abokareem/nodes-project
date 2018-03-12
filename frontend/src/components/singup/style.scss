@@ -1,25 +1,26 @@
 @import "../../assets/partials/_const.scss";
-@mixin login-placeholder-styles {
+@mixin sing-up-placeholder-styles {
   color: #c3c3c3;
   font-family: "Quicksand", sans-serif;
   font-size: 16px;
   padding-left: 5px;
 }
-@mixin login-elements {
+@mixin sing-up-elements {
   display: inline-block;
   margin-left: 32%;
 }
-@mixin login-elements-mobile {
+@mixin sing-up-elements-mobile {
   display: inline-block;
   margin-left: 0;
 }
-.login {
+.sing-up {
   display: inline-block;
   width: 100%;
   padding-top: 135px;
+  padding-bottom: 50px;
   min-height: calc(100vh - 188px);
 }
-.login-container {
+.sing-up-container {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -30,13 +31,13 @@
   line-height: 1.75;
   font-weight: 300;
 }
-.login-heading-lead {
+.sing-up-heading-lead {
   font-size: 2.5em;
   font-weight: 500;
   font-family: "Quicksand", sans-serif;
 }
 /**/
-.login-data-container, .login-redirect-container, .login-button-container, .login-captcha-container {
+.sing-up-data-container, .sing-up-redirect-container, .sing-up-button-container, .sing-up-captcha-container {
   width: 100%;
   text-align: left;
   div {
@@ -44,8 +45,8 @@
     margin-bottom: 15px;
   }
 }
-.login-input {
-  @include login-elements;
+.sing-up-input {
+  @include sing-up-elements;
   height: 45px;
   margin-bottom: 14px;
   background: #f8f8f8;
@@ -56,22 +57,35 @@
   border-radius: 4px;
   width: 600px;
   &::-webkit-input-placeholder {
-    @include login-placeholder-styles;
+    @include sing-up-placeholder-styles;
   }
   &::-moz-placeholder {
-    @include login-placeholder-styles;
+    @include sing-up-placeholder-styles;
   }
   &:-moz-placeholder {
-    @include login-placeholder-styles;
+    @include sing-up-placeholder-styles;
   }
   &:-ms-input-placeholder {
-    @include login-placeholder-styles;
+    @include sing-up-placeholder-styles;
   }
 }
-.login-captcha, .login-button, .login-redirect-register {
-  @include login-elements;
+.sing-up-captcha, .sing-up-button, .sing-up-redirect-register, .sing-up-term-container {
+  @include sing-up-elements;
 }
-.login-button {
+.sing-up-term-container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  input {
+    zoom: 1.5;
+  }
+  a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #f7921a;
+  }
+}
+.sing-up-button {
   background-color: #f7921a;
   border: 3px solid #f7921a;
   padding: 20px 58px;
@@ -85,9 +99,9 @@
   }
   transition: all .4s;
 }
-.login-redirect-container {
+.sing-up-redirect-container {
   margin-top: 10px;
-  .login-redirect-register {
+  .sing-up-redirect-register {
     font-size: 14px;
     a {
       color: #f7921a;
@@ -96,11 +110,8 @@
     }
   }
 }
-.error-login-custom {
-  border: 2px solid #ff0000 !important;
-}
-.login-data-container {
-  span {
+.sing-up-data-container {
+  .error-sing-up-validate {
     color: #FF4014;
     display: inline-block;
     width: auto;
@@ -109,20 +120,23 @@
   }
 }
 @media only screen and (min-width: $minimal) and (max-width: $medium) {
-  .login-form {
-    .login-input {
-      @include login-elements-mobile;
+  .sing-up-form {
+    .sing-up-input {
+      @include sing-up-elements-mobile;
       width: 95%;
     }
-    .login-captcha, .login-button, .login-redirect-register {
-      @include login-elements-mobile;
+    .sing-up-captcha, .sing-up-button, .sing-up-redirect-register {
+      @include sing-up-elements-mobile;
     }
-    .login-captcha-container {
+    .sing-up-captcha-container {
       div {
         margin-left: 0;
       }
     }
-    .login-data-container {
+    .sing-up-term-container {
+      margin-left: 0;
+    }
+    .sing-up-data-container {
       span {
         margin-left: 0;
       }

@@ -127,6 +127,12 @@ const en = {
     us: 'Contact Us',
     desc: 'Complete and submit the form below',
     button: 'Submit'
+  },
+  validate: {
+    email: 'Invalid email',
+    password: 'Password can\'t be less than six symbols. Password must contain letters and numbers',
+    confirmedPassword: 'Passwords do not match',
+    name: 'Name can\'t be less than 2 symbols'
   }
 }
 

@@ -16,6 +16,9 @@ const store = new Vuex.Store({
       medium: 1080,
       maximum: 1280,
       end: 1310
+    },
+    errors: {
+      notFound: 404
     }
   }
 })
