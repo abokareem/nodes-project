@@ -1,17 +1,22 @@
 <template>
     <div class="row">
-        <div class="col-lg-4 col-md-5">
+        <!--<div class="col-lg-4 col-md-5">
             <user-card>
 
             </user-card>
             <members-card>
 
             </members-card>
-        </div>
-        <div class="col-lg-8 col-md-7">
+        </div>-->
+        <div class="col-lg-12 col-md-12">
             <edit-profile-form>
 
             </edit-profile-form>
+        </div>
+        <div class="col-lg-12 col-md-12">
+            <activate-two-fa>
+
+            </activate-two-fa>
         </div>
     </div>
 </template>
@@ -19,11 +24,13 @@
 import EditProfileForm from './UserProfile/EditProfileForm.vue'
 import UserCard from './UserProfile/UserCard.vue'
 import MembersCard from './UserProfile/MembersCard.vue'
+import ActivateTwoFa from './UserProfile/ActivateTwoFa.vue'
 export default {
   components: {
     EditProfileForm,
     UserCard,
-    MembersCard
+    MembersCard,
+    ActivateTwoFa
   }
 }
 

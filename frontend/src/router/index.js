@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '../components/index/Index.vue'
 import Login from '../components/login/Login.vue'
+import Login2fa from '../components/login/Login2fa.vue'
 import SingUp from '../components/singup/SingUp.vue'
 import Faq from '../components/faq/Faq.vue'
 import Contact from '../components/contacts/Contact.vue'
@@ -30,6 +31,7 @@ export default new Router({
   routes: [
     {path: '/', name: 'index', components: siteComponenst(Index)},
     {path: '/login', name: 'login', components: siteComponenst(Login)},
+    {path: '/login/twofa', name: 'login', components: siteComponenst(Login2fa)},
     {path: '/singup', components: siteComponenst(SingUp)},
     {path: '/faq', components: siteComponenst(Faq)},
     {path: '/contact', components: siteComponenst(Contact)},

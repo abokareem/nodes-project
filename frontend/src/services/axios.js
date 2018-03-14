@@ -38,6 +38,13 @@ const request = {
   },
   confirmEmail (token) {
     return instance.get('/users/email/confirm/' + token)
+  },
+  getTwoFa () {
+    return instance.get('/users/twofa', this._getAuthHeaders)
+  },
+  activateTwoFa (creds) {
+    console.log(creds)
+    return instance.post('/users/twofa', creds, this._getAuthHeaders)
   }
 }
 export default request

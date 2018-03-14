@@ -1,6 +1,7 @@
 <template>
     <div class="login">
-        <spinner style="position: absolute; top: 50%; left: 50%;" v-if="snipper" :size="60"></spinner>
+        <spinner style="position: absolute;margin-left: auto;margin-right: auto;
+        right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
         <div class="login-container">
             <h3 class="login-heading-lead center">{{ $t("login.title") }}</h3>
             <form class="login-form" @submit.prevent="login({ username, password })">
@@ -15,7 +16,7 @@
                     <span v-if="!isValidPassword">{{$t("validate.password")}}</span>
                 </div>
                 <div class="login-captcha-container">
-                    <captcha></captcha>
+                    <!--<captcha></captcha>-->
                 </div>
                 <div class="login-button-container">
                     <button type="submit" class="login-button">{{ $t("login.button") }}</button>
@@ -42,7 +43,7 @@ export default{
   name: 'Login',
   methods: {
     login (creds) {
-      this.isValidEmail = validator.email(this.email)
+      this.isValidEmail = validator.email(this.username)
       this.isValidPassword = validator.password(this.password)
       if (this.isValidEmail && this.isValidPassword) {
         this.snipper = true

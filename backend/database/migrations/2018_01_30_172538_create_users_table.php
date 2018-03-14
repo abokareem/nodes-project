@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->boolean('subscribe')->default(false);
             $table->boolean('email_confirmed')->default(false);
             $table->boolean('two_fa')->default(false);
-            $table->string('google2fa_secret')->nullable();
+            $table->text('google2fa_secret')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
