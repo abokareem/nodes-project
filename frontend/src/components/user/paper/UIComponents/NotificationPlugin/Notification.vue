@@ -100,7 +100,7 @@ export default {
     font-size: 14px;
     z-index: 100;
     display: inline-block;
-    position: fixed;
+    position: fixed !important;
     transition: all 0.5s ease-in-out;
 
     &.center {

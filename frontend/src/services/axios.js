@@ -25,8 +25,8 @@ const request = {
   },
   login (creds) {
     creds.grant_type = 'password'
-    creds.client_id = '3'
-    creds.client_secret = '9NCPLwsB8TCIpysOLU86rBH4EJrguNpdmXvpObGA'
+    creds.client_id = '1'
+    creds.client_secret = '3OjB0S8AGE28GSydD9E9GSJKLPOrWxTZK1KeKpWy'
     creds.scope = '*'
     return instance.post('/users/auth', creds, this._getGuestHeaders)
   },

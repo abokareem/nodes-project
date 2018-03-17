@@ -34,11 +34,14 @@
 import captcha from '../captcha/Captcha.vue'
 import Spinner from 'vue-spinner-component/src/Spinner.vue'
 import validator from '../../services/validator'
+import response from '../../services/response'
+import PaperNotification from '../user/paper/UIComponents/NotificationPlugin/Notification.vue'
 
 export default{
   components: {
     captcha,
-    Spinner
+    Spinner,
+    PaperNotification
   },
   name: 'Login',
   methods: {
@@ -52,14 +55,7 @@ export default{
           this.snipper = false
         }).catch(err => {
           this.snipper = false
-          this.$notifications.notify({
-            message: '<h3>' + err.response.data.data.message + '</h3>',
-            icon: 'ti-bell',
-            horizontalAlign: 'right',
-            verticalAlign: 'bottom',
-            type: 'danger',
-            timeout: 2000
-          })
+          response.handleErrors(err, this)
         })
       }
     }

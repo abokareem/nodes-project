@@ -30,9 +30,14 @@ export default {
 }
 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+@import "../../../../../assets/sass/bootstrap.css";
+@import "../../../../../assets/sass/paper-dashboard.scss";
+.notifications {
+    position: absolute;
+}
 .list-item {
-    display: inline-block;
+    //display: inline-block;
     margin-right: 10px;
 }
 .list-enter-active,
@@ -47,8 +52,4 @@ export default {
     opacity: 0;
     transform: translateY(-30px);
 }
-</style>
-<style lang="scss" scoped>
-@import "../../../../../assets/sass/bootstrap.css";
-@import "../../../../../assets/sass/paper-dashboard.scss";
 </style>
