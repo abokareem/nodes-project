@@ -15,6 +15,7 @@ import UserProfile from '../components/user/paper/Dashboard/Views/UserProfile.vu
 import Notifications from '../components/user/paper/Dashboard/Views/Notifications.vue'
 import ConfirmEmail from '../components/user/confirmEmail/ConfirmEmail.vue'
 import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue'
+import DashboardContent from '../components/user/paper/Dashboard/Views/DashboardContent.vue'
 
 Vue.use(Router)
 
@@ -31,7 +32,7 @@ export default new Router({
   routes: [
     {path: '/', name: 'index', components: siteComponenst(Index)},
     {path: '/login', name: 'login', components: siteComponenst(Login)},
-    {path: '/login/twofa', name: 'login', components: siteComponenst(Login2fa)},
+    {path: '/login/twofa', name: 'login2fa', components: siteComponenst(Login2fa)},
     {path: '/singup', components: siteComponenst(SingUp)},
     {path: '/faq', components: siteComponenst(Faq)},
     {path: '/contact', components: siteComponenst(Contact)},
@@ -40,6 +41,11 @@ export default new Router({
       name: 'user',
       component: DashboardLayout,
       children: [
+        {
+          path: '/',
+          name: 'dashboard',
+          component: DashboardContent
+        },
         {
           path: 'profile',
           name: 'profile',

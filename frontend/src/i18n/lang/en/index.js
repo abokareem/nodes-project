@@ -132,7 +132,11 @@ const en = {
     email: 'Invalid email',
     password: 'Password can\'t be less than six symbols. Password must contain letters and numbers',
     confirmedPassword: 'Passwords do not match',
-    name: 'Name can\'t be less than 2 symbols'
+    name: 'Name can\'t be less than 2 symbols',
+    code2fa: 'Code can\'t be less than six symbols'
+  },
+  login2fa: {
+    title: 'Two Factor Authentication'
   }
 }
 

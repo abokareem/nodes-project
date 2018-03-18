@@ -12,12 +12,14 @@ const request = {
       'Accept-Language': 'ru'
     }
   },
-  _getAuthHeaders: {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Accept-Language': 'en',
-      'Authorization': 'Bearer ' + localStorage.getItem('nodepubToken')
+  _getAuthHeaders () {
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Accept-Language': 'en',
+        'Authorization': 'Bearer ' + localStorage.getItem('nodepubToken')
+      }
     }
   },
   register (creds) {
@@ -26,25 +28,37 @@ const request = {
   login (creds) {
     creds.grant_type = 'password'
     creds.client_id = '1'
-    creds.client_secret = '3OjB0S8AGE28GSydD9E9GSJKLPOrWxTZK1KeKpWy'
+    creds.client_secret = 'Q6nU8HHpUXb0xfJJaNc4G88jmBwFtWpFfpVy4VdR'
     creds.scope = '*'
     return instance.post('/users/auth', creds, this._getGuestHeaders)
   },
+  login2fa (creds) {
+    return instance.post('/users/auth/twofa', creds, this._getGuestHeaders)
+  },
   getUser () {
-    return instance.get('/users', this._getAuthHeaders)
+    return instance.get('/users', this._getAuthHeaders())
   },
   updateUser (creds) {
-    return instance.patch('/users', creds, this._getAuthHeaders)
+    return instance.patch('/users', creds, this._getAuthHeaders())
   },
   confirmEmail (token) {
     return instance.get('/users/email/confirm/' + token)
   },
   getTwoFa () {
-    return instance.get('/users/twofa', this._getAuthHeaders)
+    return instance.get('/users/twofa', this._getAuthHeaders())
+  },
+  getUserActions () {
+    return instance.get('/users/actions', this._getAuthHeaders())
   },
   activateTwoFa (creds) {
-    console.log(creds)
-    return instance.post('/users/twofa', creds, this._getAuthHeaders)
+    return instance.post('/users/twofa', creds, this._getAuthHeaders())
+  },
+  deactivateTwoFa (creds) {
+    return instance.delete('/users/twofa',
+      {
+        headers: this._getAuthHeaders().headers,
+        data: creds
+      })
   }
 }
 export default request

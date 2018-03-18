@@ -36,6 +36,7 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->post('users/twofa', 'UserController@enableTwoFa');
     $router->delete('users/twofa', 'UserController@disableTwoFa');
     $router->get('users/twofa', 'UserController@twoFaDataForActivate');
+    $router->post('users/twofa/auth', 'UserAuthController@twoFaAuthCode');
     $router->get('users/actions', 'UserController@getActions');
     $router->patch('users', 'UserController@update')->middleware('tfa');
     $router->get('users/nodes', 'UserController@getNodes');

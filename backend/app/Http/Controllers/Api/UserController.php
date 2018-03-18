@@ -208,7 +208,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        return UserActionsResource::collection($user->actions);
+        return UserActionsResource::collection($user->actions()->latest()->limit(5)->get());
     }
 
     /**

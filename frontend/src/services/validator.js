@@ -1,7 +1,7 @@
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const passwordRegExp = /^\S.{6,20}$/
 const nameRegExp = /^\S.{2,20}$/
-const twoFaRegExp = /^\d{6}$/
+const twoFaRegExp = /^\S+$/
 
 const validator = {
   email (email) {

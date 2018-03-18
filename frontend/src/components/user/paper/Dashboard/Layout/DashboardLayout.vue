@@ -45,6 +45,8 @@
 import TopNavbar from './TopNavbar.vue'
 import ContentFooter from './ContentFooter.vue'
 import DashboardContent from './Content.vue'
+import response from '../../../../../services/response'
+
 export default {
   components: {
     TopNavbar,
@@ -52,11 +54,12 @@ export default {
     DashboardContent
   },
   beforeCreate () {
-    if (!this.$store.state.auth.isLogged) {
+    console.log(this.$store.getters['auth/isLoggedIn'])
+    if (!this.$store.getters['auth/isLoggedIn']) {
       this.$router.push('/login')
     }
     this.$store.dispatch('user/get').catch(err => {
-      this.$router.push('/login')
+      response.handleErrors(err, this)
     })
   },
   methods: {

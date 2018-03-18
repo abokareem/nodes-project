@@ -18,7 +18,8 @@ const store = new Vuex.Store({
       end: 1310
     },
     errors: {
-      notFound: 404
+      notFound: 404,
+      partContent: 206
     }
   }
 })

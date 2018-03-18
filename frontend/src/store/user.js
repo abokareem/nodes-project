@@ -15,26 +15,22 @@ const user = {
   actions: {
     get ({commit}) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          request.getUser().then(res => {
-            commit(GET_USER, res.data.data)
-            resolve(res)
-          }).catch(err => {
-            reject(err)
-          })
-        }, 1000)
+        request.getUser().then(res => {
+          commit(GET_USER, res.data.data)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
     update ({commit}, creds) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          request.updateUser(creds).then(res => {
-            commit(GET_USER, res.data.data)
-            resolve(res)
-          }).catch(err => {
-            reject(err)
-          })
-        }, 1000)
+        request.updateUser(creds).then(res => {
+          commit(GET_USER, res.data.data)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
       })
     }
   },

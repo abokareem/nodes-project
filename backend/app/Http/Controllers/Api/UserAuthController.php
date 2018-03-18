@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\TwoFaCheckCodeRequest;
 use App\Http\Requests\Api\TwoFaLoginRequest;
 use App\Http\Resources\Login;
 use App\Http\Resources\TwoFaLoginFirstStep;
 use App\Http\Resources\TwoFaLoginSecondStep;
 use App\Services\TwoFaService;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -112,7 +114,8 @@ class UserAuthController extends Controller
         ServerRequestInterface $request,
         AccessTokenController $accessToken,
         TwoFaService $service2FA
-    ) {
+    )
+    {
         $tokens = $accessToken->issueToken($request);
 
         if ($tokens->status() === 200) {
@@ -211,7 +214,77 @@ class UserAuthController extends Controller
 
         }
 
-        throw new OAuthServerException(trans('auth.failed'), 6,
+        throw new OAuthServerException(trans('twofa.reset.invalid'), 6,
+            'invalid_credentials', 401);
+    }
+
+    /**
+     *
+     * @SWG\Post(
+     *     path="/users/twofa/auth",
+     *     summary="authenticate 2fa code",
+     *     tags={"Users"},
+     *     description="authenticate 2fa code",
+     *     operationId="authenticateTFACode",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="body",
+     *          in="body",
+     *          required=true,
+     *          @SWG\Schema(
+     *              @SWG\Property(
+     *                  property="code",
+     *                  type="string",
+     *                  description="authorize code",
+     *                  example="345567",
+     *              ),
+     *          ),
+     *     ),
+     *     @SWG\Response(
+     *      response=200,
+     *      description="tokens object"
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Bad request",
+     *         examples={
+     *           "application/json":{
+     *              "error": "invalid_request",
+     *              "message": "The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, or is otherwise malformed.",
+     *              "hint": "Check the `username` parameter"
+     *           },
+     *         },
+     *     ),
+     * )
+     *
+     * @param TwoFaCheckCodeRequest $request
+     * @param TwoFaService $service2FA
+     * @return TwoFaLoginSecondStep
+     * @throws OAuthServerException
+     */
+    public function twoFaAuthCode(TwoFaCheckCodeRequest $request, TwoFaService $service2FA)
+    {
+        $user = Auth::user();
+
+        if (!$user->google2fa_secret) {
+            return response('', 200);
+        }
+
+        $code = str_replace(" ", "", $request->get('code'));
+
+        $isValid = $service2FA->verifyCode($user->google2fa_secret, $code);
+
+        if ($isValid) {
+
+            return response('', 200);
+
+        }
+
+        throw new OAuthServerException(trans('twofa.reset.invalid'), 6,
             'invalid_credentials', 401);
     }
 }

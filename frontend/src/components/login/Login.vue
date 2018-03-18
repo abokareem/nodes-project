@@ -51,7 +51,12 @@ export default{
       if (this.isValidEmail && this.isValidPassword) {
         this.snipper = true
         this.$store.dispatch('auth/login', creds).then(res => {
-          this.$router.push('user')
+          let data = response.getResponse(res)
+          if (data.two_fa) {
+            this.$router.push({name: 'login2fa', params: {token: data.token}})
+          } else {
+            this.$router.push({name: 'dashboard'})
+          }
           this.snipper = false
         }).catch(err => {
           this.snipper = false

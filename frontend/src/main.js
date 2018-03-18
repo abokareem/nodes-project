@@ -14,8 +14,7 @@ import SideBar from './components/user/paper/UIComponents/SidebarPlugin'
 import Chartist from 'chartist'
 import fgInput from './components/user/paper/UIComponents/Inputs/formGroupInput.vue'
 import DropDown from './components/user/paper/UIComponents/Dropdown.vue'
-/*import 'bootstrap/dist/css/bootstrap.css'
-import './assets/sass/paper-dashboard.scss'*/
+import '../static/css/themify-icons.css'
 
 import 'es6-promise/auto'
 

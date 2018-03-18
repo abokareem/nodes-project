@@ -14,26 +14,37 @@ const auth = {
       state.pending = true
     },
     [LOGIN_SUCCESS] (state) {
-      state.isLoggedIn = true
+      state.isLogged = true
       state.pending = false
     },
     [LOGOUT] (state) {
-      state.isLoggedIn = false
+      state.isLogged = false
     }
   },
   actions: {
     login ({commit}, creds) {
       commit(LOGIN)
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          request.login(creds).then(res => {
-            localStorage.setItem('nodepubToken', res.data.data.access_token)
-            commit(LOGIN_SUCCESS)
-            resolve(res)
-          }).catch(err => {
-            reject(err)
-          })
-        }, 1000)
+        request.login(creds).then(res => {
+          localStorage.setItem('nodepubToken', res.data.data.access_token)
+          commit(LOGIN_SUCCESS)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    login2fa ({commit}, creds) {
+      commit(LOGIN)
+      return new Promise((resolve, reject) => {
+        request.login2fa(creds).then(res => {
+          console.log(res)
+          localStorage.setItem('nodepubToken', res.data.data.access_token)
+          commit(LOGIN_SUCCESS)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
 
@@ -44,7 +55,7 @@ const auth = {
   },
   getters: {
     isLoggedIn: state => {
-      return state.isLoggedIn
+      return state.isLogged
     }
   }
 }

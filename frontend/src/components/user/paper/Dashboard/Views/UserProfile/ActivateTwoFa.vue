@@ -4,88 +4,38 @@
             <div class="header">
                 <h4 class="title">Two Factor Authentication</h4>
             </div>
-            <div v-if="activate" class="row">
-                <spinner style="position: absolute;margin-left: auto;margin-right: auto;
-        right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
-                <img :src="qrCode">
-                <h4 v-if="hash" class="title">Key for mobile: {{hash}}</h4><br>
-                <h4 v-if="reserveCode" class="title">
-                    Reserve code for reset two factor authentication: {{reserveCode}}
-                </h4>
-                <div class="text-center">
-                    <label for="activate-input-code">
-                        Mobile code
-                    </label>
-                    <input class="activate-twofa-input form-control border-input"
-                           type="text"
-                           id="activate-input-code"
-                           placeholder="Mobile code *"
-                           v-model="code">
-                </div>
-                <div class="text-center">
-                    <button class="two-fa-button btn btn-success btn-fill btn-wd"
-                            @click="activateTwoFa({hash, code})">
-                        Press to activate
-                    </button>
-                </div>
-            </div>
-            <div class="text-center">
-                <button v-if="!activate" class="two-fa-button btn btn-info btn-fill btn-wd"
-                        @click="getTwoFaData">
-                    Activate Two Factor Authentication
-                </button>
-            </div>
+            <modal2fa-activate v-if="!activate && showButton" @buttonChange="activate = true"></modal2fa-activate>
+            <modal2fa-deactivate v-if="activate && showButton" @buttonChange="activate = false"></modal2fa-deactivate>
         </div>
     </div>
 </template>
 <script>
-import request from '../../../../../../services/axios'
 import Spinner from 'vue-spinner-component/src/Spinner.vue'
-import validator from '../../../../../../services/validator'
+import modal2faActivate from '../Modals/Modal2fa.vue'
+import modal2faDeactivate from '../Modals/Modal2faDeactivate.vue'
+import response from '../../../../../../services/response'
 
 export default{
   components: {
-    Spinner
+    Spinner,
+    modal2faActivate,
+    modal2faDeactivate
   },
   name: 'ActivateTwoFa',
-  methods: {
-    getTwoFaData () {
-      this.activate = true
-      this.snipper = true
-      request.getTwoFa().then(res => {
-        this.hash = res.data.data.hash
-        this.qrCode = res.data.data.qr_code
-        this.reserveCode = res.data.data.reserve_code
-        this.snipper = false
-      }).catch(err => {
-        this.activate = false
-        console.log(err.response)
-      })
-    },
-    activateTwoFa (creds) {
-      this.isValidCode = validator.twoFaCode(this.code)
-      if (this.isValidCode) {
-        this.snipper = true
-        creds.reserve_code = this.reserveCode
-        request.activateTwoFa(creds).then(res => {
-          console.log(res)
-          this.snipper = false
-        }).catch(err => {
-          console.log(err.response)
-          this.snipper = false
-        })
-      }
-    }
+  beforeCreate () {
+    this.$store.dispatch('user/get').then(res => {
+      this.activate = this.$store.getters['user/get'].two_fa
+      this.showButton = true
+    }).catch(err => {
+      response.handleErrors(err, this)
+      this.showButton = true
+    })
   },
   data () {
     return {
-      hash: '',
-      qrCode: '',
-      reserveCode: '',
-      code: '',
-      isValidCode: true,
-      activate: false,
-      snipper: false
+      activate: this.$store.getters['user/get'].two_fa,
+      snipper: false,
+      showButton: false
     }
   }
 }

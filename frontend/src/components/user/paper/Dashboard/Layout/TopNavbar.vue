@@ -34,6 +34,14 @@
                             </p>
                         </a>
                     </li>
+                    <li>
+                        <a @click="logout" href="/" class="btn-rotate">
+                            <i class="ti-power-off"></i>
+                            <p>
+                                Logout
+                            </p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -67,6 +75,9 @@ export default {
     },
     hideSidebar () {
       this.$sidebar.displaySidebar(false)
+    },
+    logout () {
+      this.$store.dispatch('auth/logout')
     }
   }
 }
