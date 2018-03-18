@@ -59,6 +59,9 @@ const request = {
         headers: this._getAuthHeaders().headers,
         data: creds
       })
+  },
+  checkCodeTwoFa (creds) {
+    return instance.post('users/twofa/auth', creds, this._getAuthHeaders())
   }
 }
 export default request

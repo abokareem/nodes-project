@@ -30,11 +30,11 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button v-if="!user.is2faEnabled" type="submit" class="btn btn-info btn-fill btn-wd"
+                    <button v-if="!is2faEnabled" type="submit" class="btn btn-info btn-fill btn-wd"
                             @click.prevent="updateProfile">
                         Update Profile
                     </button>
-                    <modal2fa-check v-if="user.is2faEnabled"></modal2fa-check>
+                    <modal2fa-check v-if="is2faEnabled" @checkCode="updateData"></modal2fa-check>
                 </div>
                 <div class="clearfix"></div>
             </form>
@@ -56,9 +56,9 @@ export default {
       user: {
         name: '',
         email: '',
-        is2faEnabled: '',
         password: ''
       },
+      is2faEnabled: '',
       showContent: false,
       showModal2fa: false
     }
@@ -67,12 +67,17 @@ export default {
     this.$store.dispatch('user/get').then(res => {
       this.user.name = this.$store.getters['user/get'].name
       this.user.email = this.$store.getters['user/get'].email
-      this.user.is2faEnabled = this.$store.getters['user/get'].two_fa
+      this.is2faEnabled = this.$store.getters['user/get'].two_fa
       this.showContent = true
     }).catch(err => {
       response.handleErrors(err, this)
       this.showContent = true
     })
+  },
+  computed: {
+    is2faEnabled () {
+      this.is2faEnabled = this.$store.getters['user/get'].two_fa
+    }
   },
   methods: {
     updateProfile () {
@@ -82,26 +87,28 @@ export default {
         this.updateData()
       }
     },
-    updateData () {
+    updateData (creds) {
       if (this.user.password === '') {
         delete this.user.password
       }
       if (this.user.email === this.$store.getters['user/get'].email) {
         delete this.user.email
       }
+      if (creds) {
+        this.user.twofa = creds.code
+      }
       this.$store.dispatch('user/update', this.user).then(res => {
-        console.log(res)
         this.$notifications.notify(
           {
             message: 'Profile was updated.',
-            icon: 'ti-gift',
+            icon: 'ti-bell',
             horizontalAlign: 'right',
             verticalAlign: 'bottom',
             type: 'info',
             timeout: 2000
           })
       }).catch(err => {
-        console.log(err.response)
+        response.handleErrors(err, this)
       })
     }
   }

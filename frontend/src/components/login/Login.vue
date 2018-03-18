@@ -16,7 +16,12 @@
                     <span v-if="!isValidPassword">{{$t("validate.password")}}</span>
                 </div>
                 <div class="login-captcha-container">
-                    <!--<captcha></captcha>-->
+                    <captcha></captcha>
+                </div>
+                <div class="login-redirect-container">
+                    <p class="login-redirect-register">
+                        <router-link to="/forgot/password">Forgot password?</router-link>
+                    </p>
                 </div>
                 <div class="login-button-container">
                     <button type="submit" class="login-button">{{ $t("login.button") }}</button>

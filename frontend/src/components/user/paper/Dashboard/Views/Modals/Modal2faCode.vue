@@ -7,19 +7,19 @@
         </slot>
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">Deactivate two factor authentication</h3>
+                <h3 slot="header">Two Factor Authentication</h3>
                 <div slot="body">
                     <div class="row">
                         <spinner style="position: absolute;margin-left: auto;margin-right: auto;
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <div class="text-center">
                             <label for="activate-input-code">
-                                Mobile code
+                                Code
                             </label>
                             <input class="activate-twofa-input form-control border-input"
                                    type="text"
                                    id="activate-input-code"
-                                   placeholder="Mobile code *"
+                                   placeholder="Code *"
                                    v-model="code">
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                 <div slot="footer">
                     <div class="text-center">
                         <button class="two-fa-button btn btn-info btn-fill btn-wd"
-                                @click="checkCodeTwoFa({code})">
+                                @click.prevent="checkCodeTwoFa({code})">
                             Update
                         </button>
                     </div>
@@ -63,12 +63,10 @@ export default {
       if (this.isValidCode) {
         this.snipper = true
         request.checkCodeTwoFa(creds).then(res => {
-          //response.handleSuccess(res, this)
           this.snipper = false
           this.showModal = false
           this.$emit('checkCode', {code: this.code})
         }).catch(err => {
-          console.log(err.response)
           response.handleErrors(err, this)
           this.snipper = false
         })
