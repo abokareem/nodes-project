@@ -137,6 +137,12 @@ const en = {
   },
   login2fa: {
     title: 'Two Factor Authentication'
+  },
+  reset: {
+    password: {
+      title: 'Reset password',
+      button: 'Send'
+    }
   }
 }
 

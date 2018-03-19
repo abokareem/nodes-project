@@ -13,12 +13,12 @@
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <div class="text-center">
                             <label for="activate-input-code">
-                                Mobile code
+                                Code
                             </label>
                             <input class="activate-twofa-input form-control border-input"
                                    type="text"
                                    id="activate-input-code"
-                                   placeholder="Mobile code *"
+                                   placeholder="Code *"
                                    v-model="code">
                         </div>
                     </div>
@@ -61,13 +61,12 @@ export default {
       this.isValidCode = validator.twoFaCode(this.code)
       if (this.isValidCode) {
         this.snipper = true
-        request.deactivateTwoFa(creds).then(res => {
+        this.$store.dispatch('user/deactivateTwoFa', creds).then(res => {
           response.handleSuccess(res, this)
           this.snipper = false
           this.showModal = false
           this.$emit('buttonChange')
         }).catch(err => {
-          console.log(err.response)
           response.handleErrors(err, this)
           this.snipper = false
         })

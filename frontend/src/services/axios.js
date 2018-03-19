@@ -17,7 +17,7 @@ const request = {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'en',
+        'Accept-Language': 'ru',
         'Authorization': 'Bearer ' + localStorage.getItem('nodepubToken')
       }
     }
@@ -61,7 +61,13 @@ const request = {
       })
   },
   checkCodeTwoFa (creds) {
-    return instance.post('users/twofa/auth', creds, this._getAuthHeaders())
+    return instance.post('/users/twofa/auth', creds, this._getAuthHeaders())
+  },
+  forgotPassword (creds) {
+    return instance.post('/users/password', creds, this._getGuestHeaders)
+  },
+  resetPassword (creds) {
+    return instance.patch('/users/password', creds, this._getGuestHeaders)
   }
 }
 export default request

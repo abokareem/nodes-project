@@ -1,6 +1,8 @@
 <template>
     <div class="login-container">
-        <button class="two-fa-button btn btn-info btn-fill btn-wd" @click="getTwoFaData">Activate Two Factor Authentication</button>
+        <button class="two-fa-button btn btn-info btn-fill btn-wd" @click="getTwoFaData">
+            Activate Two Factor Authentication
+        </button>
 
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
@@ -16,12 +18,12 @@
                         </h4>
                         <div class="text-center">
                             <label for="activate-input-code">
-                                Mobile code
+                                Code
                             </label>
                             <input class="activate-twofa-input form-control border-input"
                                    type="text"
                                    id="activate-input-code"
-                                   placeholder="Mobile code *"
+                                   placeholder="Code *"
                                    v-model="code">
                         </div>
                     </div>
@@ -67,7 +69,7 @@ export default {
         this.snipper = false
       }).catch(err => {
         this.activate = false
-        console.log(err.response)
+        response.handleErrors(err, this)
       })
     },
     activateTwoFa (creds) {
@@ -75,7 +77,7 @@ export default {
       if (this.isValidCode) {
         this.snipper = true
         creds.reserve_code = this.reserveCode
-        request.activateTwoFa(creds).then(res => {
+        this.$store.dispatch('user/activateTwoFa', creds).then(res => {
           response.handleSuccess(res, this)
           this.snipper = false
           this.showModal = false

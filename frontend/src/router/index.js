@@ -8,6 +8,8 @@ import Faq from '../components/faq/Faq.vue'
 import Contact from '../components/contacts/Contact.vue'
 import NavBar from '../components/header/Header.vue'
 import FooTer from '../components/footer/Footer.vue'
+import ForgotPassword from '../components/login/forgotten/ForgotPassword.vue'
+import ResetPassword from '../components/login/forgotten/ResetPassword.vue'
 
 import Icons from '../components/user/paper/Dashboard/Views/Icons.vue'
 import DashboardLayout from '../components/user/paper/Dashboard/Layout/DashboardLayout.vue'
@@ -33,6 +35,8 @@ export default new Router({
     {path: '/', name: 'index', components: siteComponenst(Index)},
     {path: '/login', name: 'login', components: siteComponenst(Login)},
     {path: '/login/twofa', name: 'login2fa', components: siteComponenst(Login2fa)},
+    {path: '/password/forgot', components: siteComponenst(ForgotPassword)},
+    {path: '/password/reset/:token', components: siteComponenst(ResetPassword)},
     {path: '/singup', components: siteComponenst(SingUp)},
     {path: '/faq', components: siteComponenst(Faq)},
     {path: '/contact', components: siteComponenst(Contact)},

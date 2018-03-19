@@ -40,7 +40,34 @@ const response = {
     })
   },
   404 (err, component) {
-    component.$router.push('/notfound')
+    component.$notifications.notify({
+      message: '<h3>' + err.statusText + '</h3>',
+      icon: 'ti-bell',
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+      type: 'danger',
+      timeout: 2000
+    })
+  },
+  422 (err, component) {
+    component.$notifications.notify({
+      message: '<h3>' + err.data.message + '</h3>',
+      icon: 'ti-bell',
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+      type: 'danger',
+      timeout: 2000
+    })
+  },
+  429 (err, component) {
+    component.$notifications.notify({
+      message: '<h3>' + err.data.message + '</h3>',
+      icon: 'ti-bell',
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+      type: 'danger',
+      timeout: 2000
+    })
   },
   500 (err, component) {
     component.$notifications.notify({

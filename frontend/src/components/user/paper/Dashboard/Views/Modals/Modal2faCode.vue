@@ -1,10 +1,10 @@
 <template>
     <div class="login-container">
-        <slot name="open-modal">
+        <!--<slot name="open-modal">
             <button class="two-fa-button btn btn-info btn-fill btn-wd" @click.prevent="openModal">
                 Update profile
             </button>
-        </slot>
+        </slot>-->
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
                 <h3 slot="header">Two Factor Authentication</h3>
