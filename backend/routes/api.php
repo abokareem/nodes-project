@@ -38,7 +38,6 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->get('users/twofa', 'UserController@twoFaDataForActivate');
     $router->post('users/twofa/auth', 'UserAuthController@twoFaAuthCode');
     $router->get('users/actions', 'UserController@getActions');
-    $router->patch('users', 'UserController@update')->middleware('tfa');
     $router->get('users/nodes', 'UserController@getNodes');
     $router->get('users/transactions', 'UserController@getTransactions');
     $router->get('users/withdrawals', 'UserController@getWithdrawals');
@@ -72,7 +71,7 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {
-
+    $router->patch('users', 'UserController@update')->middleware('tfa');
     $router->get('users/email/resend', 'UserController@resendConfirmEmail');
 });
 
