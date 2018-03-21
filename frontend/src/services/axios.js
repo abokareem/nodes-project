@@ -68,6 +68,9 @@ const request = {
   },
   resetPassword (creds) {
     return instance.patch('/users/password', creds, this._getGuestHeaders)
+  },
+  resendEmail () {
+    return instance.get('/users/email/resend', this._getAuthHeaders())
   }
 }
 export default request

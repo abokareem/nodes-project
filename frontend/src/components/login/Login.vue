@@ -57,6 +57,7 @@ export default{
         this.snipper = true
         this.$store.dispatch('auth/login', creds).then(res => {
           let data = response.getResponse(res)
+          this.$store.commit('user/SET_EMAIL', this.username)
           if (data.two_fa) {
             this.$router.push({name: 'login2fa', params: {token: data.token}})
           } else {

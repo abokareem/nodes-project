@@ -1,5 +1,10 @@
 <template>
     <div class="card">
+        <div v-if="!isConfirmEmail" class="resend-email">
+            <h3 class="title">Please confirm your email. You can change email and
+                <a style="cursor: pointer" @click="resendEmail">resend letter.</a>
+            </h3>
+        </div>
         <div class="header">
             <h4 class="title">Edit Profile</h4>
         </div>
@@ -7,26 +12,31 @@
             <form>
                 <div class="row">
                     <div class="col-md-4">
-
                         <fg-input type="text"
                                   label="Username"
                                   placeholder="Username"
-                                  v-model="name">
+                                  v-model="name"
+                                  :class="{'error-login-custom':!isValidName}">
                         </fg-input>
+                        <span class="error-sing-up-validate" v-if="!isValidName">{{$t("validate.name")}}</span>
                     </div>
                     <div class="col-md-4">
                         <fg-input type="email"
                                   label="Email"
                                   placeholder="Email"
-                                  v-model="email">
+                                  v-model="email"
+                                  :class="{'error-login-custom':!isValidEmail}">
                         </fg-input>
+                        <span class="error-sing-up-validate" v-if="!isValidEmail">{{$t("validate.email")}}</span>
                     </div>
                     <div class="col-md-4">
                         <fg-input type="password"
                                   label="Password"
                                   placeholder="Password"
-                                  v-model="password">
+                                  v-model="password"
+                                  :class="{'error-login-custom':!isValidPassword}">
                         </fg-input>
+                        <span class="error-sing-up-validate" v-if="!isValidPassword">{{$t("validate.password")}}</span>
                     </div>
                 </div>
                 <div class="text-center">
@@ -38,13 +48,13 @@
                 <div class="clearfix"></div>
             </form>
         </div>
+        <spinner style="position: absolute;margin-left: auto;margin-right: auto;
+        right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
                 <h3 slot="header">Two Factor Authentication</h3>
                 <div slot="body">
                     <div class="row">
-                        <spinner style="position: absolute;margin-left: auto;margin-right: auto;
-        right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <div class="text-center">
                             <label for="activate-input-code">
                                 Code
@@ -87,6 +97,10 @@ export default {
       email: '',
       password: '',
       is2faEnabled: '',
+      isConfirmEmail: true,
+      isValidName: true,
+      isValidPassword: true,
+      isValidEmail: true,
       showContent: false,
       showModal2fa: false,
       showModal: false,
@@ -99,8 +113,11 @@ export default {
       this.name = this.$store.getters['user/get'].name
       this.email = this.$store.getters['user/get'].email
       this.is2faEnabled = this.$store.getters['user/get'].two_fa
+      this.isConfirmEmail = this.$store.getters['user/get'].email_confirmed
       this.showContent = true
     }).catch(err => {
+      this.email = this.$store.getters['user/get'].email
+      this.isConfirmEmail = this.$store.getters['user/get'].email_confirmed
       response.handleErrors(err, this)
       this.showContent = true
     })
@@ -128,29 +145,92 @@ export default {
         })
       }
     },
+    resendEmail () {
+      this.snipper = true
+      request.resendEmail().then(res => {
+        response.handleSuccess(res, this)
+        this.snipper = false
+      }).catch(err => {
+        response.handleErrors(err, this)
+        this.snipper = false
+      })
+    },
     updateData (creds) {
-      if (this.password === '') {
-        delete creds.password
-      }
-      if (this.email === this.$store.getters['user/get'].email) {
-        delete creds.email
-      }
-      if (creds.code) {
-        creds.twofa = creds.code
-      }
-      this.$store.dispatch('user/update', creds).then(res => {
+      creds = this.handleCreds(creds)
+      if (Object.keys(creds).length === 0) {
         this.$notifications.notify(
           {
-            message: 'Profile was updated.',
+            message: 'Nothing to update.',
             icon: 'ti-bell',
             horizontalAlign: 'right',
             verticalAlign: 'bottom',
             type: 'info',
             timeout: 2000
           })
-      }).catch(err => {
-        response.handleErrors(err, this)
-      })
+      } else {
+        this.snipper = true
+        this.$store.dispatch('user/update', creds).then(res => {
+          this.$notifications.notify(
+            {
+              message: 'Profile was updated.',
+              icon: 'ti-bell',
+              horizontalAlign: 'right',
+              verticalAlign: 'bottom',
+              type: 'success',
+              timeout: 2000
+            })
+          let data = response.getResponse(res)
+          this.snipper = false
+          if (!data.email_confirmed) {
+            this.isConfirmEmail = false
+          }
+        }).catch(err => {
+          this.snipper = false
+          response.handleErrors(err, this)
+        })
+      }
+    },
+    handleCreds (creds) {
+      if (this.password === '') {
+        delete creds.password
+      } else {
+        this.isValidPassword = validator.password(this.password)
+      }
+      if (this.email === this.$store.getters['user/get'].email || this.email === '') {
+        delete creds.email
+      } else {
+        this.isValidEmail = validator.email(this.email)
+      }
+      if (this.name === '') {
+        delete creds.name
+      } else {
+        this.isValidName = validator.name(this.name)
+      }
+      if (creds.code) {
+        creds.twofa = creds.code
+      }
+      delete creds.code
+      return creds
+    }
+  },
+  watch: {
+    name () {
+      this.isValidName = validator.name(this.name)
+      if (this.name === '') {
+        this.isValidName = true
+      }
+    },
+    password () {
+      this.isValidPassword = validator.password(this.password)
+      if (this.password === '') {
+        this.isValidPassword = true
+      }
+    },
+    email () {
+      this.isValidEmail = validator.email(this.email)
+      if (this.email === '') {
+        this.isValidEmail = true
+      }
     }
   }
 }
@@ -159,4 +239,8 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../../assets/sass/bootstrap.css";
 @import "../../../../../../assets/sass/paper-dashboard.scss";
+.resend-email {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
 </style>

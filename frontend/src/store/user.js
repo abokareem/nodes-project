@@ -3,6 +3,7 @@ import request from '../services/axios'
 const GET_USER = 'GET_USER'
 const ACTIVATE_2FA = 'ACTIVATE_2FA'
 const DEACTIVATE_2FA = 'DEACTIVATE_2FA'
+const SET_EMAIL = 'SET_EMAIL'
 
 const user = {
   namespaced: true,
@@ -18,6 +19,9 @@ const user = {
     },
     [DEACTIVATE_2FA] (state) {
       state.user.two_fa = false
+    },
+    [SET_EMAIL] (state, email) {
+      state.user.email = email
     }
   },
   actions: {

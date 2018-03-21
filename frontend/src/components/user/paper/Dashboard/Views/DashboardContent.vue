@@ -7,7 +7,7 @@
             <div v-if="user.actions" class="content">
                 <div class="row">
                     <ul class="list-group list-group-flush">
-                        <li v-for="action in user.actions" :key="action" class="list-group-item">
+                        <li v-for="(action,index) in user.actions" :key="index" class="list-group-item">
                             {{action.message}}
                         </li>
                     </ul>
@@ -24,6 +24,8 @@ export default{
   created () {
     request.getUserActions().then(res => {
       this.user.actions = response.getResponse(res)
+    }).catch(err => {
+      response.handleErrors(err, this)
     })
   },
   data () {

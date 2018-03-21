@@ -13,7 +13,7 @@
 
             </edit-profile-form>
         </div>
-        <div class="col-lg-12 col-md-12">
+        <div v-if="$store.getters['user/get'].email_confirmed" class="col-lg-12 col-md-12">
             <activate-two-fa>
 
             </activate-two-fa>

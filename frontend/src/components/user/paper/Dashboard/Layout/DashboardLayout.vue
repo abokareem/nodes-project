@@ -54,11 +54,15 @@ export default {
     DashboardContent
   },
   beforeCreate () {
-    console.log(this.$store.getters['auth/isLoggedIn'])
     if (!this.$store.getters['auth/isLoggedIn']) {
       this.$router.push('/login')
     }
-    this.$store.dispatch('user/get').catch(err => {
+    this.$store.dispatch('user/get').then(res => {
+      let data = response.getResponse(res)
+      if (data.email_confirmed) {
+
+      }
+    }).catch(err => {
       response.handleErrors(err, this)
     })
   },

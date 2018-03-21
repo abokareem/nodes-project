@@ -60,6 +60,7 @@ class UserResource extends Resource
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'group' => $this->group_id,
             'email_confirmed' => (bool)$this->email_confirmed,
             'two_fa' => (bool)$this->two_fa,
             'invest' => MasternodeResource::collection($this->nodes),

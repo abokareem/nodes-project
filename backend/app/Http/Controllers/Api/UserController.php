@@ -301,7 +301,7 @@ class UserController extends Controller
 
         event(new ResendUserRegisteredEmail($confirmation));
 
-        return new MessageResource(trans('emails.reconfirm'));
+        return new MessageResource(trans('mails.reconfirm'));
     }
 
     /**
