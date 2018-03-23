@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard-content">
-        <div class="card col-md-2">
+        <div class="card col-md-12 col-xs-12">
             <div class="header">
                 <h4 class="title">My Actions</h4>
             </div>
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
                         title="My Transactions"
@@ -24,7 +24,7 @@
                         :lineNumbers="true"/>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
                         title="My Withdrawals"
@@ -50,7 +50,7 @@
             <div class="header">
                 <h3 class="title" style="margin-bottom: 30px">My Masternodes</h3>
             </div>
-            <div v-for="(node, index) in nodes" :key="index" class="col-md-12 col-xs-12">
+            <div v-for="(node, index) in nodes" :key="index" class="col-md-4 col-xs-4">
                 <chart-card :chart-data="node.data" chart-type="Pie">
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
                     <span slot="subTitle">State: {{node.state}}</span>

@@ -9,7 +9,7 @@
             <div class="header">
                 <h3 class="title" style="margin-bottom: 30px">Masternodes</h3>
             </div>
-            <div v-for="(node, index) in nodes" :key="index" class="col-md-12 col-xs-12">
+            <div v-for="(node, index) in nodes" :key="index" class="col-md-4 col-xs-4">
                 <chart-card :chart-data="node.data" chart-type="Pie">
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
                     <span slot="subTitle"><br>Share price: {{node.sharePrice}} <br><br> Free Shares: {{node.freeShares}}</span>
