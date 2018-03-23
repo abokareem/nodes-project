@@ -1,7 +1,8 @@
 <template>
     <div :class="{'nav-open': $sidebar.showSidebar}">
         <div class="wrapper">
-            <side-bar type="sidebar" :sidebar-links="$sidebar.sidebarLinks">
+            <side-bar v-if="showSidebarLinks" type="sidebar"
+                      :sidebar-links="isAdmin ? $sidebar.adminLinks : $sidebar.sidebarLinks">
 
             </side-bar>
             <div class="main-panel">
@@ -13,7 +14,8 @@
                 <content-footer></content-footer>
             </div>
         </div>
-        <side-bar type="navbar" :sidebar-links="$sidebar.sidebarLinks">
+        <side-bar v-if="showSidebarLinks" type="navbar"
+                  :sidebar-links="isAdmin ? $sidebar.adminLinks : $sidebar.sidebarLinks">
             <ul class="nav navbar-nav">
                 <li>
                     <a class="dropdown-toggle" data-toggle="dropdown">
@@ -59,10 +61,17 @@ export default {
     }
     this.$store.dispatch('user/get').then(res => {
       let data = response.getResponse(res)
-      if (data.email_confirmed) {
-
+      if (data.group === this.$store.state.groups.admin) {
+        this.isAdmin = true
+        this.$router.push({name: 'users'})
+      } else {
+        if (this.$route.name === 'user') {
+          this.$router.push({name: 'dashboard'})
+        }
       }
+      this.showSidebarLinks = true
     }).catch(err => {
+      this.showSidebarLinks = true
       response.handleErrors(err, this)
     })
   },
@@ -71,6 +80,12 @@ export default {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false)
       }
+    }
+  },
+  data () {
+    return {
+      isAdmin: false,
+      showSidebarLinks: false
     }
   }
 }

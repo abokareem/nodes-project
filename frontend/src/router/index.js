@@ -11,13 +11,14 @@ import FooTer from '../components/footer/Footer.vue'
 import ForgotPassword from '../components/login/forgotten/ForgotPassword.vue'
 import ResetPassword from '../components/login/forgotten/ResetPassword.vue'
 
-import Icons from '../components/user/paper/Dashboard/Views/Icons.vue'
+import Masternodes from '../components/user/paper/Dashboard/Views/Masternodes.vue'
 import DashboardLayout from '../components/user/paper/Dashboard/Layout/DashboardLayout.vue'
 import UserProfile from '../components/user/paper/Dashboard/Views/UserProfile.vue'
 import Notifications from '../components/user/paper/Dashboard/Views/Notifications.vue'
 import ConfirmEmail from '../components/user/confirmEmail/ConfirmEmail.vue'
 import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue'
 import DashboardContent from '../components/user/paper/Dashboard/Views/DashboardContent.vue'
+import Overview from '../components/user/paper/Dashboard/Views/Overview.vue'
 
 Vue.use(Router)
 
@@ -46,7 +47,7 @@ export default new Router({
       component: DashboardLayout,
       children: [
         {
-          path: '/',
+          path: 'dashboard',
           name: 'dashboard',
           component: DashboardContent
         },
@@ -56,13 +57,18 @@ export default new Router({
           component: UserProfile
         },
         {
-          path: 'notify',
-          name: 'notify',
+          path: 'nodes',
+          name: 'nodes',
+          component: Masternodes
+        },
+        {
+          path: '/admin/users',
+          name: 'users',
           component: Notifications
         }
       ]
     },
-    {path: '/admin/icons', name: 'icons', component: Icons},
+    {path: '/admin/icons', name: 'icons', component: Overview},
     {path: '/email/confirm/:token', component: ConfirmEmail},
     {path: '*', component: NotFoundPage}
   ]

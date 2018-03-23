@@ -49,6 +49,16 @@ const response = {
       timeout: 2000
     })
   },
+  409 (err, component) {
+    component.$notifications.notify({
+      message: '<h4>' + err.data.message + '</h4>',
+      icon: 'ti-bell',
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+      type: 'danger',
+      timeout: 2000
+    })
+  },
   422 (err, component) {
     component.$notifications.notify({
       message: '<h3>' + err.data.message + '</h3>',

@@ -17,6 +17,12 @@ const store = new Vuex.Store({
       maximum: 1280,
       end: 1310
     },
+    groups: {
+      admin: 1
+    },
+    withdrawals: {
+      processing: 'processing'
+    },
     errors: {
       notFound: 404,
       partContent: 206

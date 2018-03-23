@@ -2,22 +2,29 @@ import Sidebar from './SideBar.vue'
 
 const SidebarStore = {
   showSidebar: false,
+  adminLinks: [
+    {
+      name: 'Users',
+      icon: 'ti-panel',
+      path: '/admin/users'
+    }
+  ],
   sidebarLinks: [
     {
       name: 'Dashboard',
       icon: 'ti-panel',
-      path: '/user'
+      path: '/user/dashboard'
     },
     {
       name: 'User Profile',
       icon: 'ti-user',
       path: '/user/profile'
-    }/*,
-    {
-      name: 'Table List',
-      icon: 'ti-view-list-alt',
-      path: '/admin/table-list'
     },
+    {
+      name: 'Masternodes',
+      icon: 'ti-view-list-alt',
+      path: '/user/nodes'
+    }/*,
     {
       name: 'Typography',
       icon: 'ti-text',

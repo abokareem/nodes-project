@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import i18n from './i18n'
+import VueGoodTable from 'vue-good-table'
 
 import vClickOutside from 'v-click-outside'
 
@@ -14,8 +15,9 @@ import SideBar from './components/user/paper/UIComponents/SidebarPlugin'
 import Chartist from 'chartist'
 import fgInput from './components/user/paper/UIComponents/Inputs/formGroupInput.vue'
 import DropDown from './components/user/paper/UIComponents/Dropdown.vue'
+//import './assets/sass/bootstrap.css'
+import './assets/sass/paper-dashboard.scss'
 import '../static/css/themify-icons.css'
-
 import 'es6-promise/auto'
 
 const GlobalComponents = {
@@ -25,6 +27,7 @@ const GlobalComponents = {
   }
 }
 
+Vue.use(VueGoodTable)
 Vue.use(GlobalComponents)
 Vue.use(vClickOutside)
 Vue.use(Notifications)

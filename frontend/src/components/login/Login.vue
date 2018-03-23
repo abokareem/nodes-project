@@ -61,7 +61,7 @@ export default{
           if (data.two_fa) {
             this.$router.push({name: 'login2fa', params: {token: data.token}})
           } else {
-            this.$router.push({name: 'dashboard'})
+            this.$router.push({name: 'user'})
           }
           this.snipper = false
         }).catch(err => {

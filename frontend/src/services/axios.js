@@ -42,7 +42,7 @@ const request = {
     return instance.patch('/users', creds, this._getAuthHeaders())
   },
   confirmEmail (token) {
-    return instance.get('/users/email/confirm/' + token)
+    return instance.get('/users/email/confirm/' + token, this._getGuestHeaders)
   },
   getTwoFa () {
     return instance.get('/users/twofa', this._getAuthHeaders())
@@ -71,6 +71,27 @@ const request = {
   },
   resendEmail () {
     return instance.get('/users/email/resend', this._getAuthHeaders())
+  },
+  getUserNodes () {
+    return instance.get('/users/nodes', this._getAuthHeaders())
+  },
+  getUserTransactions () {
+    return instance.get('/users/transactions', this._getAuthHeaders())
+  },
+  getUserWithdrawals () {
+    return instance.get('/users/withdrawals', this._getAuthHeaders())
+  },
+  withdrawalNode (creds) {
+    return instance.post('/withdrawals', creds, this._getAuthHeaders())
+  },
+  declineWithdrawal (id) {
+    return instance.delete('/withdrawals/decline/' + id, this._getAuthHeaders())
+  },
+  getNodes () {
+    return instance.get('/nodes', this._getAuthHeaders())
+  },
+  getCurrencies () {
+    return instance.get('/currency', this._getGuestHeaders)
   }
 }
 export default request
