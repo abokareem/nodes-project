@@ -32,7 +32,8 @@ class UserActionsResource extends Resource
     public function toArray($request)
     {
         return [
-            'message' => trans($this->message,['email' => Auth::user()->email])
+            'message' => trans($this->message,['email' => Auth::user()->email]),
+            'created' => $this->created_at
         ];
     }
 }

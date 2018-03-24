@@ -61,6 +61,7 @@ export default {
     }
     this.$store.dispatch('user/get').then(res => {
       let data = response.getResponse(res)
+      this.$i18n.locale = data.language ? data.language : navigator.language
       if (data.group === this.$store.state.groups.admin) {
         this.isAdmin = true
         this.$router.push({name: 'users'})

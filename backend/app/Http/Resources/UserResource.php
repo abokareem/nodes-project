@@ -62,6 +62,7 @@ class UserResource extends Resource
             'email' => $this->email,
             'group' => $this->group_id,
             'email_confirmed' => (bool)$this->email_confirmed,
+            'language' => $this->language,
             'two_fa' => (bool)$this->two_fa,
             'invest' => MasternodeResource::collection($this->nodes),
             'actions' => UserActionsResource::collection($this->getActions()),

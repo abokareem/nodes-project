@@ -92,6 +92,12 @@ const request = {
   },
   getCurrencies () {
     return instance.get('/currency', this._getGuestHeaders)
+  },
+  createNode (data) {
+    return instance.post('/nodes', data, this._getAuthHeaders())
+  },
+  buyShares (data) {
+    return instance.post('/shares/buy', data, this._getAuthHeaders())
   }
 }
 export default request

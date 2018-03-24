@@ -59,7 +59,8 @@ class WithdrawalResource extends Resource
             'node_id' => $this->node_id,
             'state' => $this->state,
             'amount' => $this->amount,
-            'currency' => new CurrencyResource($this->currency)
+            'currency' => new CurrencyResource($this->node->currency),
+            'created' => $this->created_at
         ];
     }
 }

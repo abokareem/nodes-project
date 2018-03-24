@@ -1,16 +1,14 @@
 <template>
     <div class="dashboard-content">
         <div class="card col-md-12 col-xs-12">
-            <div class="header">
-                <h4 class="title">My Actions</h4>
-            </div>
-            <div v-if="user.actions" class="content">
+            <div v-if="actions" class="content">
                 <div class="row">
-                    <ul class="list-group list-group-flush">
-                        <li v-for="(action,index) in user.actions" :key="index" class="list-group-item">
-                            {{action.message}}
-                        </li>
-                    </ul>
+                    <vue-good-table
+                            title="My Actions"
+                            :columns="actions.columns"
+                            :rows="actions.data"
+                            :perPage="5"
+                            :lineNumbers="true"/>
                 </div>
             </div>
         </div>
@@ -60,9 +58,18 @@
                         </button>
                     </span>
                     <div slot="legend">
-                        <i class="fa fa-circle text-info"></i> Other share
-                        <i v-if="node.showFree" class="fa fa-circle text-danger"></i> Free share
-                        <i class="fa fa-circle text-warning"></i> Your share
+                        <p v-if="node.showOther" style="display: inline-block">
+                            <i class="fa fa-circle text-info"></i>
+                            Other share
+                        </p>
+                        <p v-if="node.showFree" style="display: inline-block">
+                            <i class="fa fa-circle text-danger"></i>
+                            Free share
+                        </p>
+                        <p v-if="node.showUser" style="display: inline-block">
+                            <i class="fa fa-circle text-warning"></i>
+                            Your share
+                        </p>
                     </div>
                 </chart-card>
             </div>
@@ -80,7 +87,27 @@ export default{
   },
   beforeCreate () {
     request.getUserActions().then(res => {
-      this.user.actions = response.getResponse(res)
+      let actions = response.getResponse(res)
+      console.log(actions)
+      this.actions.columns = [
+        {
+          label: 'Message',
+          field: 'message'
+        },
+        {
+          label: 'Date',
+          field: 'date',
+          type: 'date',
+          inputFormat: 'YYYY-MM-DD',
+          outputFormat: 'MMM Do YYYY'
+        }
+      ]
+      for (let index in actions) {
+        this.actions.data.push({
+          message: actions[index].message,
+          date: actions[index].created.date
+        })
+      }
     }).catch(err => {
       response.handleErrors(err, this)
     })
@@ -93,11 +120,28 @@ export default{
         let other = ((investments - investor) * 100) / price
         let userShare = (investor * 100) / price
         let free = ((price - investments) * 100) / price
-        nodes[index].data = {
-          labels: free === 0 ? [other + '%', userShare + '%'] : [other + '%', userShare + '%', free + '%'],
-          series: free === 0 ? [other, userShare] : [other, userShare, free]
+        let labels = [
+          other ? other + '%' : '',
+          userShare ? userShare + '%' : '',
+          free ? free + '%' : ''
+        ]
+        let series = [other, userShare, free]
+        if (!other) {
+          delete series[0]
         }
+        if (!userShare) {
+          delete series[1]
+        }
+        if (!free) {
+          delete series[2]
+        }
+        nodes[index].showOther = !!other
+        nodes[index].showUser = !!userShare
         nodes[index].showFree = !!free
+        nodes[index].data = {
+          labels: labels,
+          series: series
+        }
       }
       this.nodes = nodes
     }).catch(err => {
@@ -139,6 +183,7 @@ export default{
       response.handleErrors(err, this)
     })
     request.getUserWithdrawals().then(res => {
+      console.log(res)
       let withdrawals = response.getResponse(res)
       this.withdrawals.columns = [
         {
@@ -165,8 +210,9 @@ export default{
       ]
       for (let index in withdrawals) {
         this.withdrawals.data.push({
-          currency: withdrawals[index].currency,
+          currency: withdrawals[index].currency.name,
           amount: withdrawals[index].amount,
+          id: withdrawals[index].id,
           //date: withdrawals[index].created.date,
           state: withdrawals[index].state
         })
@@ -187,16 +233,18 @@ export default{
     },
     declineWithdrawal (id) {
       request.declineWithdrawal(id).then(res => {
-        console.log(res)
+        response.handleSuccess(res, this)
       }).catch(err => {
         console.log(err.response)
+        response.handleErrors(err, this)
       })
     }
   },
   data () {
     return {
-      user: {
-        actions: false
+      actions: {
+        columns: [],
+        data: []
       },
       transactions: {
         columns: [],

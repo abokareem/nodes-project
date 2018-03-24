@@ -3,7 +3,7 @@
         <div class="jumbotron">
             <h1>Create your own Masternode</h1>
             <p>or unite with others</p>
-            <create-masternode></create-masternode>
+            <create-masternode @refreshNodes="getNodes"></create-masternode>
         </div>
         <div class="card col-md-12 col-xs-12">
             <div class="header">
@@ -14,9 +14,7 @@
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
                     <span slot="subTitle"><br>Share price: {{node.sharePrice}} <br><br> Free Shares: {{node.freeShares}}</span>
                     <span slot="footer">
-                        <!--<button type="button" class="btn btn-success" @click="buyShares(node.id)">
-                            Buy shares
-                        </button>-->
+                        <buy-shares :node="node"></buy-shares>
                     </span>
                     <div slot="legend">
                         <p v-if="node.showOther" style="display: inline-block">
@@ -42,55 +40,57 @@ import request from '../../../../../services/axios'
 import response from '../../../../../services/response'
 import ChartCard from '../../UIComponents/Cards/ChartCard.vue'
 import CreateMasternode from './Modals/CreateMasternode.vue'
+import BuyShares from './Modals/BuyShares.vue'
 
 export default{
   components: {
     ChartCard,
-    CreateMasternode
+    CreateMasternode,
+    BuyShares
   },
-  beforeCreate () {
-    request.getNodes().then(res => {
-      const nodes = response.getResponse(res)
-      for (let index in nodes) {
-        let price = nodes[index].price
-        let investments = nodes[index].bill.amount
-        let investor = nodes[index].investor ? nodes[index].investor.amount : null
-        let other = ((investments - investor) * 100) / price
-        let userShare = (investor * 100) / price
-        let free = ((price - investments) * 100) / price
-        let labels = [
-          other ? other + '%' : '',
-          userShare ? userShare + '%' : '',
-          free ? free + '%' : ''
-        ]
-        let series = [other, userShare, free]
-        if (!other) {
-          delete series[0]
-        }
-        if (!userShare) {
-          delete series[1]
-        }
-        if (!free) {
-          delete series[2]
-        }
-        nodes[index].showOther = !!other
-        nodes[index].showUser = !!userShare
-        nodes[index].showFree = !!free
-        nodes[index].sharePrice = nodes[index].currency.share.share_price
-        nodes[index].freeShares = price - investments / nodes[index].currency.share.share_price
-        nodes[index].data = {
-          labels: labels,
-          series: series
-        }
-      }
-      this.nodes = nodes
-    }).catch(err => {
-      response.handleErrors(err, this)
-    })
+  created () {
+    this.getNodes()
   },
   methods: {
-    buyShares (id) {
-
+    getNodes () {
+      request.getNodes().then(res => {
+        const nodes = response.getResponse(res)
+        for (let index in nodes) {
+          let price = nodes[index].price
+          let investments = nodes[index].bill.amount
+          let investor = nodes[index].investor ? nodes[index].investor.amount : null
+          let other = ((investments - investor) * 100) / price
+          let userShare = (investor * 100) / price
+          let free = ((price - investments) * 100) / price
+          let labels = [
+            other ? other + '%' : '',
+            userShare ? userShare + '%' : '',
+            free ? free + '%' : ''
+          ]
+          let series = [other, userShare, free]
+          if (!other) {
+            delete series[0]
+          }
+          if (!userShare) {
+            delete series[1]
+          }
+          if (!free) {
+            delete series[2]
+          }
+          nodes[index].showOther = !!other
+          nodes[index].showUser = !!userShare
+          nodes[index].showFree = !!free
+          nodes[index].sharePrice = nodes[index].currency.share.share_price
+          nodes[index].freeShares = price - investments / nodes[index].currency.share.share_price
+          nodes[index].data = {
+            labels: labels,
+            series: series
+          }
+        }
+        this.nodes = nodes
+      }).catch(err => {
+        response.handleErrors(err, this)
+      })
     }
   },
   data () {

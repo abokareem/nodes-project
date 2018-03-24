@@ -47,6 +47,12 @@ const validator = {
     } else {
       return false
     }
+  },
+  sharesCount (shares, freeshares) {
+    if (shares < 1 || shares > freeshares) {
+      return false
+    }
+    return true
   }
 }
 

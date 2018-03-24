@@ -13,14 +13,13 @@
                     <slot name="legend"></slot>
                 </div>
                 <hr>
-                <div class="stats">
-                    <slot name="footer"></slot>
-                </div>
                 <div class="pull-right">
                 </div>
             </div>
         </div>
-
+        <div class="stats">
+            <slot name="footer"></slot>
+        </div>
     </div>
 </template>
 <script>
@@ -90,4 +89,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../assets/sass/bootstrap.css";
 @import "../../../../../assets/sass/paper-dashboard.scss";
+.stats {
+    padding-bottom: 10px;
+}
 </style>

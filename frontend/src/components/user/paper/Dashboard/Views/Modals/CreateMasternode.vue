@@ -22,16 +22,44 @@
                                 {{currency.name}}
                             </option>
                         </select>
-                        <div v-if="currency" class="share-content-container">
+                        <div v-if="currency" class="type-node-container">
+                            <h4 class="title">Type of Masternode</h4>
+                            <select v-model="nodeType" class="form-control form-control-lg border-input">
+                                <option disabled value="">Select type of masternode</option>
+                                <option value="single">
+                                    single
+                                </option>
+                                <option value="party">
+                                    party
+                                </option>
+                            </select>
+                        </div>
+                        <div v-if="nodeType === 'party'" class="share-content-container">
+                            <h4 class="title">Buy shares</h4>
                             <h5>Cost one share: {{currency.share.share_price}}</h5>
+                            <input class="form-control border-input" type="range"
+                                   min="1" :max="currency.share.full_price / currency.share.share_price" step="1"
+                                   v-model="sharesCount">
+                            <input class="form-control border-input" type="number"
+                                   min="1" :max="currency.share.full_price / currency.share.share_price" step="1"
+                                   v-model="sharesCount"
+                                   :class="{'error-create-node':!isValidShare}">
+                            <span class="error-create-node-validate"
+                                  v-if="!isValidShare">{{$t("validate.shares") + currency.share.full_price / currency.share.share_price}}</span>
+                        </div>
+                        <div v-if="currency" class="type-node-container pull-left">
                             <h5>Full cost Masternode: {{currency.share.full_price}}</h5>
+                        </div>
+                        <div v-if="currency" class="type-node-container pull-right">
+                            <h5 style="color: #8FBC8F;">
+                                To pay: {{toPay(currency.share.full_price, currency.share.share_price)}}</h5>
                         </div>
                     </div>
                 </div>
                 <div slot="footer">
                     <div class="text-center">
-                        <button class="two-fa-button btn btn-success btn-fill btn-wd"
-                                @click.prevent="create({currency_id})">
+                        <button :disabled="!isValidShare" class="two-fa-button btn btn-success btn-fill btn-wd"
+                                @click.prevent="create({currency,nodeType, sharesCount})">
                             Create
                         </button>
                     </div>
@@ -70,21 +98,52 @@ export default {
         response.handleErrors(err, this)
       })
     },
-    create (creds) {
-      console.log(creds)
+    create (data) {
+      let dataToSend = {}
+      dataToSend.currency_id = data.currency.id
+      dataToSend.type = data.nodeType
+      dataToSend.count = data.sharesCount
+      let freeShares = data.currency.share.full_price / data.currency.share.share_price
+      this.isValidShare = validator.sharesCount(this.sharesCount, freeShares)
+      if (this.isValidShare) {
+        request.createNode(dataToSend).then(res => {
+          response.handleSuccess(res, this)
+          this.$emit('refreshNodes')
+        }).catch(err => {
+          response.handleErrors(err, this)
+        })
+      }
+    },
+    toPay (fullPrice, sharePrice) {
+      if (this.nodeType === 'single') {
+        this.sharesCount = fullPrice / sharePrice
+        return fullPrice
+      }
+      if (this.nodeType === 'party') {
+        let toPay = sharePrice * this.sharesCount
+        if (toPay > fullPrice) {
+          return fullPrice
+        }
+        return toPay
+      }
     }
   },
+  computed: {},
   watch: {
-    currency () {
-      console.log(this.currency.share)
+    sharesCount () {
+      let freeShares = this.currency.share.full_price / this.currency.share.share_price
+      this.isValidShare = validator.sharesCount(this.sharesCount, freeShares)
     }
   },
   data () {
     return {
       currencies: [],
       currency: '',
+      nodeType: '',
       snipper: false,
-      showModal: false
+      showModal: false,
+      sharesCount: 0,
+      isValidShare: true
     }
   }
 }
@@ -95,10 +154,10 @@ export default {
 input {
     margin-bottom: 10px;
 }
-span {
+.error-create-node-validate {
     color: red;
 }
-.error {
+.error-create-node {
     border: 1px solid red;
 }
 .two-fa-button {
