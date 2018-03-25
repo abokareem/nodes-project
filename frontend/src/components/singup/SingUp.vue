@@ -79,7 +79,7 @@ export default {
         this.snipper = true
         const lang = navigator.language || navigator.userLanguage
         creds.language = lang.substring(0, 2)
-        request.register(creds).then(res => {
+        request.register(creds, this.$i18n.locale).then(res => {
           this.snipper = false
           this.$notifications.notify({
             message: '<h3>' + res.data.message + '</h3>',
@@ -91,7 +91,6 @@ export default {
           })
         }).catch(err => {
           this.snipper = false
-          console.log(err.response)
           this.$notifications.notify({
             message: '<h3>' + err.response.data.errors.email[0] + '</h3>',
             icon: 'ti-bell',

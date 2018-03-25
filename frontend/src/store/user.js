@@ -37,7 +37,7 @@ const user = {
     },
     update ({commit}, creds) {
       return new Promise((resolve, reject) => {
-        request.updateUser(creds).then(res => {
+        request.updateUser(creds, creds.locale).then(res => {
           commit(GET_USER, res.data.data)
           resolve(res)
         }).catch(err => {
@@ -47,7 +47,7 @@ const user = {
     },
     activateTwoFa ({commit}, creds) {
       return new Promise((resolve, reject) => {
-        request.activateTwoFa(creds).then(res => {
+        request.activateTwoFa(creds, creds.locale).then(res => {
           commit(ACTIVATE_2FA)
           resolve(res)
         }).catch(err => {
@@ -57,7 +57,7 @@ const user = {
     },
     deactivateTwoFa ({commit}, creds) {
       return new Promise((resolve, reject) => {
-        request.deactivateTwoFa(creds).then(res => {
+        request.deactivateTwoFa(creds, creds.locale).then(res => {
           commit(DEACTIVATE_2FA)
           resolve(res)
         }).catch(err => {

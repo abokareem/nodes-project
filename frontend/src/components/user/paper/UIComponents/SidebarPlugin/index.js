@@ -24,27 +24,12 @@ const SidebarStore = {
       name: 'Masternodes',
       icon: 'ti-view-list-alt',
       path: '/user/nodes'
-    }/*,
-    {
-      name: 'Typography',
-      icon: 'ti-text',
-      path: '/admin/typography'
     },
     {
-      name: 'Icons',
-      icon: 'ti-pencil-alt2',
-      path: '/admin/icons'
-    },
-    {
-      name: 'Maps',
-      icon: 'ti-map',
-      path: '/admin/maps'
-    },
-    {
-      name: 'Notifications',
-      icon: 'ti-bell',
-      path: '/admin/notifications'
-    }*/
+      name: 'Bills',
+      icon: 'ti-wallet',
+      path: '/user/bills'
+    }
   ],
   displaySidebar (value) {
     this.showSidebar = value

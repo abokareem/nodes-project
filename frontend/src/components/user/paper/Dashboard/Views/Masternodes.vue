@@ -1,33 +1,36 @@
 <template>
     <div class="masternodes">
         <div class="jumbotron">
-            <h1>Create your own Masternode</h1>
-            <p>or unite with others</p>
+            <h1>{{$t("masternode.title")}}</h1>
+            <p>{{$t("masternode.desc")}}</p>
             <create-masternode @refreshNodes="getNodes"></create-masternode>
         </div>
         <div class="card col-md-12 col-xs-12">
             <div class="header">
-                <h3 class="title" style="margin-bottom: 30px">Masternodes</h3>
+                <h3 class="title" style="margin-bottom: 30px">{{$t("masternode.otherTitle")}}</h3>
             </div>
             <div v-for="(node, index) in nodes" :key="index" class="col-md-4 col-xs-4">
                 <chart-card :chart-data="node.data" chart-type="Pie">
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
-                    <span slot="subTitle"><br>Share price: {{node.sharePrice}} <br><br> Free Shares: {{node.freeShares}}</span>
+                    <span slot="subTitle"><br>
+                        {{$t("masternode.price")}}: {{node.sharePrice}}<br><br>
+                        {{$t("dashboard.columns.state")}}: {{node.state}}<br><br>
+                        {{$t("masternode.free")}}: {{node.freeShares}}</span>
                     <span slot="footer">
                         <buy-shares :node="node"></buy-shares>
                     </span>
                     <div slot="legend">
                         <p v-if="node.showOther" style="display: inline-block">
                             <i class="fa fa-circle text-info"></i>
-                            Other share
+                            {{$t("dashboard.share.other")}}
                         </p>
                         <p v-if="node.showFree" style="display: inline-block">
                             <i class="fa fa-circle text-danger"></i>
-                            Free share
+                            {{$t("dashboard.share.free")}}
                         </p>
                         <p v-if="node.showUser" style="display: inline-block">
                             <i class="fa fa-circle text-warning"></i>
-                            Your share
+                            {{$t("dashboard.share.your")}}
                         </p>
                     </div>
                 </chart-card>
@@ -53,7 +56,7 @@ export default{
   },
   methods: {
     getNodes () {
-      request.getNodes().then(res => {
+      request.getNodes(this.$i18n.locale).then(res => {
         const nodes = response.getResponse(res)
         for (let index in nodes) {
           let price = nodes[index].price

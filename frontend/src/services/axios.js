@@ -5,99 +5,101 @@ const instance = axios.create({
 })
 
 const request = {
-  _getGuestHeaders: {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Accept-Language': 'ru'
-    }
-  },
-  _getAuthHeaders () {
+  _getGuestHeaders (lang) {
     return {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'ru',
+        'Accept-Language': lang
+      }
+    }
+  },
+  _getAuthHeaders (lang) {
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Accept-Language': lang,
         'Authorization': 'Bearer ' + localStorage.getItem('nodepubToken')
       }
     }
   },
-  register (creds) {
-    return instance.post('/users', creds, this._getGuestHeaders)
+  register (creds, lang) {
+    return instance.post('/users', creds, this._getGuestHeaders(lang))
   },
-  login (creds) {
+  login (creds, lang) {
     creds.grant_type = 'password'
     creds.client_id = '1'
     creds.client_secret = 'Q6nU8HHpUXb0xfJJaNc4G88jmBwFtWpFfpVy4VdR'
     creds.scope = '*'
-    return instance.post('/users/auth', creds, this._getGuestHeaders)
+    return instance.post('/users/auth', creds, this._getGuestHeaders(lang))
   },
-  login2fa (creds) {
-    return instance.post('/users/auth/twofa', creds, this._getGuestHeaders)
+  login2fa (creds, lang) {
+    return instance.post('/users/auth/twofa', creds, this._getGuestHeaders(lang))
   },
-  getUser () {
-    return instance.get('/users', this._getAuthHeaders())
+  getUser (lang) {
+    return instance.get('/users', this._getAuthHeaders(lang))
   },
-  updateUser (creds) {
-    return instance.patch('/users', creds, this._getAuthHeaders())
+  updateUser (creds, lang) {
+    return instance.patch('/users', creds, this._getAuthHeaders(lang))
   },
-  confirmEmail (token) {
-    return instance.get('/users/email/confirm/' + token, this._getGuestHeaders)
+  confirmEmail (token, lang) {
+    return instance.get('/users/email/confirm/' + token, this._getGuestHeaders(lang))
   },
-  getTwoFa () {
-    return instance.get('/users/twofa', this._getAuthHeaders())
+  getTwoFa (lang) {
+    return instance.get('/users/twofa', this._getAuthHeaders(lang))
   },
-  getUserActions () {
-    return instance.get('/users/actions', this._getAuthHeaders())
+  getUserActions (lang) {
+    return instance.get('/users/actions', this._getAuthHeaders(lang))
   },
-  activateTwoFa (creds) {
-    return instance.post('/users/twofa', creds, this._getAuthHeaders())
+  activateTwoFa (creds, lang) {
+    return instance.post('/users/twofa', creds, this._getAuthHeaders(lang))
   },
-  deactivateTwoFa (creds) {
+  deactivateTwoFa (creds, lang) {
     return instance.delete('/users/twofa',
       {
-        headers: this._getAuthHeaders().headers,
+        headers: this._getAuthHeaders(lang).headers,
         data: creds
       })
   },
-  checkCodeTwoFa (creds) {
-    return instance.post('/users/twofa/auth', creds, this._getAuthHeaders())
+  checkCodeTwoFa (creds, lang) {
+    return instance.post('/users/twofa/auth', creds, this._getAuthHeaders(lang))
   },
-  forgotPassword (creds) {
-    return instance.post('/users/password', creds, this._getGuestHeaders)
+  forgotPassword (creds, lang) {
+    return instance.post('/users/password', creds, this._getGuestHeaders(lang))
   },
-  resetPassword (creds) {
-    return instance.patch('/users/password', creds, this._getGuestHeaders)
+  resetPassword (creds, lang) {
+    return instance.patch('/users/password', creds, this._getGuestHeaders(lang))
   },
-  resendEmail () {
-    return instance.get('/users/email/resend', this._getAuthHeaders())
+  resendEmail (lang) {
+    return instance.get('/users/email/resend', this._getAuthHeaders(lang))
   },
-  getUserNodes () {
-    return instance.get('/users/nodes', this._getAuthHeaders())
+  getUserNodes (lang) {
+    return instance.get('/users/nodes', this._getAuthHeaders(lang))
   },
-  getUserTransactions () {
-    return instance.get('/users/transactions', this._getAuthHeaders())
+  getUserTransactions (lang) {
+    return instance.get('/users/transactions', this._getAuthHeaders(lang))
   },
-  getUserWithdrawals () {
-    return instance.get('/users/withdrawals', this._getAuthHeaders())
+  getUserWithdrawals (lang) {
+    return instance.get('/users/withdrawals', this._getAuthHeaders(lang))
   },
-  withdrawalNode (creds) {
-    return instance.post('/withdrawals', creds, this._getAuthHeaders())
+  withdrawalNode (creds, lang) {
+    return instance.post('/withdrawals', creds, this._getAuthHeaders(lang))
   },
-  declineWithdrawal (id) {
-    return instance.delete('/withdrawals/decline/' + id, this._getAuthHeaders())
+  declineWithdrawal (id, lang) {
+    return instance.delete('/withdrawals/decline/' + id, this._getAuthHeaders(lang))
   },
-  getNodes () {
-    return instance.get('/nodes', this._getAuthHeaders())
+  getNodes (lang) {
+    return instance.get('/nodes', this._getAuthHeaders(lang))
   },
-  getCurrencies () {
-    return instance.get('/currency', this._getGuestHeaders)
+  getCurrencies (lang) {
+    return instance.get('/currency', this._getGuestHeaders(lang))
   },
-  createNode (data) {
-    return instance.post('/nodes', data, this._getAuthHeaders())
+  createNode (data, lang) {
+    return instance.post('/nodes', data, this._getAuthHeaders(lang))
   },
-  buyShares (data) {
-    return instance.post('/shares/buy', data, this._getAuthHeaders())
+  buyShares (data, lang) {
+    return instance.post('/shares/buy', data, this._getAuthHeaders(lang))
   }
 }
 export default request

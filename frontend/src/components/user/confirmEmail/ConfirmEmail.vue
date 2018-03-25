@@ -8,7 +8,7 @@ import request from '../../../services/axios'
 export default{
   name: 'ConfirmEmail',
   created () {
-    request.confirmEmail(this.$route.params.token).then(res => {
+    request.confirmEmail(this.$route.params.token, this.$i18n.locale).then(res => {
       this.$router.push('/login')
       this.$notifications.notify({
         message: '<h3>' + res.data.message + '</h3>',

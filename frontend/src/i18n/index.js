@@ -9,9 +9,15 @@ const messages = {
   en,
   ru
 }
-
+function getLocale () {
+  let lang = (navigator.language || navigator.userLanguage).substring(0, 2)
+  if (lang !== 'ru' && lang !== 'en') {
+    return 'en'
+  }
+  return lang
+}
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: getLocale(),
   messages
 })
 

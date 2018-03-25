@@ -1,30 +1,34 @@
 <template>
     <div class="login-container">
         <button class="two-fa-button btn btn-info btn-fill btn-wd" @click="getTwoFaData">
-            Activate Two Factor Authentication
+            {{$t("twofa.activate.button.activate")}}
         </button>
 
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">Activate two factor authentication</h3>
+                <h3 slot="header">{{$t("twofa.activate.title")}}</h3>
                 <div slot="body">
                     <div class="row">
                         <spinner style="position: absolute;margin-left: auto;margin-right: auto;
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <img :src="qrCode">
-                        <h4 v-if="hash" class="title">Key for mobile: {{hash}}</h4><br>
+                        <h4 v-if="hash" class="title">{{$t("twofa.activate.key")}}: {{hash}}</h4><br>
                         <h4 v-if="reserveCode" class="title">
-                            Reserve code for reset two factor authentication: {{reserveCode}}
+                            {{$t("twofa.activate.reserve")}}: {{reserveCode}}
                         </h4>
                         <div class="text-center">
                             <label for="activate-input-code">
-                                Code
+                                {{$t("twofa.code")}}
                             </label>
                             <input class="activate-twofa-input form-control border-input"
                                    type="text"
                                    id="activate-input-code"
-                                   placeholder="Code *"
-                                   v-model="code">
+                                   :placeholder="$t('twofa.code') + '*'"
+                                   v-model="code"
+                                   :class="{'error-activate2fa-custom':!isValidCode}">
+                            <span class="error-activate2fa-validate" v-if="!isValidCode">
+                                {{$t("validate.code2fa")}}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -32,7 +36,7 @@
                     <div class="text-center">
                         <button class="two-fa-button btn btn-success btn-fill btn-wd"
                                 @click="activateTwoFa({hash, code})">
-                            Press to activate
+                            {{$t("twofa.activate.button.activateTwo")}}
                         </button>
                     </div>
                 </div>
@@ -62,7 +66,7 @@ export default {
       this.isValidEmail = true
       this.isValidPassword = true
       this.snipper = true
-      request.getTwoFa().then(res => {
+      request.getTwoFa(this.$i18n.locale).then(res => {
         this.hash = res.data.data.hash
         this.qrCode = res.data.data.qr_code
         this.reserveCode = res.data.data.reserve_code
@@ -77,6 +81,7 @@ export default {
       if (this.isValidCode) {
         this.snipper = true
         creds.reserve_code = this.reserveCode
+        creds.locale = this.$i18n.locale
         this.$store.dispatch('user/activateTwoFa', creds).then(res => {
           response.handleSuccess(res, this)
           this.snipper = false
@@ -109,10 +114,11 @@ export default {
 input {
     margin-bottom: 10px;
 }
-span {
+.error-activate2fa-validate {
+    display: block;
     color: red;
 }
-.error {
+.error-activate2fa-custom {
     border: 1px solid red;
 }
 .two-fa-button {

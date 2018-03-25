@@ -32,7 +32,7 @@ export default{
       this.isValidEmail = validator.email(this.email)
       if (this.isValidEmail) {
         this.snipper = true
-        request.forgotPassword(creds).then(res => {
+        request.forgotPassword(creds, this.$i18n.locale).then(res => {
           response.handleSuccess(res, this)
           this.snipper = false
         }).catch(err => {

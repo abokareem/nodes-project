@@ -3,20 +3,20 @@
         <slot name="open-modal">
             <p>
                 <a class="btn btn-success" href="#" role="button" @click="openModal">
-                    Buy shares
+                    {{$t("masternode.buy.buttons.buy")}}
                 </a>
             </p>
         </slot>
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">Buy Shares</h3>
+                <h3 slot="header">{{$t("masternode.buy.title")}}</h3>
                 <div slot="body">
                     <div class="row">
                         <spinner style="position: absolute;margin-left: auto;margin-right: auto;
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <div class="share-content-container">
-                            <h4 class="title">Buy shares</h4>
-                            <h5>Cost one share: {{node.currency.share.share_price}}</h5>
+                            <h4 class="title">{{$t("masternode.buy.subTitle")}}</h4>
+                            <h5>{{$t("masternode.buy.shareCost")}}: {{node.currency.share.share_price}}</h5>
                             <input class="form-control border-input" type="range"
                                    min="1" :max="freeSharesCount" step="1"
                                    v-model="sharesCount">
@@ -28,11 +28,11 @@
                                   v-if="!isValidShare">{{$t("validate.shares") + freeSharesCount}}</span>
                         </div>
                         <div class="type-node-container pull-left">
-                            <h5>Free shares: {{freeSharesCount}}</h5>
+                            <h5>{{$t("masternode.buy.free")}}: {{freeSharesCount}}</h5>
                         </div>
                         <div class="type-node-container pull-right">
                             <h5 style="color: #8FBC8F;">
-                                To pay: {{toPay()}}</h5>
+                                {{$t("masternode.buy.toPay")}}: {{toPay()}}</h5>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                     <div class="text-center">
                         <button :disabled="!isValidShare" class="two-fa-button btn btn-success btn-fill btn-wd"
                                 @click.prevent="buy(sharesCount)">
-                            Buy
+                            {{$t("masternode.buy.buttons.buy")}}
                         </button>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default {
       let freeShares = (this.node.price - this.node.bill.amount) / this.node.currency.share.share_price
       this.isValidShare = validator.sharesCount(this.sharesCount, freeShares)
       if (this.isValidShare) {
-        request.buyShares(dataToSend).then(res => {
+        request.buyShares(dataToSend, this.$i18n.locale).then(res => {
           response.handleSuccess(res, this)
         }).catch(err => {
           response.handleErrors(err, this)

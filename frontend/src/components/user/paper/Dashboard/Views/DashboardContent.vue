@@ -1,21 +1,19 @@
 <template>
     <div class="dashboard-content">
-        <div class="card col-md-12 col-xs-12">
-            <div v-if="actions" class="content">
-                <div class="row">
-                    <vue-good-table
-                            title="My Actions"
-                            :columns="actions.columns"
-                            :rows="actions.data"
-                            :perPage="5"
-                            :lineNumbers="true"/>
-                </div>
+        <div class="col-md-12 col-xs-12">
+            <div class="card">
+                <vue-good-table
+                        :title="$t('dashboard.actions.title')"
+                        :columns="actions.columns"
+                        :rows="actions.data"
+                        :perPage="5"
+                        :lineNumbers="true"/>
             </div>
         </div>
         <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
-                        title="My Transactions"
+                        :title="$t('dashboard.transaction.title')"
                         :columns="transactions.columns"
                         :rows="transactions.data"
                         :perPage="5"
@@ -25,7 +23,7 @@
         <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
-                        title="My Withdrawals"
+                        :title="$t('dashboard.withdrawal.title')"
                         :columns="withdrawals.columns"
                         :rows="withdrawals.data"
                         :perPage="5"
@@ -36,7 +34,7 @@
                         <td>
                             <button v-if="props.row.state === $store.state.withdrawals.processing"
                                     @click="declineWithdrawal(props.row.id)" type="button" class="btn btn-danger">
-                                decline
+                                {{$t("dashboard.declineButton")}}
                             </button>
                         </td>
                     </template>
@@ -46,29 +44,29 @@
 
         <div class="card col-md-12 col-xs-12">
             <div class="header">
-                <h3 class="title" style="margin-bottom: 30px">My Masternodes</h3>
+                <h3 class="title" style="margin-bottom: 30px">{{$t("dashboard.nodes.title")}}</h3>
             </div>
             <div v-for="(node, index) in nodes" :key="index" class="col-md-4 col-xs-4">
                 <chart-card :chart-data="node.data" chart-type="Pie">
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
-                    <span slot="subTitle">State: {{node.state}}</span>
+                    <span slot="subTitle">{{$t("dashboard.columns.state")}}: {{node.state}}</span>
                     <span slot="footer">
                         <button type="button" class="btn btn-danger" :id="node.id" @click="leaveNode">
-                            Leave from node
+                            {{$t("dashboard.leaveButton")}}
                         </button>
                     </span>
                     <div slot="legend">
                         <p v-if="node.showOther" style="display: inline-block">
                             <i class="fa fa-circle text-info"></i>
-                            Other share
+                            {{$t("dashboard.share.other")}}
                         </p>
                         <p v-if="node.showFree" style="display: inline-block">
                             <i class="fa fa-circle text-danger"></i>
-                            Free share
+                            {{$t("dashboard.share.free")}}
                         </p>
                         <p v-if="node.showUser" style="display: inline-block">
                             <i class="fa fa-circle text-warning"></i>
-                            Your share
+                            {{$t("dashboard.share.your")}}
                         </p>
                     </div>
                 </chart-card>
@@ -86,20 +84,19 @@ export default{
     ChartCard
   },
   beforeCreate () {
-    request.getUserActions().then(res => {
+    request.getUserActions(this.$i18n.locale).then(res => {
       let actions = response.getResponse(res)
-      console.log(actions)
       this.actions.columns = [
         {
-          label: 'Message',
+          label: this.$t('dashboard.actions.message'),
           field: 'message'
         },
         {
-          label: 'Date',
+          label: this.$t('dashboard.columns.date'),
           field: 'date',
           type: 'date',
           inputFormat: 'YYYY-MM-DD',
-          outputFormat: 'MMM Do YYYY'
+          outputFormat: 'YYYY-MM-DD'
         }
       ]
       for (let index in actions) {
@@ -111,7 +108,7 @@ export default{
     }).catch(err => {
       response.handleErrors(err, this)
     })
-    request.getUserNodes().then(res => {
+    request.getUserNodes(this.$i18n.locale).then(res => {
       const nodes = response.getResponse(res)
       for (let index in nodes) {
         let price = nodes[index].price
@@ -147,27 +144,27 @@ export default{
     }).catch(err => {
       response.handleErrors(err, this)
     })
-    request.getUserTransactions().then(res => {
+    request.getUserTransactions(this.$i18n.locale).then(res => {
       let transactions = response.getResponse(res)
       this.transactions.columns = [
         {
-          label: 'Currency',
+          label: this.$t('dashboard.columns.currency'),
           field: 'currency'
         },
         {
-          label: 'Amount',
+          label: this.$t('dashboard.columns.amount'),
           field: 'amount',
           type: 'number'
         },
         {
-          label: 'Date',
+          label: this.$t('dashboard.columns.date'),
           field: 'date',
           type: 'date',
           inputFormat: 'YYYY-MM-DD',
-          outputFormat: 'MMM Do YYYY'
+          outputFormat: 'YYYY-MM-DD'
         },
         {
-          label: 'Type',
+          label: this.$t('dashboard.transaction.type'),
           field: 'type'
         }
       ]
@@ -182,60 +179,61 @@ export default{
     }).catch(err => {
       response.handleErrors(err, this)
     })
-    request.getUserWithdrawals().then(res => {
-      console.log(res)
+    request.getUserWithdrawals(this.$i18n.locale).then(res => {
       let withdrawals = response.getResponse(res)
       this.withdrawals.columns = [
         {
-          label: 'Currency',
+          label: this.$t('dashboard.columns.currency'),
           field: 'currency'
         },
         {
-          label: 'Amount',
+          label: this.$t('dashboard.columns.amount'),
           field: 'amount',
           type: 'number'
         },
         {
-          label: 'Date',
-          field: 'date'
+          label: this.$t('dashboard.columns.date'),
+          field: 'date',
+          type: 'date',
+          inputFormat: 'YYYY-MM-DD',
+          outputFormat: 'YYYY-MM-DD'
         },
         {
-          label: 'State',
+          label: this.$t('dashboard.columns.state'),
           field: 'state'
         },
         {
-          label: 'Decline',
+          label: this.$t('dashboard.withdrawal.decline'),
           sortable: false
         }
       ]
       for (let index in withdrawals) {
         this.withdrawals.data.push({
-          currency: withdrawals[index].currency.name,
+          currency: withdrawals[index].currency ? withdrawals[index].currency.name : null,
           amount: withdrawals[index].amount,
           id: withdrawals[index].id,
-          //date: withdrawals[index].created.date,
+          date: withdrawals[index].created.date,
           state: withdrawals[index].state
         })
       }
     }).catch(err => {
-      console.log(err)
+      response.handleErrors(err, this)
     })
   },
   methods: {
     leaveNode (e) {
       let creds = {}
       creds.node_id = e.target.id
-      request.withdrawalNode(creds).then(res => {
+      request.withdrawalNode(creds, this.$i18n.locale).then(res => {
         response.handleSuccess(res, this)
       }).catch(err => {
         response.handleErrors(err, this)
       })
     },
     declineWithdrawal (id) {
-      request.declineWithdrawal(id).then(res => {
+      request.declineWithdrawal(id, this.$i18n.locale).then(res => {
         response.handleSuccess(res, this)
       }).catch(err => {
-        console.log(err.response)
         response.handleErrors(err, this)
       })
     }

@@ -173,7 +173,7 @@ export default{
   },
   mounted () {
     this.handleIndexPage()
-    this.changeLang('en')
+    this.changeLang(this.$i18n.locale)
     this.addDropdownEvent()
   },
   destroyed () {

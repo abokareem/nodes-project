@@ -3,19 +3,19 @@
         <slot name="open-modal">
             <p>
                 <a class="btn btn-primary btn-lg" href="#" role="button" @click="getCurrency">
-                    Create
+                    {{$t("masternode.create.buttons.create")}}
                 </a>
             </p>
         </slot>
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">Create Masternode</h3>
+                <h3 slot="header">{{$t("masternode.create.title")}}</h3>
                 <div slot="body">
                     <div class="row">
                         <spinner style="position: absolute;margin-left: auto;margin-right: auto;
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <select v-model="currency" class="form-control form-control-lg border-input">
-                            <option disabled value="">Select the currency</option>
+                            <option disabled value="">{{$t("masternode.create.currency")}}</option>
                             <option v-for="(currency,index) in currencies"
                                     :key="index"
                                     :value="currency">
@@ -23,9 +23,9 @@
                             </option>
                         </select>
                         <div v-if="currency" class="type-node-container">
-                            <h4 class="title">Type of Masternode</h4>
+                            <h4 class="title">{{$t("masternode.create.typeTitle")}}</h4>
                             <select v-model="nodeType" class="form-control form-control-lg border-input">
-                                <option disabled value="">Select type of masternode</option>
+                                <option disabled value="">{{$t("masternode.create.type")}}</option>
                                 <option value="single">
                                     single
                                 </option>
@@ -35,8 +35,8 @@
                             </select>
                         </div>
                         <div v-if="nodeType === 'party'" class="share-content-container">
-                            <h4 class="title">Buy shares</h4>
-                            <h5>Cost one share: {{currency.share.share_price}}</h5>
+                            <h4 class="title">{{$t("masternode.create.title")}}</h4>
+                            <h5>{{$t("masternode.create.shareCost")}}: {{currency.share.share_price}}</h5>
                             <input class="form-control border-input" type="range"
                                    min="1" :max="currency.share.full_price / currency.share.share_price" step="1"
                                    v-model="sharesCount">
@@ -48,11 +48,11 @@
                                   v-if="!isValidShare">{{$t("validate.shares") + currency.share.full_price / currency.share.share_price}}</span>
                         </div>
                         <div v-if="currency" class="type-node-container pull-left">
-                            <h5>Full cost Masternode: {{currency.share.full_price}}</h5>
+                            <h5>{{$t("masternode.create.fullCost")}}: {{currency.share.full_price}}</h5>
                         </div>
                         <div v-if="currency" class="type-node-container pull-right">
                             <h5 style="color: #8FBC8F;">
-                                To pay: {{toPay(currency.share.full_price, currency.share.share_price)}}</h5>
+                                {{$t("masternode.create.toPay")}}: {{toPay(currency.share.full_price, currency.share.share_price)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                     <div class="text-center">
                         <button :disabled="!isValidShare" class="two-fa-button btn btn-success btn-fill btn-wd"
                                 @click.prevent="create({currency,nodeType, sharesCount})">
-                            Create
+                            {{$t("masternode.create.buttons.create")}}
                         </button>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default {
     getCurrency () {
       this.openModal()
       this.snipper = true
-      request.getCurrencies().then(res => {
+      request.getCurrencies(this.$i18n.locale).then(res => {
         this.currencies = response.getResponse(res)
         this.snipper = false
       }).catch(err => {
@@ -106,7 +106,7 @@ export default {
       let freeShares = data.currency.share.full_price / data.currency.share.share_price
       this.isValidShare = validator.sharesCount(this.sharesCount, freeShares)
       if (this.isValidShare) {
-        request.createNode(dataToSend).then(res => {
+        request.createNode(dataToSend, this.$i18n.locale).then(res => {
           response.handleSuccess(res, this)
           this.$emit('refreshNodes')
         }).catch(err => {

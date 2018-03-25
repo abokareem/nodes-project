@@ -38,7 +38,7 @@ export default{
       if (this.isValidEmail) {
         this.snipper = true
         creds.token = this.$route.params.token
-        request.resetPassword(creds).then(res => {
+        request.resetPassword(creds, this.$i18n.locale).then(res => {
           response.handleSuccess(res, this)
           this.$router.push({name: 'login'})
           this.snipper = false

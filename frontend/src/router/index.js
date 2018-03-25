@@ -19,6 +19,7 @@ import ConfirmEmail from '../components/user/confirmEmail/ConfirmEmail.vue'
 import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue'
 import DashboardContent from '../components/user/paper/Dashboard/Views/DashboardContent.vue'
 import Overview from '../components/user/paper/Dashboard/Views/Overview.vue'
+import UserBills from '../components/user/paper/Dashboard/Views/UserBills.vue'
 
 Vue.use(Router)
 
@@ -60,6 +61,11 @@ export default new Router({
           path: 'nodes',
           name: 'nodes',
           component: Masternodes
+        },
+        {
+          path: 'bills',
+          name: 'bill',
+          component: UserBills
         },
         {
           path: '/admin/users',

@@ -133,7 +133,9 @@ const en = {
     password: 'Password can\'t be less than six symbols. Password must contain letters and numbers',
     confirmedPassword: 'Passwords do not match',
     name: 'Name can\'t be less than 2 symbols',
-    code2fa: 'Code can\'t be less than six symbols'
+    code2fa: 'Code can\'t be less than six symbols',
+    shares: 'To participate, you must have at least 1 share. Possible free shares ',
+    wallet: 'Invalid wallet'
   },
   login2fa: {
     title: 'Two Factor Authentication'
@@ -142,6 +144,99 @@ const en = {
     password: {
       title: 'Reset password',
       button: 'Send'
+    }
+  },
+  logoutButton: 'Logout',
+  dashboard: {
+    columns: {
+      date: 'Date',
+      amount: 'Amount',
+      currency: 'Currency',
+      state: 'State'
+    },
+    actions: {
+      title: 'My Actions',
+      message: 'Actions'
+    },
+    transaction: {
+      title: 'My Transactions',
+      type: 'Type'
+    },
+    withdrawal: {
+      title: 'My Withdrawals',
+      decline: 'Decline'
+    },
+    nodes: {
+      title: 'My Masternodes'
+    },
+    leaveButton: 'Leave',
+    declineButton: 'decline',
+    share: {
+      free: 'free shares',
+      other: 'other shares',
+      your: 'your shares'
+    }
+  },
+  editProfile: {
+    title: 'Edit Profile',
+    buttons: {
+      update: 'Update profile'
+    },
+    name: 'Username',
+    mail: 'Email',
+    password: 'Password',
+    confirm: 'Please confirm your email. You can change email and ',
+    resend: 'resend letter.',
+    code: 'Code'
+  },
+  twofa: {
+    code: 'Code',
+    title: 'Two Factor Authentication',
+    activate: {
+      title: 'Activate two factor authentication',
+      button: {
+        activate: 'Activate Two Factor Authentication',
+        activateTwo: 'Press to activate'
+      },
+      key: 'Key for activate',
+      reserve: 'Reserve code for reset two factor authentication',
+    },
+    deactivate: {
+      title: 'Deactivate two factor authentication',
+      button: {
+        deactivate: 'Deactivate Two Factor Authentication',
+        deactivateTwo: 'Press to deactivate'
+      }
+    }
+  },
+  masternode: {
+    title: 'Create your own Masternode',
+    desc: 'or unite with others',
+    otherTitle: 'Masternodes',
+    price: 'Share price',
+    free: 'Free Shares',
+    create: {
+      title: 'Create Masternode',
+      typeTitle: 'Type of Masternode',
+      buyTitle: 'Buy shares',
+      type: 'Select type of masternode',
+      currency: 'Select the currency',
+      shareCost: 'Cost one share',
+      fullCost: 'Full cost Masternode',
+      toPay: 'To pay',
+      buttons: {
+        create: 'Create'
+      }
+    },
+    buy: {
+      buttons: {
+        buy: 'Buy shares'
+      },
+      title: 'Buy Shares',
+      subTitle: 'Buy Shares',
+      toPay: 'To pay',
+      free: 'Free shares',
+      shareCost: 'Cost one share'
     }
   }
 }

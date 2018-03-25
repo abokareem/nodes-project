@@ -1,20 +1,20 @@
 <template>
     <div class="card">
         <div v-if="!isConfirmEmail" class="resend-email">
-            <h3 class="title">Please confirm your email. You can change email and
-                <a style="cursor: pointer" @click="resendEmail">resend letter.</a>
+            <h3 class="title">{{$t("editProfile.confirm")}}
+                <a style="cursor: pointer" @click="resendEmail">{{$t("editProfile.resend")}}</a>
             </h3>
         </div>
         <div class="header">
-            <h4 class="title">Edit Profile</h4>
+            <h4 class="title">{{$t("editProfile.title")}}</h4>
         </div>
         <div v-if="showContent" class="content">
             <form>
                 <div class="row">
                     <div class="col-md-4">
                         <fg-input type="text"
-                                  label="Username"
-                                  placeholder="Username"
+                                  :label="$t('editProfile.name')"
+                                  :placeholder="$t('editProfile.name')"
                                   v-model="name"
                                   :class="{'error-login-custom':!isValidName}">
                         </fg-input>
@@ -22,8 +22,8 @@
                     </div>
                     <div class="col-md-4">
                         <fg-input type="email"
-                                  label="Email"
-                                  placeholder="Email"
+                                  :label="$t('editProfile.mail')"
+                                  :placeholder="$t('editProfile.mail')"
                                   v-model="email"
                                   :class="{'error-login-custom':!isValidEmail}">
                         </fg-input>
@@ -31,8 +31,8 @@
                     </div>
                     <div class="col-md-4">
                         <fg-input type="password"
-                                  label="Password"
-                                  placeholder="Password"
+                                  :label="$t('editProfile.password')"
+                                  :placeholder="$t('editProfile.password')"
                                   v-model="password"
                                   :class="{'error-login-custom':!isValidPassword}">
                         </fg-input>
@@ -42,7 +42,7 @@
                 <div class="text-center">
                     <button type="submit" class="btn btn-info btn-fill btn-wd"
                             @click.prevent="updateProfile({name, email, password, code})">
-                        Update Profile
+                        {{$t('editProfile.buttons.update')}}
                     </button>
                 </div>
                 <div class="clearfix"></div>
@@ -52,17 +52,17 @@
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">Two Factor Authentication</h3>
+                <h3 slot="header">{{$t('twofa.title')}}</h3>
                 <div slot="body">
                     <div class="row">
                         <div class="text-center">
                             <label for="activate-input-code">
-                                Code
+                                {{$t('editProfile.code')}}
                             </label>
                             <input class="activate-twofa-input form-control border-input"
                                    type="text"
                                    id="activate-input-code"
-                                   placeholder="Code *"
+                                   :placeholder="$t('editProfile.code') + '*'"
                                    v-model="code">
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                     <div class="text-center">
                         <button class="two-fa-button btn btn-info btn-fill btn-wd"
                                 @click.prevent="checkCodeTwoFa({name, email, password, code})">
-                            Update
+                            {{$t('editProfile.buttons.update')}}
                         </button>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ export default {
       this.isValidCode = validator.twoFaCode(this.code)
       if (this.isValidCode) {
         this.snipper = true
-        request.checkCodeTwoFa(creds).then(res => {
+        request.checkCodeTwoFa(creds, this.$i18n.locale).then(res => {
           this.snipper = false
           this.showModal = false
           this.updateData(creds)
@@ -147,7 +147,7 @@ export default {
     },
     resendEmail () {
       this.snipper = true
-      request.resendEmail().then(res => {
+      request.resendEmail(this.$i18n.locale).then(res => {
         response.handleSuccess(res, this)
         this.snipper = false
       }).catch(err => {
@@ -169,6 +169,7 @@ export default {
           })
       } else {
         this.snipper = true
+        creds.locale = this.$i18n.locale
         this.$store.dispatch('user/update', creds).then(res => {
           this.$notifications.notify(
             {

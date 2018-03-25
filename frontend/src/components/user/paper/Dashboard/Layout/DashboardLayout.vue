@@ -18,6 +18,15 @@
                   :sidebar-links="isAdmin ? $sidebar.adminLinks : $sidebar.sidebarLinks">
             <ul class="nav navbar-nav">
                 <li>
+                    <a @click="logout" href="/" class="btn-rotate">
+                        <i class="ti-power-off"></i>
+                        <p>
+                            {{$t("logoutButton")}}
+                        </p>
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <!--<li>
                     <a class="dropdown-toggle" data-toggle="dropdown">
                         <i class="ti-panel"></i>
                         <p>Stats</p>
@@ -38,7 +47,7 @@
                         <p>Settings</p>
                     </a>
                 </li>
-                <li class="divider"></li>
+                <li class="divider"></li>-->
             </ul>
         </side-bar>
     </div>
@@ -61,7 +70,9 @@ export default {
     }
     this.$store.dispatch('user/get').then(res => {
       let data = response.getResponse(res)
-      this.$i18n.locale = data.language ? data.language : navigator.language
+      if (data.language) {
+        this.$i18n.locale = data.language
+      }
       if (data.group === this.$store.state.groups.admin) {
         this.isAdmin = true
         this.$router.push({name: 'users'})
@@ -81,6 +92,9 @@ export default {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false)
       }
+    },
+    logout () {
+      this.$store.dispatch('auth/logout')
     }
   },
   data () {

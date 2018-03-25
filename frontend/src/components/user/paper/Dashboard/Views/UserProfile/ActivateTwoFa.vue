@@ -2,7 +2,7 @@
     <div class="activate-twofa">
         <div class="card">
             <div class="header">
-                <h4 class="title">Two Factor Authentication</h4>
+                <h4 class="title">{{$t("twofa.title")}}</h4>
             </div>
             <modal2fa-activate v-if="!activate && showButton" @buttonChange="activate = true"></modal2fa-activate>
             <modal2fa-deactivate v-if="activate && showButton" @buttonChange="activate = false"></modal2fa-deactivate>

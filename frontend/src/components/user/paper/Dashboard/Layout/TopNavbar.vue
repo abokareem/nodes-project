@@ -13,7 +13,7 @@
             </div>
             <div class="navbar-right-menu">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="open">
+                    <!--<li class="open">
                         <a href="#" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
                             <i class="ti-panel"></i>
                             <p>Stats</p>
@@ -33,12 +33,12 @@
                                 Settings
                             </p>
                         </a>
-                    </li>
+                    </li>-->
                     <li>
                         <a @click="logout" href="/" class="btn-rotate">
                             <i class="ti-power-off"></i>
                             <p>
-                                Logout
+                                {{$t("logoutButton")}}
                             </p>
                         </a>
                     </li>
