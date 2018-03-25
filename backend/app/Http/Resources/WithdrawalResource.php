@@ -43,7 +43,6 @@ use Illuminate\Http\Resources\Json\Resource;
  *
  *
  */
-
 class WithdrawalResource extends Resource
 {
     /**
@@ -59,8 +58,16 @@ class WithdrawalResource extends Resource
             'node_id' => $this->node_id,
             'state' => $this->state,
             'amount' => $this->amount,
-            'currency' => new CurrencyResource($this->node->currency),
+            'currency' => new CurrencyResource($this->getCurrency()),
             'created' => $this->created_at
         ];
+    }
+
+    private function getCurrency()
+    {
+        if ($this->node) {
+            return $this->node->currency;
+        }
+        return null;
     }
 }
