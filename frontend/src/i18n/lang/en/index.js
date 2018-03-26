@@ -267,6 +267,14 @@ const en = {
         title: 'Wallet for replenishment'
       }
     }
+  },
+  withdrawals: {
+    buttons: {
+      buy: 'Buy withdrawal',
+      close: 'Close'
+    },
+    title: 'Requests for sale',
+    subTitle: 'Withdrawals'
   }
 }
 

@@ -17,7 +17,9 @@
                         {{$t("dashboard.columns.state")}}: {{node.state}}<br><br>
                         {{$t("masternode.free")}}: {{node.freeShares}}</span>
                     <span slot="footer">
-                        <buy-shares :node="node"></buy-shares>
+                        <buy-shares v-if="node.state !== $store.state.nodes.unstable" :node="node"></buy-shares>
+                        <node-withdrawals v-if="node.state === $store.state.nodes.unstable"
+                                          style="display: inline-block" :node="node"></node-withdrawals>
                     </span>
                     <div slot="legend">
                         <p v-if="node.showOther" style="display: inline-block">
@@ -44,12 +46,14 @@ import response from '../../../../../services/response'
 import ChartCard from '../../UIComponents/Cards/ChartCard.vue'
 import CreateMasternode from './Modals/CreateMasternode.vue'
 import BuyShares from './Modals/BuyShares.vue'
+import NodeWithdrawals from './Modals/BuyNodeWithdrawals.vue'
 
 export default{
   components: {
     ChartCard,
     CreateMasternode,
-    BuyShares
+    BuyShares,
+    NodeWithdrawals
   },
   created () {
     this.getNodes()

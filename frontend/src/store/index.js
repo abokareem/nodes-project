@@ -23,6 +23,9 @@ const store = new Vuex.Store({
     withdrawals: {
       processing: 'processing'
     },
+    nodes: {
+      unstable: 'unstable'
+    },
     errors: {
       notFound: 404,
       partContent: 206

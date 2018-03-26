@@ -51,9 +51,11 @@
                     <h4 class="title" slot="title">{{node.currency.name}}</h4>
                     <span slot="subTitle">{{$t("dashboard.columns.state")}}: {{node.state}}</span>
                     <span slot="footer">
-                        <button type="button" class="btn btn-danger" :id="node.id" @click="leaveNode">
+                        <button style="display: inline-block" type="button" class="btn btn-danger" :id="node.id" @click="leaveNode">
                             {{$t("dashboard.leaveButton")}}
                         </button>
+                        <node-withdrawals v-if="node.state === $store.state.nodes.unstable"
+                                          style="display: inline-block" :node="node"></node-withdrawals>
                     </span>
                     <div slot="legend">
                         <p v-if="node.showOther" style="display: inline-block">
@@ -78,10 +80,12 @@
 import request from '../../../../../services/axios'
 import response from '../../../../../services/response'
 import ChartCard from '../../UIComponents/Cards/ChartCard.vue'
+import NodeWithdrawals from './Modals/BuyNodeWithdrawals.vue'
 
 export default{
   components: {
-    ChartCard
+    ChartCard,
+    NodeWithdrawals
   },
   beforeCreate () {
     request.getUserActions(this.$i18n.locale).then(res => {

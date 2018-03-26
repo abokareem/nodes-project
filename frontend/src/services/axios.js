@@ -107,6 +107,12 @@ const request = {
       data: data
     })
   },
+  getNodesWithdrawals (id, lang) {
+    return instance.get('/nodes/' + id + '/withdrawals', this._getAuthHeaders(lang))
+  },
+  buyNodesWithdrawal (id, lang) {
+    return instance.post('/withdrawals/buy/' + id, null, this._getAuthHeaders(lang))
+  },
   createBill (data, lang) {
     return instance.post('/money', data, this._getAuthHeaders(lang))
   }
