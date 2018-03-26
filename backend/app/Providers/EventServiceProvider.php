@@ -81,6 +81,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NewWithdrawal' => [
             'App\Listeners\SendEmailNewWithdrawal'
         ],
+        'App\Events\MasternodeReadyToCreate' => [
+            'App\Listeners\ChangeMasternodeState'
+        ],
     ];
 
     protected $observers = [

@@ -2,6 +2,7 @@ const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 const passwordRegExp = /^\S.{6,20}$/
 const nameRegExp = /^\S.{1,20}$/
 const twoFaRegExp = /^\S+$/
+const walletRegExp = /^\S+$/
 
 const validator = {
   email (email) {
@@ -50,6 +51,24 @@ const validator = {
   },
   sharesCount (shares, freeshares) {
     if (shares < 1 || shares > freeshares) {
+      return false
+    }
+    return true
+  },
+  wallet (wallet) {
+    let result = walletRegExp.test(wallet)
+
+    if (result) {
+      return true
+    } else {
+      return false
+    }
+  },
+  withdrawalUserAmount (price, existPrice) {
+    if (price === 0) {
+      return false
+    }
+    if (+existPrice < price) {
       return false
     }
     return true

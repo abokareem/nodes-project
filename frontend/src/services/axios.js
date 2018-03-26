@@ -100,6 +100,15 @@ const request = {
   },
   buyShares (data, lang) {
     return instance.post('/shares/buy', data, this._getAuthHeaders(lang))
+  },
+  withdrawalMoney (data, lang) {
+    return instance.delete('/money', {
+      headers: this._getAuthHeaders(lang).headers,
+      data: data
+    })
+  },
+  createBill (data, lang) {
+    return instance.post('/money', data, this._getAuthHeaders(lang))
   }
 }
 export default request

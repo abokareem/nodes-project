@@ -8,9 +8,11 @@ use App\Http\Requests\Api\CreateMasternodeRequest;
 use App\Http\Requests\Api\UpdateMasternodeRequest;
 use App\Http\Resources\MasternodeResource;
 use App\Http\Resources\MessageResource;
+use App\Http\Resources\WithdrawalResource;
 use App\Masternode;
 use App\Http\Controllers\Controller;
 use App\Services\NodeService;
+use App\Withdrawals;
 
 class MasternodeController extends Controller
 {
@@ -43,7 +45,42 @@ class MasternodeController extends Controller
     {
         return MasternodeResource::collection(
             Masternode::where('state', Masternode::NEW_STATE)
-                ->orWhere('state', Masternode::UNSTABLE_STATE)->paginate()
+                ->orWhere('state', Masternode::UNSTABLE_STATE)->get()
+        );
+    }
+
+    /**
+     *
+     * @SWG\Get(
+     *     path="/nodes/{node}/withdrawals",
+     *     summary="Get masternode withdrawals",
+     *     tags={"Masternode"},
+     *     description="Get masternode",
+     *     operationId="getMasternode",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="node",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *     @SWG\Response(
+     *      response=200,
+     *      description="masternode object"
+     *     ),
+     * )
+     *
+     * @param Masternode $node
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getNodeWithdrawals(Masternode $node)
+    {
+        return WithdrawalResource::collection(
+            $node->withdrawals()->where('state', Withdrawals::PROCESSING_STATE)->get()
         );
     }
 

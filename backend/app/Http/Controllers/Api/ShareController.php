@@ -82,7 +82,7 @@ class ShareController extends Controller
         $shareService->buy($node, $count);
 
         if ($node->price === $node->bill->amount) {
-            event(new MasternodeReadyToCreate());
+            event(new MasternodeReadyToCreate($node));
         }
 
         event(new BoughtShares());

@@ -135,7 +135,8 @@ const en = {
     name: 'Name can\'t be less than 2 symbols',
     code2fa: 'Code can\'t be less than six symbols',
     shares: 'To participate, you must have at least 1 share. Possible free shares ',
-    wallet: 'Invalid wallet'
+    wallet: 'Invalid wallet',
+    userBillAmount: 'Invalid price'
   },
   login2fa: {
     title: 'Two Factor Authentication'
@@ -237,6 +238,34 @@ const en = {
       toPay: 'To pay',
       free: 'Free shares',
       shareCost: 'Cost one share'
+    }
+  },
+  bills: {
+    buttons: {
+      fill: 'Fill in',
+      fillTwo: 'Close',
+      withdrawal: 'Withdrawal',
+      create: 'Create Bill'
+    },
+    columns: {
+      currency: 'Currency',
+      amount: 'Amount',
+      actions: 'Actions'
+    },
+    messages: {
+      withdrawal: 'Your application for withdrawal of funds has been accepted. Confirmation will take some time',
+      fill: '',
+      create: 'New wallet was created'
+    },
+    modals: {
+      withdrawal: {
+        title: 'Withdrawal Money',
+        wallet: 'Enter your Wallet',
+        amount: 'Amount for withdrawal'
+      },
+      fill: {
+        title: 'Wallet for replenishment'
+      }
     }
   }
 }

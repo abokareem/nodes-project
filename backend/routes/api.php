@@ -52,6 +52,8 @@ Route::middleware(['auth:api', 'confirmEmail'])->group(function (Router $router)
     $router->delete('money', 'UserBillController@withdrawalMoney');
     $router->patch('money/approve/{withdrawal}', 'UserBillController@approve');
     $router->delete('money/decline/{withdrawal}', 'UserBillController@decline');
+
+    $router->get('nodes/{node}/withdrawals', 'MasternodeController@getNodeWithdrawals');
 });
 
 Route::middleware(['auth:api', 'confirmEmail', 'node'])->group(function (Router $router) {

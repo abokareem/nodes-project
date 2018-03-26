@@ -60,8 +60,9 @@ const response = {
     })
   },
   404 (err, component) {
+    let message = err.data.message ? err.data.message : err.statusText
     component.$notifications.notify({
-      message: '<h3>' + err.statusText + '</h3>',
+      message: '<h3>' + message + '</h3>',
       icon: 'ti-bell',
       horizontalAlign: 'right',
       verticalAlign: 'bottom',
