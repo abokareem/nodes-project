@@ -121,6 +121,9 @@ const request = {
   },
   fillInUserBill (data, lang) {
     return instance.patch('/bills/' + data.id, data, this._getAuthHeaders(lang))
+  },
+  sendContactForm (data, lang) {
+    return instance.post('/contact', data, this._getAuthHeaders(lang))
   }
 }
 export default request

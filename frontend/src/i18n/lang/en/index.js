@@ -136,7 +136,8 @@ const en = {
     code2fa: 'Code can\'t be less than six symbols',
     shares: 'To participate, you must have at least 1 share. Possible free shares ',
     wallet: 'Invalid wallet',
-    userBillAmount: 'Invalid price'
+    userBillAmount: 'Invalid price',
+    contactMessage: 'The field is required for complete'
   },
   login2fa: {
     title: 'Two Factor Authentication'

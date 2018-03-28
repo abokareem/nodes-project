@@ -7,19 +7,24 @@
         <!-- -->
         <div class="sidebar-wrapper" id="style-3">
             <div class="logo">
-                <a href="#" class="simple-text">
+                <!--<a href="#" class="simple-text">
                     <div class="logo-img">
                         <img src="../../../../../../static/img/vue-logo.png" alt="">
                     </div>
                     Paper Dashboard
-                </a>
+                </a>-->
+                <router-link class="simple-text" to="/">
+                    <img class="dashboard-custom-logo" alt="logo"
+                         src="../../../../../assets/images/site/logo_white.png">
+                </router-link>
             </div>
             <slot>
 
             </slot>
             <ul :class="navClasses">
                 <!--By default vue-router adds an active class to each route link. This way the links are colored when clicked-->
-                <router-link v-for="(link, index) in sidebarLinks" :key="link.name + index" :to="link.path" tag="li" :ref="link.name">
+                <router-link v-for="(link, index) in sidebarLinks" :key="link.name + index" :to="link.path" tag="li"
+                             :ref="link.name">
                     <a>
                         <i :class="link.icon"></i>
 
@@ -129,4 +134,8 @@ export default {
 @import "../../../../../assets/sass/bootstrap.css";
 @import "../../../../../assets/sass/paper-dashboard.scss";
 @import "../../../../../../static/css/themify-icons.css";
+.dashboard-custom-logo {
+    width: 190px;
+    height: 45px;
+}
 </style>

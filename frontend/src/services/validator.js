@@ -3,6 +3,7 @@ const passwordRegExp = /^\S.{6,20}$/
 const nameRegExp = /^\S.{1,20}$/
 const twoFaRegExp = /^\S+$/
 const walletRegExp = /^\S+$/
+const messageRegExp = /^\S+$/
 
 const validator = {
   email (email) {
@@ -72,6 +73,15 @@ const validator = {
       return false
     }
     return true
+  },
+  contactUsMessage (message) {
+    let result = messageRegExp.test(message)
+
+    if (result) {
+      return true
+    } else {
+      return false
+    }
   }
 }
 

@@ -16,7 +16,7 @@
                     <span v-if="!isValidPassword">{{$t("validate.password")}}</span>
                 </div>
                 <div class="login-captcha-container">
-                    <!--<captcha></captcha>-->
+                    <captcha></captcha>
                 </div>
                 <div class="login-redirect-container">
                     <p class="login-redirect-register">
@@ -49,6 +49,11 @@ export default{
     PaperNotification
   },
   name: 'Login',
+  beforeCreate () {
+    if (this.$store.getters['auth/isLoggedIn']) {
+      this.$router.push({name: 'dashboard'})
+    }
+  },
   methods: {
     login (creds) {
       this.isValidEmail = validator.email(this.username)
