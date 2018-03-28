@@ -21,6 +21,8 @@ Route::get('users/email/confirm/{token}', 'UserController@confirmEmail')->name('
 Route::post('users/auth', 'UserAuthController@login');
 Route::post('users/auth/twofa', 'UserAuthController@twoFaLogin');
 
+Route::post('contact', 'SystemController@contactUs');
+
 Route::get('currency', 'CurrencyController@index');
 Route::get('currency/{currency}', 'CurrencyController@show');
 
@@ -70,6 +72,19 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
     $router->get('bills', 'Admin\UserBillController@index');
     $router->patch('bills/{bill}', 'Admin\UserBillController@update');
     $router->get('bills/{bill}', 'UserBillController@show');
+
+    $router->patch('/shares/{share}', 'ShareController@update');
+
+    $router->get('/admin/users', 'Admin\UserController@index');
+    $router->get('/admin/users/{user}', 'Admin\UserController@show');
+    $router->patch('/admin/users/{user}', 'Admin\UserController@update');
+    $router->delete('/admin/users/{user}', 'Admin\UserController@destroy');
+    $router->put('/admin/users/{user}', 'Admin\UserController@restore');
+
+    $router->get('/admin/commissions', 'SystemController@getCommissions');
+    $router->patch('/admin/commissions/{commission}', 'SystemController@updateCommissions');
+
+    $router->post('systems/wallets', 'SystemController@loadWallets');
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {
@@ -87,5 +102,3 @@ Route::middleware('throttle:15')->group(function (Router $router) {
 Route::middleware(['auth:api', 'leaveNode'])->group(function (Router $router) {
     $router->post('withdrawals', 'WithdrawalController@store');
 });
-
-Route::post('systems/wallets', 'SystemController@loadWallets');

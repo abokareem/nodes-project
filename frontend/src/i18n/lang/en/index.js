@@ -241,6 +241,7 @@ const en = {
     }
   },
   bills: {
+    title: 'Bills',
     buttons: {
       fill: 'Fill in',
       fillTwo: 'Close',
@@ -250,7 +251,8 @@ const en = {
     columns: {
       currency: 'Currency',
       amount: 'Amount',
-      actions: 'Actions'
+      actions: 'Actions',
+      bill: 'Wallet'
     },
     messages: {
       withdrawal: 'Your application for withdrawal of funds has been accepted. Confirmation will take some time',

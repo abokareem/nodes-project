@@ -20,6 +20,7 @@ import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue
 import DashboardContent from '../components/user/paper/Dashboard/Views/DashboardContent.vue'
 import Overview from '../components/user/paper/Dashboard/Views/Overview.vue'
 import UserBills from '../components/user/paper/Dashboard/Views/UserBills.vue'
+import AdminUsersBills from '../components/user/paper/Dashboard/Views/Admin/UserBills.vue'
 
 Vue.use(Router)
 
@@ -68,9 +69,9 @@ export default new Router({
           component: UserBills
         },
         {
-          path: '/admin/users',
+          path: '/admin/users/bills',
           name: 'users',
-          component: Notifications
+          component: AdminUsersBills
         }
       ]
     },

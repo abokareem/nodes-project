@@ -119,7 +119,7 @@ class CurrencyController extends Controller
      */
     public function store(CreateCurrencyRequest $request)
     {
-        $currency = $request->only('name', 'code', 'symbol');
+        $currency = $request->only(['name', 'code', 'symbol']);
 
         Currency::create($currency);
 
@@ -247,7 +247,7 @@ class CurrencyController extends Controller
      */
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
-        $updatedCurrency = $request->only('name', 'code', 'symbol');
+        $updatedCurrency = $request->only(['name', 'code', 'symbol']);
 
         $currency->update($updatedCurrency);
 

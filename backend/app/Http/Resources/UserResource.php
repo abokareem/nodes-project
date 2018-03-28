@@ -64,6 +64,7 @@ class UserResource extends Resource
             'email_confirmed' => (bool)$this->email_confirmed,
             'language' => $this->language,
             'two_fa' => (bool)$this->two_fa,
+            'banned' => $this->trashed(),
             'invest' => MasternodeResource::collection($this->nodes),
             'actions' => UserActionsResource::collection($this->getActions()),
             'bills' => UserBillsResource::collection($this->bills)

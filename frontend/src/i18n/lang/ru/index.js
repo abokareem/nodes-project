@@ -241,6 +241,7 @@ const ru = {
     }
   },
   bills: {
+    title: 'Счета',
     buttons: {
       fill: 'Пополнить',
       fillTwo: 'Закрыть',
@@ -250,7 +251,8 @@ const ru = {
     columns: {
       currency: 'Монета',
       amount: 'Сумма',
-      actions: 'Действие'
+      actions: 'Действие',
+      bill: 'Кошелек'
     },
     messages: {
       withdrawal: 'Ваша заявка на вывод средств принята. Подтверждение потребует некоторого времени',

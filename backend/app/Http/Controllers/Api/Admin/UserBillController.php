@@ -166,6 +166,6 @@ class UserBillController extends Controller
 
         event(new AcceptedPutMoney($bill->user));
 
-        return response('');
+        return new UserBillsResource($bill);
     }
 }

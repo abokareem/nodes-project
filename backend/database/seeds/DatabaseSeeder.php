@@ -14,7 +14,14 @@ class DatabaseSeeder extends Seeder
     {
         app(UserGroup::class)->create(['name' => 'admin']);
         app(UserGroup::class)->create(['name' => 'user']);
-
+        \App\Commission::create([
+            'type' => \App\Commission::FOR_SINGLE_NODE,
+            'percent' => '9'
+        ]);
+        \App\Commission::create([
+            'type' => \App\Commission::FOR_PARTY_NODE,
+            'percent' => '12'
+        ]);
         $this->call([
             MasternodeSeeder::class,
             UserSeeder::class

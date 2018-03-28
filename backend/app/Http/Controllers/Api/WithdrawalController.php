@@ -6,6 +6,8 @@ use App\Events\AcceptedLeaveFromNode;
 use App\Events\BoughtShares;
 use App\Events\CreatedWithdrawal;
 use App\Events\DeclinedWithdrawal;
+use App\Events\MasternodeChanges;
+use App\Events\NewWithdrawal;
 use App\Exceptions\WithdrawalAlreadyNotProcessing;
 use App\Http\Requests\Api\LeaveNodeRequest;
 use App\Http\Resources\MessageResource;
@@ -143,6 +145,7 @@ class WithdrawalController extends Controller
         ]);
 
         event(new DeclinedWithdrawal());
+        event(new MasternodeChanges($withdrawal->node));
 
         return new MessageResource(trans('masternode.withdrawal.decline'));
     }
@@ -258,6 +261,7 @@ class WithdrawalController extends Controller
 
         event(new AcceptedLeaveFromNode($withdrawal->user));
         event(new BoughtShares());
+        event(new MasternodeChanges($withdrawal->node));
 
         return new MessageResource(trans('monetary.share.buy'));
     }

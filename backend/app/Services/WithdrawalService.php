@@ -54,6 +54,8 @@ class WithdrawalService
             'amount' => $investor->amount
         ]);
 
+        event(new NewWithdrawal($withdrawal));
+
         if ($node->state === Masternode::NEW_STATE) {
             $this->approve($withdrawal);
             event(new AcceptedLeaveFromNode($this->user));
@@ -64,8 +66,6 @@ class WithdrawalService
             LeaveNodeJob::dispatch($this->user, $node, $withdrawal);
             return;
         }
-
-        event(new NewWithdrawal($withdrawal));
     }
 
     /**

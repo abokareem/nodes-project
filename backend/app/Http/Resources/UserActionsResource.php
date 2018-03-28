@@ -26,13 +26,14 @@ class UserActionsResource extends Resource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'message' => trans($this->message,['email' => Auth::user()->email]),
+            'message' => trans($this->message, ['email' => Auth::user()->email]),
+            'ip' => $this->ip,
             'created' => $this->created_at
         ];
     }

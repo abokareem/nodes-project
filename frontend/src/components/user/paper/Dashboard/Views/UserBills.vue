@@ -3,7 +3,7 @@
         <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
-                        title="Bills"
+                        :title="$t('bills.title')"
                         :columns="bills.columns"
                         :rows="bills.data"
                         :perPage="15"

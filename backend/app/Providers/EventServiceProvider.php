@@ -73,7 +73,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\WriteLog'
         ],
         'App\Events\CreatedWithdrawal' => [
-            'App\Listeners\WriteLog',
+            'App\Listeners\WriteLog'
         ],
         'App\Events\DeclinedWithdrawal' => [
             'App\Listeners\WriteLog'
@@ -83,6 +83,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\MasternodeReadyToCreate' => [
             'App\Listeners\ChangeMasternodeState'
+        ],
+        'App\Events\MasternodeChanges' => [
+            'App\Listeners\ChangeMasternodeStableState'
         ],
     ];
 

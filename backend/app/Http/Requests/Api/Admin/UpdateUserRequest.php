@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\System;
+namespace App\Http\Requests\Api\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoadWalletsRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,10 @@ class LoadWalletsRequest extends FormRequest
     public function rules()
     {
         return [
-            'currency_id' => 'required|integer',
-            'wallets' => 'required|max:65535|min:5'
+            'group_id' => 'integer',
+            'name' => 'max:255',
+            'language' => 'in:ru,en',
+            'subscribe' => 'boolean'
         ];
     }
 }

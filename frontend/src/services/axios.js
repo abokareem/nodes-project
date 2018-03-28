@@ -115,6 +115,12 @@ const request = {
   },
   createBill (data, lang) {
     return instance.post('/money', data, this._getAuthHeaders(lang))
+  },
+  getUsersBills (lang) {
+    return instance.get('/bills', this._getAuthHeaders(lang))
+  },
+  fillInUserBill (data, lang) {
+    return instance.patch('/bills/' + data.id, data, this._getAuthHeaders(lang))
   }
 }
 export default request
