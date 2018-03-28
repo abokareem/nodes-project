@@ -51,7 +51,9 @@ export default{
   name: 'Login',
   beforeCreate () {
     if (this.$store.getters['auth/isLoggedIn']) {
-      this.$router.push({name: 'dashboard'})
+      this.$store.dispatch('user/get').then(res => {
+        this.$router.push({name: 'dashboard'})
+      })
     }
   },
   methods: {
