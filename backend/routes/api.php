@@ -84,6 +84,10 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
     $router->get('/admin/commissions', 'SystemController@getCommissions');
     $router->patch('/admin/commissions/{commission}', 'SystemController@updateCommissions');
 
+    $router->post('/admin/nodes/{node}/profits', 'Admin\NodeController@setProfit');
+    $router->get('/admin/nodes', 'Admin\NodeController@index');
+    $router->get('/admin/withdrawals', 'Admin\NodeController@getWithdrawals');
+
     $router->post('systems/wallets', 'SystemController@loadWallets');
 });
 
@@ -101,4 +105,7 @@ Route::middleware('throttle:15')->group(function (Router $router) {
 
 Route::middleware(['auth:api', 'leaveNode'])->group(function (Router $router) {
     $router->post('withdrawals', 'WithdrawalController@store');
+});
+Route::get('/test', function (\App\Services\Math\BCMathService $service) {
+    dd(bcdiv('105', '6.45957', 3));
 });

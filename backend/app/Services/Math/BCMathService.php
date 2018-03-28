@@ -60,6 +60,17 @@ class BCMathService implements MathInterface
     /**
      * @param string $left
      * @param string $right
+     * @param int $scale
+     * @return string
+     */
+    public function divideScale(string $left, string $right, int $scale): string
+    {
+        return bcdiv($left, $right, $scale);
+    }
+
+    /**
+     * @param string $left
+     * @param string $right
      * @return string
      */
     public function sub(string $left, string $right): string

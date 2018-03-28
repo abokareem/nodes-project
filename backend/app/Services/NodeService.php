@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Commission;
 use App\Currency;
 use App\Exceptions\InsolventException;
 use App\Exceptions\MaxMasternodes;
@@ -42,6 +43,52 @@ class NodeService
         $this->user = Auth::user();
         $this->math = $math;
         $this->request = $request;
+    }
+
+    /**
+     * @param $amount
+     * @param Masternode $node
+     */
+    public function profit($amount, Masternode $node)
+    {
+        $percent = Commission::where('type', $node->type)->first();
+
+        if ($percent) {
+            $percent = $percent->percent;
+        }
+
+        $amount = $this->math->sub($amount, $this->math->percent($amount, $percent));
+
+        $node->getConnection()->transaction(function () use ($node, $amount) {
+            $investors = $node->investments;
+
+            foreach ($investors as $investor) {
+
+                $bill = $investor->user->bills()->where('currency_id', $node->currency_id)
+                    ->firstOrFail();
+                $percentInvestments = $this->math->divideScale(
+                    $this->math->multiply($investor->amount, 100), $node->price, 2
+                );
+                $profit = $this->math->percent($amount, $percentInvestments);
+                $bill->amount = $this->math->add($bill->amount, $profit);
+
+                $userProfits = $investor->user->profits()->where('node_id', $node->id)->first();
+
+                if ($userProfits) {
+
+                    $userProfits->per_day = $profit;
+                    $userProfits->full = $this->math->add($userProfits->full, $profit);
+                    $userProfits->save();
+                    continue;
+                }
+
+                $investor->user->profits()->create([
+                    'node_id' => $node->id,
+                    'per_day' => $profit,
+                    'full' => $profit
+                ]);
+            }
+        });
     }
 
     /**
