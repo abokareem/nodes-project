@@ -29,6 +29,7 @@ const response = {
     })
   },
   401 (err, component) {
+    component.$store.dispatch('auth/logout')
     component.$router.push('/login')
     component.$notifications.notify({
       message: '<h3>' + err.data.message + '</h3>',
