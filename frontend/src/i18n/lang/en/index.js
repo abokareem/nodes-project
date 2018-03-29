@@ -290,6 +290,9 @@ const en = {
         ban: 'block',
         unban: 'unblock'
       },
+      edit: {
+        title: 'Edit user profile'
+      },
       columns: {
         name: 'Name',
         email: 'Email',
@@ -298,6 +301,7 @@ const en = {
     },
     commissions: {
       title: 'Commissions',
+      subTitle: 'Percent',
       buttons: {
         change: 'change'
       },

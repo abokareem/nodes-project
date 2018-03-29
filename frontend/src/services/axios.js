@@ -130,6 +130,15 @@ const request = {
   },
   getCommissions (lang) {
     return instance.get('/admin/commissions', this._getAuthHeaders(lang))
+  },
+  changeCommission (data, lang) {
+    return instance.patch('/admin/commissions/' + data.id, data, this._getAuthHeaders(lang))
+  },
+  softDeleteUser (id, lang) {
+    return instance.delete('/admin/users/' + id, this._getAuthHeaders(lang))
+  },
+  restoreUser (id, lang) {
+    return instance.put('/admin/users/' + id, '', this._getAuthHeaders(lang))
   }
 }
 export default request

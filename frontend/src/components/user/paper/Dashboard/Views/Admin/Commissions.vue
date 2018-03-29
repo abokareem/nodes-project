@@ -22,13 +22,13 @@
         </div>
         <div @click="showCommissionModal = false">
             <window-modal v-if="showCommissionModal" @close="showCommissionModal = false">
-                <h3 slot="header">{{$t('bills.columns.amount')}}</h3>
+                <h3 slot="header">{{$t('admin.commissions.subTitle')}}</h3>
                 <div slot="body">
                     <div class="row">
                         <input class="form-control border-input" type="number"
                                max="freePrice"
                                id="withdrawal-input"
-                               v-model="amount">
+                               v-model="percent">
                     </div>
                 </div>
                 <spinner style="position: absolute;margin-left: auto;margin-right: auto;
@@ -36,8 +36,8 @@
                 <div slot="footer">
                     <div class="text-center">
                         <button class="two-fa-button btn btn-info btn-fill btn-wd"
-                                @click="fillIn({amount})">
-                            {{$t("bills.buttons.fill")}}
+                                @click="changePercent({percent})">
+                            {{$t("admin.commissions.buttons.change")}}
                         </button>
                     </div>
                 </div>
@@ -63,8 +63,8 @@ export default {
         data: []
       },
       showCommissionModal: false,
-      currentBill: '',
-      amount: 0,
+      currentCommission: '',
+      percent: 0,
       spinner: false
     }
   },
@@ -98,18 +98,18 @@ export default {
     })
   },
   methods: {
-    changeModal (bill) {
-      this.showBillModal = true
-      this.currentBill = bill
+    changeModal (commission) {
+      this.showCommissionModal = true
+      this.currentCommission = commission
     },
-    fillIn (amount) {
-      amount.id = this.currentBill.id
+    changePercent (percent) {
+      percent.id = this.currentCommission.id
       this.spinner = true
-      request.fillInUserBill(amount, this.$i18n.locale).then(res => {
+      request.changeCommission(percent, this.$i18n.locale).then(res => {
         let data = response.getResponse(res)
-        this.currentBill.amount = data.amount
+        this.currentCommission.percent = data.percent
         response.handleSuccess(res, this)
-        this.showBillModal = false
+        this.showCommissionModal = false
         this.spinner = false
       }).catch(err => {
         response.handleErrors(err, this)

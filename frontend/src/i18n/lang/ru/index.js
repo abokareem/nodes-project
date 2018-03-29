@@ -294,10 +294,14 @@ const ru = {
         name: 'Имя',
         email: 'Почта',
         lang: 'Язык'
-      }
+      },
+      edit: {
+        title: 'Редактировать пользователя'
+      },
     },
     commissions: {
       title: 'Комиссии',
+      subTitle: 'Процент',
       buttons: {
         change: 'Изменить'
       },

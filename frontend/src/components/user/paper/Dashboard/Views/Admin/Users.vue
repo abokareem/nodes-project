@@ -12,13 +12,13 @@
                         :lineNumbers="true">
                     <template slot="table-row-after" slot-scope="props">
                         <td style="width: 20%">
-                            <button type="button" class="btn btn-success pull-left">
-                                {{$t('admin.users.buttons.edit')}}
-                            </button>
-                            <button v-if="!props.row.ban" type="button" class="btn btn-danger pull-left">
+                            <user-edit :user="props.row"></user-edit>
+                            <button @click="softDelete(props.row)" v-if="!props.row.ban" type="button"
+                                    class="btn btn-danger">
                                 {{$t('admin.users.buttons.ban')}}
                             </button>
-                            <button v-if="props.row.ban" type="button" class="btn btn-success pull-left">
+                            <button @click="restore(props.row)" v-if="props.row.ban" type="button"
+                                    class="btn btn-success">
                                 {{$t('admin.users.buttons.unban')}}
                             </button>
                         </td>
@@ -32,10 +32,12 @@
 import request from '../../../../../../services/axios'
 import response from '../../../../../../services/response'
 import Spinner from 'vue-spinner-component/src/Spinner.vue'
+import UserEdit from './Modals/UserEdit.vue'
 
 export default {
   components: {
-    Spinner
+    Spinner,
+    UserEdit
   },
   data () {
     return {
@@ -51,8 +53,8 @@ export default {
   },
   created () {
     request.adminGetUsers(this.$i18n.locale).then(res => {
-      let resUsers = response.getResponse(res)
       console.log(res)
+      let resUsers = response.getResponse(res)
       this.users.columns = [
         {
           label: this.$t('admin.users.columns.name'),
@@ -73,9 +75,11 @@ export default {
       ]
       for (let index in resUsers) {
         this.users.data.push({
+          id: resUsers[index].id,
           name: resUsers[index].name,
           email: resUsers[index].email,
           lang: resUsers[index].language,
+          group: resUsers[index].group,
           ban: resUsers[index].banned
         })
       }
@@ -84,7 +88,24 @@ export default {
     })
   },
   methods: {
-
+    restore (user) {
+      request.restoreUser(user.id, this.$i18n.locale).then(res => {
+        let data = response.getResponse(res)
+        user.ban = data.banned
+        response.handleSuccess(res, this)
+      }).catch(err => {
+        response.handleErrors(err, this)
+      })
+    },
+    softDelete (user) {
+      request.softDeleteUser(user.id, this.$i18n.locale).then(res => {
+        let data = response.getResponse(res)
+        user.ban = data.banned
+        response.handleSuccess(res, this)
+      }).catch(err => {
+        response.handleErrors(err, this)
+      })
+    }
   }
 }
 </script>
