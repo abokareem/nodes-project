@@ -278,6 +278,34 @@ const en = {
     },
     title: 'Requests for sale',
     subTitle: 'Withdrawals'
+  },
+  admin: {
+    columns: {
+      actions: 'Actions'
+    },
+    users: {
+      title: 'Users',
+      buttons: {
+        edit: 'edit',
+        ban: 'block',
+        unban: 'unblock'
+      },
+      columns: {
+        name: 'Name',
+        email: 'Email',
+        lang: 'Language'
+      }
+    },
+    commissions: {
+      title: 'Commissions',
+      buttons: {
+        change: 'change'
+      },
+      columns: {
+        type: 'Type',
+        percent: 'Percent'
+      }
+    }
   }
 }
 

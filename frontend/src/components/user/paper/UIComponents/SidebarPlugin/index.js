@@ -4,9 +4,19 @@ const SidebarStore = {
   showSidebar: false,
   adminLinks: [
     {
+      name: 'Users',
+      icon: 'ti-user',
+      path: '/admin/users'
+    },
+    {
       name: 'Users Bills',
       icon: 'ti-panel',
       path: '/admin/users/bills'
+    },
+    {
+      name: 'Commissions',
+      icon: 'ti-wallet',
+      path: '/admin/commissions'
     }
   ],
   sidebarLinks: [

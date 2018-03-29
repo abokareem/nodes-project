@@ -1,27 +1,27 @@
 <template>
-    <div class="admin-user-bills">
+    <div class="admin-commissions">
         <div class="col-md-12 col-xs-12">
             <div class="card">
                 <vue-good-table
-                        :title="$t('bills.title')"
-                        :columns="bills.columns"
-                        :rows="bills.data"
+                        :title="$t('admin.commissions.title')"
+                        :columns="commissions.columns"
+                        :rows="commissions.data"
                         :perPage="15"
                         :paginate="true"
                         :globalSearch="true"
                         :lineNumbers="true">
                     <template slot="table-row-after" slot-scope="props">
                         <td style="width: 20%">
-                            <button @click="fillInModal(props.row)" type="button" class="btn btn-success pull-left">
-                                {{$t("bills.buttons.fill")}}
+                            <button @click="changeModal(props.row)" type="button" class="btn btn-success pull-left">
+                                {{$t("admin.commissions.buttons.change")}}
                             </button>
                         </td>
                     </template>
                 </vue-good-table>
             </div>
         </div>
-        <div @click="showBillModal = false">
-            <window-modal v-if="showBillModal" @close="showBillModal = false">
+        <div @click="showCommissionModal = false">
+            <window-modal v-if="showCommissionModal" @close="showCommissionModal = false">
                 <h3 slot="header">{{$t('bills.columns.amount')}}</h3>
                 <div slot="body">
                     <div class="row">
@@ -58,44 +58,39 @@ export default {
   },
   data () {
     return {
-      bills: {
+      commissions: {
         columns: [],
         data: []
       },
-      showBillModal: false,
+      showCommissionModal: false,
       currentBill: '',
       amount: 0,
       spinner: false
     }
   },
   created () {
-    request.getUsersBills(this.$i18n.locale).then(res => {
-      let resBills = response.getResponse(res)
-      this.bills.columns = [
+    request.getCommissions(this.$i18n.locale).then(res => {
+      console.log(res)
+      let resCommisssions = response.getResponse(res)
+      this.commissions.columns = [
         {
-          label: this.$t('bills.columns.currency'),
-          field: 'currency'
+          label: this.$t('admin.commissions.columns.type'),
+          field: 'type'
         },
         {
-          label: this.$t('bills.columns.amount'),
-          field: 'amount',
-          type: 'number'
+          label: this.$t('admin.commissions.columns.percent'),
+          field: 'percent'
         },
         {
-          label: this.$t('bills.columns.bill'),
-          field: 'wallet'
-        },
-        {
-          label: this.$t('bills.columns.actions'),
+          label: this.$t('admin.columns.actions'),
           sortable: false
         }
       ]
-      for (let index in resBills) {
-        this.bills.data.push({
-          currency: resBills[index].currency.name,
-          amount: resBills[index].amount,
-          id: resBills[index].id,
-          wallet: resBills[index].bill
+      for (let index in resCommisssions) {
+        this.commissions.data.push({
+          percent: resCommisssions[index].percent,
+          type: resCommisssions[index].type,
+          id: resCommisssions[index].id
         })
       }
     }).catch(err => {
@@ -103,7 +98,7 @@ export default {
     })
   },
   methods: {
-    fillInModal (bill) {
+    changeModal (bill) {
       this.showBillModal = true
       this.currentBill = bill
     },

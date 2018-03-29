@@ -124,6 +124,12 @@ const request = {
   },
   sendContactForm (data, lang) {
     return instance.post('/contact', data, this._getAuthHeaders(lang))
+  },
+  adminGetUsers (lang) {
+    return instance.get('/admin/users', this._getAuthHeaders(lang))
+  },
+  getCommissions (lang) {
+    return instance.get('/admin/commissions', this._getAuthHeaders(lang))
   }
 }
 export default request

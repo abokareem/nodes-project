@@ -9,8 +9,9 @@ const response = {
     return res.data.data
   },
   200 (success, component) {
+    let message = success.data.message ? success.data.message : 'Success'
     component.$notifications.notify({
-      message: '<h3>' + success.data.message + '</h3>',
+      message: '<h3>' + message + '</h3>',
       icon: 'ti-bell',
       horizontalAlign: 'right',
       verticalAlign: 'bottom',

@@ -14,13 +14,14 @@ import ResetPassword from '../components/login/forgotten/ResetPassword.vue'
 import Masternodes from '../components/user/paper/Dashboard/Views/Masternodes.vue'
 import DashboardLayout from '../components/user/paper/Dashboard/Layout/DashboardLayout.vue'
 import UserProfile from '../components/user/paper/Dashboard/Views/UserProfile.vue'
-import Notifications from '../components/user/paper/Dashboard/Views/Notifications.vue'
 import ConfirmEmail from '../components/user/confirmEmail/ConfirmEmail.vue'
 import NotFoundPage from '../components/user/paper/GeneralViews/NotFoundPage.vue'
 import DashboardContent from '../components/user/paper/Dashboard/Views/DashboardContent.vue'
 import Overview from '../components/user/paper/Dashboard/Views/Overview.vue'
 import UserBills from '../components/user/paper/Dashboard/Views/UserBills.vue'
 import AdminUsersBills from '../components/user/paper/Dashboard/Views/Admin/UserBills.vue'
+import AdminUsers from '../components/user/paper/Dashboard/Views/Admin/Users.vue'
+import Commissions from '../components/user/paper/Dashboard/Views/Admin/Commissions.vue'
 
 Vue.use(Router)
 
@@ -69,9 +70,19 @@ export default new Router({
           component: UserBills
         },
         {
-          path: '/admin/users/bills',
+          path: '/admin/users',
           name: 'users',
+          component: AdminUsers
+        },
+        {
+          path: '/admin/users/bills',
+          name: 'usersBills',
           component: AdminUsersBills
+        },
+        {
+          path: '/admin/commissions',
+          name: 'commissions',
+          component: Commissions
         }
       ]
     },

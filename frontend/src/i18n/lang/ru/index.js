@@ -278,6 +278,34 @@ const ru = {
     },
     title: 'Заявки выставленные на продажу',
     subTitle: 'Заявки'
+  },
+  admin: {
+    columns: {
+      actions: 'Действие'
+    },
+    users: {
+      title: 'Юзеры',
+      buttons: {
+        edit: 'редактировать',
+        ban: 'заблокировать',
+        unban: 'разблокировать'
+      },
+      columns: {
+        name: 'Имя',
+        email: 'Почта',
+        lang: 'Язык'
+      }
+    },
+    commissions: {
+      title: 'Комиссии',
+      buttons: {
+        change: 'Изменить'
+      },
+      columns: {
+        type: 'Тип',
+        percent: 'Процент'
+      }
+    }
   }
 }
 
