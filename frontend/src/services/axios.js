@@ -139,6 +139,15 @@ const request = {
   },
   restoreUser (id, lang) {
     return instance.put('/admin/users/' + id, '', this._getAuthHeaders(lang))
+  },
+  adminUpdateUser (data, lang) {
+    return instance.patch('/admin/users/' + data.id, data, this._getAuthHeaders(lang))
+  },
+  getAdminNodes (lang) {
+    return instance.get('/admin/nodes', this._getAuthHeaders(lang))
+  },
+  setProfit (data, lang) {
+    return instance.post('/admin/nodes/' + data.id + '/profits', data, this._getAuthHeaders(lang))
   }
 }
 export default request

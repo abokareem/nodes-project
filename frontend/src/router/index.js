@@ -22,6 +22,7 @@ import UserBills from '../components/user/paper/Dashboard/Views/UserBills.vue'
 import AdminUsersBills from '../components/user/paper/Dashboard/Views/Admin/UserBills.vue'
 import AdminUsers from '../components/user/paper/Dashboard/Views/Admin/Users.vue'
 import Commissions from '../components/user/paper/Dashboard/Views/Admin/Commissions.vue'
+import Nodes from '../components/user/paper/Dashboard/Views/Admin/Nodes.vue'
 
 Vue.use(Router)
 
@@ -83,6 +84,11 @@ export default new Router({
           path: '/admin/commissions',
           name: 'commissions',
           component: Commissions
+        },
+        {
+          path: '/admin/nodes',
+          name: 'adminNodes',
+          component: Nodes
         }
       ]
     },

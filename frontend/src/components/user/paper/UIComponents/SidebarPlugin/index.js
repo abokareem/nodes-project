@@ -17,6 +17,16 @@ const SidebarStore = {
       name: 'Commissions',
       icon: 'ti-wallet',
       path: '/admin/commissions'
+    },
+    {
+      name: 'Masternodes',
+      icon: 'ti-view-list-alt',
+      path: '/admin/nodes'
+    },
+    {
+      name: 'Currencies',
+      icon: 'ti-view-list-alt',
+      path: '/admin/currencies'
     }
   ],
   sidebarLinks: [

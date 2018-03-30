@@ -1,59 +1,33 @@
 <template>
     <div class="admin-user-edit">
         <button class="btn btn-info" @click="openModal">
-            {{$t('admin.users.buttons.edit')}}
+            Распредилить прибыль
         </button>
 
         <div @click="showModal = false">
             <window-modal v-if="showModal" @close="showModal = false">
-                <h3 slot="header">{{$t('admin.users.edit.title')}}</h3>
+                <h3 slot="header">Введите прибыль</h3>
                 <div slot="body">
                     <div class="row">
                         <spinner style="position: absolute;margin-left: auto;margin-right: auto;
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
                         <div class="text-center">
                             <label for="admin-user-name">
-                                Имя
+                                Прибыль
                             </label>
-                            <input v-model="name"
+                            <input v-model="profit"
                                    class="form-control border-input"
-                                   type="text"
+                                   type="number"
                                    id="admin-user-name"
-                                   placeholder="Имя">
-                            <!--<label for="admin-user-email">
-                                Почта
-                            </label>
-                            <input v-model="email"
-                                   class="form-control border-input"
-                                   type="email"
-                                   id="admin-user-email"
-                                   placeholder="Почта">-->
-                            <label for="admin-user-lang">
-                                Язык
-                            </label>
-                            <select v-model="lang"
-                                    class="form-control form-control-lg border-input"
-                                    id="admin-user-lang">
-                                <option value="en">en</option>
-                                <option value="ru">ru</option>
-                            </select>
-                            <label for="admin-user-role">
-                                Роль
-                            </label>
-                            <select v-model="userRole"
-                                    class="form-control form-control-lg border-input"
-                                    id="admin-user-role">
-                                <option value="1">admin</option>
-                                <option value="2">user</option>
-                            </select>
+                                   placeholder="Прибыль">
                         </div>
                     </div>
                 </div>
                 <div slot="footer">
                     <div class="text-center">
                         <button class="two-fa-button btn btn-info btn-fill btn-wd"
-                                @click="updateUser">
-                            Сохранить
+                                @click="execute">
+                            Распредилить
                         </button>
                     </div>
                 </div>
@@ -75,7 +49,7 @@ export default {
     WindowModal
   },
   props: {
-    user: {
+    node: {
       type: Object
     }
   },
@@ -83,10 +57,7 @@ export default {
     return {
       snipper: false,
       showModal: false,
-      lang: this.user.lang,
-      userRole: this.user.group,
-      name: this.user.name,
-      email: this.user.email
+      profit: ''
     }
   },
   mounted () {
@@ -96,20 +67,18 @@ export default {
     openModal () {
       this.showModal = true
     },
-    updateUser () {
+    execute () {
       let data = {
-        id: this.user.id,
-        name: this.name,
-        group_id: this.userRole,
-        language: this.lang
+        id: this.node.id,
+        amount: this.profit
       }
-      request.adminUpdateUser(data, this.$i18n.locale).then(res => {
+      this.spinner = true
+      request.setProfit(data, this.$i18n.locale).then(res => {
         response.handleSuccess(res, this)
-        let data = response.getResponse(res)
-        this.user.name = data.name
-        this.user.lang = data.language
+        this.spinner = false
       }).catch(err => {
         response.handleErrors(err, this)
+        this.spinner = false
       })
     }
   }
