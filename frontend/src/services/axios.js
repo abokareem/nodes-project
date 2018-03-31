@@ -148,6 +148,19 @@ const request = {
   },
   setProfit (data, lang) {
     return instance.post('/admin/nodes/' + data.id + '/profits', data, this._getAuthHeaders(lang))
+  },
+  editShare (data, lang) {
+    return instance.patch('/shares/' + data.shareId, data, this._getAuthHeaders(lang))
+  },
+  editCurrency (data, lang) {
+    return instance.patch('/currency/' + data.currencyId, data, this._getAuthHeaders(lang))
+  },
+  adminGetAllNodeWithdrawals (lang) {
+    return instance.get('/admin/withdrawals', this._getAuthHeaders(lang))
+  },
+  approveNodeWithdrawal (id, lang) {
+    return instance.patch('/withdrawals/approve/' + id, null, this._getAuthHeaders(lang))
   }
 }
+
 export default request

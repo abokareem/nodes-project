@@ -23,6 +23,8 @@ import AdminUsersBills from '../components/user/paper/Dashboard/Views/Admin/User
 import AdminUsers from '../components/user/paper/Dashboard/Views/Admin/Users.vue'
 import Commissions from '../components/user/paper/Dashboard/Views/Admin/Commissions.vue'
 import Nodes from '../components/user/paper/Dashboard/Views/Admin/Nodes.vue'
+import Currency from '../components/user/paper/Dashboard/Views/Admin/Currencies.vue'
+import NodeWithdrawals from '../components/user/paper/Dashboard/Views/Admin/NodeWithdrawals.vue'
 
 Vue.use(Router)
 
@@ -77,18 +79,28 @@ export default new Router({
         },
         {
           path: '/admin/users/bills',
-          name: 'usersBills',
+          name: 'User bills',
           component: AdminUsersBills
         },
         {
           path: '/admin/commissions',
-          name: 'commissions',
+          name: 'Commissions',
           component: Commissions
         },
         {
           path: '/admin/nodes',
-          name: 'adminNodes',
+          name: 'Masternodes',
           component: Nodes
+        },
+        {
+          path: '/admin/nodes/withdrawals',
+          name: 'Node withdrawals',
+          component: NodeWithdrawals
+        },
+        {
+          path: '/admin/currencies',
+          name: 'Currency',
+          component: Currency
         }
       ]
     },

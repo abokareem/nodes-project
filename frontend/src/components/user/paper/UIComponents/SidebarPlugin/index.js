@@ -24,6 +24,11 @@ const SidebarStore = {
       path: '/admin/nodes'
     },
     {
+      name: 'Node Withdrawals',
+      icon: 'ti-view-list-alt',
+      path: '/admin/nodes/withdrawals'
+    },
+    {
       name: 'Currencies',
       icon: 'ti-view-list-alt',
       path: '/admin/currencies'

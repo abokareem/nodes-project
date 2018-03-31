@@ -12,9 +12,6 @@
                         :lineNumbers="true">
                     <template slot="table-row-after" slot-scope="props">
                         <td style="width: 20%">
-                            <!--<button @click="fillInModal(props.row)" type="button" class="btn btn-success pull-left">
-                                Распредилить прибыль
-                            </button>-->
                             <node-profit :node="props.row"></node-profit>
                         </td>
                     </template>
