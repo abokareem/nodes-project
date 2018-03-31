@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
+use App\Http\Resources\MasternodeShareResource;
 use Illuminate\Http\Resources\Json\Resource;
 
 /**
  * Class CurrencyResource
  *
  * @SWG\Definition(
- *     definition="Currency",
- *     title="Currency",
+ *     definition="AdminCurrency",
+ *     title="AdminCurrency",
  *     @SWG\Property(
  *      property="name",
  *      type="string",
@@ -27,7 +28,12 @@ use Illuminate\Http\Resources\Json\Resource;
  *      type="string",
  *      description="symbol of currency",
  *      example="$"
- *     )
+ *     ),
+ *     @SWG\Property(
+ *      property="share",
+ *      description="",
+ *      ref="#/definitions/MasternodeShares"
+ *     ),
  * )
  *
  */
@@ -46,6 +52,7 @@ class CurrencyResource extends Resource
             'name' => $this->name,
             'code' => $this->code,
             'symbol' => $this->symbol,
+            'freeWallets' => $this->freeWallets,
             'share' => new MasternodeShareResource($this->share)
         ];
     }

@@ -24,4 +24,12 @@ class WithdrawalMoney extends Model
         'state',
         'amount'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bill()
+    {
+        return $this->belongsTo(UserBill::class, 'user_bill_id', 'id');
+    }
 }

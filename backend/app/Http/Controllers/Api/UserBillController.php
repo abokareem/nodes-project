@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AcceptPutMoneyRequest;
 use App\Http\Requests\Api\CreateUserBillRequest;
 use App\Http\Requests\Api\WithdrawalMoneyRequest;
+use App\Http\Resources\Admin\WithdrawalMoneyResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\UserBillsResource;
 use App\Services\UserBillService;
@@ -217,7 +218,7 @@ class UserBillController extends Controller
 
         $billService->acceptPut($currency, $user, $amount);
 
-        event(new AcceptedPutMoney());
+        event(new AcceptedPutMoney($user));
 
         return response('', 201);
     }
@@ -425,5 +426,40 @@ class UserBillController extends Controller
         ]);
 
         return new MessageResource(trans('monetary.bill.withdrawal.accept'));
+    }
+
+    /**
+     *
+     *  @SWG\Get(
+     *     path="/admin/money/withdrawals",
+     *     summary="Take money withdrawals",
+     *     tags={"Admin"},
+     *     description="Take withdrawals",
+     *     operationId="takeWithdrawals",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Response(
+     *      response=200,
+     *      description="money withdrawals object",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/AdminWithdrawalMoney"
+     *       )
+     *      )
+     *     )
+     * )
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getWithdrawals()
+    {
+        return WithdrawalMoneyResource::collection(
+          WithdrawalMoney::withTrashed()->get()
+        );
     }
 }

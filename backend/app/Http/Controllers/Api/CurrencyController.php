@@ -38,7 +38,7 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        return CurrencyResource::collection(Currency::paginate());
+        return CurrencyResource::collection(Currency::all());
     }
 
     /**
@@ -121,9 +121,9 @@ class CurrencyController extends Controller
     {
         $currency = $request->only(['name', 'code', 'symbol']);
 
-        Currency::create($currency);
+        $currency = Currency::create($currency);
 
-        return response('', Response::HTTP_CREATED);
+        return new CurrencyResource($currency);
     }
 
     /**

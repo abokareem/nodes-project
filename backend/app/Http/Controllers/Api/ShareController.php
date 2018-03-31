@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Currency;
 use App\Events\BoughtShares;
 use App\Events\MasternodeReadyToCreate;
 use App\Http\Requests\Api\BuySharesRequest;
+use App\Http\Requests\Api\CreateShareRequest;
 use App\Http\Requests\Api\UpdateShareRequest;
+use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\MasternodeShareResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Controllers\Controller;
@@ -179,5 +182,90 @@ class ShareController extends Controller
         $share->update($data);
 
         return new MasternodeShareResource($share);
+    }
+
+    /**
+     *
+     * @SWG\Post(
+     *     path="/shares/{currency}",
+     *     summary="Create Share",
+     *     tags={"Admin"},
+     *     description="Create share",
+     *     operationId="createShare",
+     *     security={
+     *         {
+     *             "Bearer": {}
+     *         }
+     *     },
+     *     @SWG\Parameter(
+     *          name="currency",
+     *          in="path",
+     *          type="integer",
+     *          required=true
+     *      ),
+     *     @SWG\Parameter(
+     *          name="body",
+     *          in="body",
+     *          required=true,
+     *          @SWG\Schema(
+     *              @SWG\Property(
+     *                  property="share_price",
+     *                  type="number",
+     *                  description="",
+     *                  example="2",
+     *              ),
+     *              @SWG\Property(
+     *                  property="full_price",
+     *                  type="number",
+     *                  description="",
+     *                  example="1",
+     *              ),
+     *          ),
+     *     ),
+     *     @SWG\Response(
+     *      response=200,
+     *      description="Create share",
+     *      @SWG\Schema(
+     *       title="Result",
+     *       @SWG\Property(
+     *        property="data",
+     *        ref="#/definitions/Currency"
+     *       )
+     *      )
+     *     ),
+     *     @SWG\Response(
+     *         response="401",
+     *         description="Token is expired or blacklisted.",
+     *         examples={
+     *                  "application/json":{
+     *                              "message":"Unauthenticated."
+     *                  },
+     *         },
+     *     ),
+     *     @SWG\Response(
+     *         response="422",
+     *         description="Provided data is invalid and can not be used (validator error)",
+     *         examples={
+     *                  "application/json":{
+     *                          "message": "The given data was invalid",
+     *                          "errors":{
+     *                              "share_price":{"The last name must be a numeric."}
+     *                          },
+     *                  },
+     *         },
+     *     ),
+     * )
+     *
+     * @param CreateShareRequest $request
+     * @param int $id
+     * @return CurrencyResource
+     */
+    public function store(CreateShareRequest $request, int $id)
+    {
+        $newShare = $request->only(['share_price', 'full_price']);
+        $currency = Currency::findOrFail($id);
+        $currency->share()->create($newShare);
+
+        return new CurrencyResource($currency);
     }
 }

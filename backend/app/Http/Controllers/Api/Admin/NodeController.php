@@ -134,7 +134,7 @@ class NodeController extends Controller
      *       @SWG\Property(
      *        property="data",
      *        type="array",
-     *        @SWG\Items(ref="#/definitions/NodeWithdrawal")
+     *        @SWG\Items(ref="#/definitions/AdminNodeWithdrawal")
      *       )
      *      )
      *     ),

@@ -17,13 +17,13 @@ use Illuminate\Http\Resources\Json\Resource;
  *       example=1
  *      ),
  *     @SWG\Property(
- *       property="price",
+ *       property="share_price",
  *       type="integer",
  *       description="",
  *       example=10
  *      ),
  *      @SWG\Property(
- *       property="count",
+ *       property="full_price",
  *       type="integer",
  *       description="",
  *       example=15

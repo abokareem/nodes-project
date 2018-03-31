@@ -74,6 +74,7 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
     $router->get('bills/{bill}', 'UserBillController@show');
 
     $router->patch('/shares/{share}', 'ShareController@update');
+    $router->post('/shares/{share}', 'ShareController@store');
 
     $router->get('/admin/users', 'Admin\UserController@index');
     $router->get('/admin/users/{user}', 'Admin\UserController@show');
@@ -87,8 +88,11 @@ Route::middleware(['auth:api', 'admin'])->group(function (Router $router) {
     $router->post('/admin/nodes/{node}/profits', 'Admin\NodeController@setProfit');
     $router->get('/admin/nodes', 'Admin\NodeController@index');
     $router->get('/admin/withdrawals', 'Admin\NodeController@getWithdrawals');
+    $router->get('/admin/money/withdrawals','UserBillController@getWithdrawals');
 
-    $router->post('systems/wallets', 'SystemController@loadWallets');
+    $router->post('/systems/wallets', 'SystemController@loadWallets');
+
+    $router->get('/admin/currency', 'Admin\CurrencyController@index');
 });
 
 Route::middleware('auth:api')->group(function (Router $router) {
