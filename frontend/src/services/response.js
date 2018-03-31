@@ -19,6 +19,16 @@ const response = {
       timeout: 2000
     })
   },
+  201 (success, component) {
+    component.$notifications.notify({
+      message: '<h3>Success</h3>',
+      icon: 'ti-bell',
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+      type: 'success',
+      timeout: 2000
+    })
+  },
   400 (err, component) {
     component.$notifications.notify({
       message: '<h3>' + err.data.message + '</h3>',

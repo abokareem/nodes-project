@@ -149,17 +149,38 @@ const request = {
   setProfit (data, lang) {
     return instance.post('/admin/nodes/' + data.id + '/profits', data, this._getAuthHeaders(lang))
   },
+  getAdminCurrencies (lang) {
+    return instance.get('/admin/currency', this._getAuthHeaders(lang))
+  },
   editShare (data, lang) {
     return instance.patch('/shares/' + data.shareId, data, this._getAuthHeaders(lang))
   },
   editCurrency (data, lang) {
     return instance.patch('/currency/' + data.currencyId, data, this._getAuthHeaders(lang))
   },
+  createCurrency (data, lang) {
+    return instance.post('/currency', data, this._getAuthHeaders(lang))
+  },
+  createShare (data, lang) {
+    return instance.post('/shares/' + data.id, data, this._getAuthHeaders(lang))
+  },
   adminGetAllNodeWithdrawals (lang) {
     return instance.get('/admin/withdrawals', this._getAuthHeaders(lang))
   },
   approveNodeWithdrawal (id, lang) {
     return instance.patch('/withdrawals/approve/' + id, null, this._getAuthHeaders(lang))
+  },
+  loadFreeWallets (data, lang) {
+    return instance.post('/systems/wallets', data, this._getAuthHeaders(lang))
+  },
+  getMoneyWithdrawals (lang) {
+    return instance.get('/admin/money/withdrawals', this._getAuthHeaders(lang))
+  },
+  approveMoneyWithdrawal (id, lang) {
+    return instance.patch('/money/approve/' + id, null, this._getAuthHeaders(lang))
+  },
+  declineMoneyWithdrawal (id, lang) {
+    return instance.delete('/money/decline/' + id, this._getAuthHeaders(lang))
   }
 }
 

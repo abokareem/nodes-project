@@ -17,8 +17,12 @@
                     <template slot="table-row-after" slot-scope="props">
                         <td style="width: 20%">
                             <button @click="currencyModal(props.row)"
-                                    type="button" class="btn btn-success pull-left">
+                                    type="button" class="btn btn-info pull-left">
                                 Редактировать Валюту
+                            </button>
+                            <button @click="freeWalletsModal(props.row)"
+                                    type="button" class="btn btn-info pull-left">
+                                Загрузить кошельки
                             </button>
                         </td>
                     </template>
@@ -91,6 +95,33 @@
                 </div>
             </window-modal>
         </div>
+        <div @click="showFreeWalletsModal = false">
+            <window-modal v-if="showFreeWalletsModal" @close="showFreeWalletsModal = false">
+                <h3 slot="header">Загрузить кошельки</h3>
+                <div slot="body">
+                    <div class="row">
+                        <label for="admin-free-wallets">
+                            Введите кошельки для данной валюты, каждый с новой строки
+                        </label>
+                        <textarea v-model="freeWallets"
+                                  class="form-control border-input"
+                                  type="text"
+                                  id="admin-free-wallets"
+                                  placeholder="Введите кошельки, каждый с новой строки"></textarea>
+                    </div>
+                </div>
+                <spinner style="position: absolute;margin-left: auto;margin-right: auto;
+        right: 0; left: 0;" v-if="spinner" :size="60"></spinner>
+                <div slot="footer">
+                    <div class="text-center">
+                        <button class="two-fa-button btn btn-info btn-fill btn-wd"
+                                @click="loadWallets">
+                            Загрузить
+                        </button>
+                    </div>
+                </div>
+            </window-modal>
+        </div>
     </div>
 </template>
 <script>
@@ -111,18 +142,19 @@ export default {
         data: []
       },
       showCurrencyModal: false,
-      showShareModal: false,
+      showFreeWalletsModal: false,
       currentCurrency: '',
       name: '',
       code: '',
       symbol: '',
       share_price: '',
       full_price: '',
+      freeWallets: [],
       spinner: false
     }
   },
   created () {
-    request.getCurrencies(this.$i18n.locale).then(res => {
+    request.getAdminCurrencies(this.$i18n.locale).then(res => {
       let resCurrency = response.getResponse(res)
       this.currencies.columns = [
         {
@@ -142,7 +174,7 @@ export default {
           field: 'sharePrice'
         },
         {
-          label: 'Цена доли',
+          label: 'Цена полной ноды',
           field: 'fullPrice'
         },
         {
@@ -183,8 +215,43 @@ export default {
         this.full_price = ''
       }
     },
+    freeWalletsModal (data) {
+      this.showFreeWalletsModal = true
+      this.currentCurrency = data
+    },
+    loadWallets () {
+      let data = {
+        currency_id: this.currentCurrency.currencyId,
+        wallets: this.freeWallets
+      }
+      request.loadFreeWallets(data, this.$i18n.locale).then(res => {
+        response.handleSuccess(res, this)
+      }).catch(err => {
+        response.handleErrors(err, this)
+      })
+    },
     createCurrency (data) {
-
+      request.createCurrency(data, this.$i18n.locale).then(res => {
+        let newCurrency = response.getResponse(res)
+        data.id = newCurrency.id
+        request.createShare(data, this.$i18n.locale).then(resp => {
+          let newResource = response.getResponse(resp)
+          this.currencies.data.push({
+            currency: newResource.name,
+            sharePrice: newResource.share.share_price,
+            code: newResource.code,
+            symbol: newResource.symbol,
+            fullPrice: newResource.share.full_price,
+            shareId: newResource.share.id,
+            currencyId: newResource.id
+          })
+          response.handleSuccess(newResource, this)
+        }).catch(err => {
+          response.handleErrors(err, this)
+        })
+      }).catch(err => {
+        response.handleErrors(err, this)
+      })
     },
     editCurrency (data) {
       data.currencyId = this.currentCurrency.currencyId

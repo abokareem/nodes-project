@@ -25,13 +25,18 @@ const SidebarStore = {
     },
     {
       name: 'Node Withdrawals',
-      icon: 'ti-view-list-alt',
+      icon: 'ti-angle-double-left',
       path: '/admin/nodes/withdrawals'
     },
     {
       name: 'Currencies',
-      icon: 'ti-view-list-alt',
+      icon: 'ti-star',
       path: '/admin/currencies'
+    },
+    {
+      name: 'Money Withdrawals',
+      icon: 'ti-angle-double-left',
+      path: '/admin/money/withdrawals'
     }
   ],
   sidebarLinks: [

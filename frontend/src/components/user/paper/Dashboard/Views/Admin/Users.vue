@@ -53,7 +53,6 @@ export default {
   },
   created () {
     request.adminGetUsers(this.$i18n.locale).then(res => {
-      console.log(res)
       let resUsers = response.getResponse(res)
       this.users.columns = [
         {
