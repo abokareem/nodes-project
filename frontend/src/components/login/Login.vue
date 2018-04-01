@@ -4,7 +4,7 @@
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
         <div class="login-container">
             <h3 class="login-heading-lead center">{{ $t("login.title") }}</h3>
-            <form class="login-form" @submit.prevent="login({ username, password })">
+            <form class="login-form" @submit.prevent="login({ username, password }, $event)">
                 <div class="login-data-container">
                     <input v-model="username" type="email" placeholder="Email *"
                            class="login-email-input login-input" :class="{'error-login-custom':!isValidEmail}">
@@ -15,12 +15,13 @@
                            class="login-password-input login-input" :class="{'error-login-custom':!isValidPassword}">
                     <span v-if="!isValidPassword">{{$t("validate.password")}}</span>
                 </div>
-                <div class="login-captcha-container">
+                <div class="login-data-container login-captcha-container">
                     <captcha></captcha>
+                    <span v-if="!isValidCaptcha">{{$t("validate.captcha")}}</span>
                 </div>
                 <div class="login-redirect-container">
                     <p class="login-redirect-register">
-                        <router-link to="/password/forgot">Forgot password?</router-link>
+                        <router-link to="/password/forgot">{{ $t("login.forgot") }}</router-link>
                     </p>
                 </div>
                 <div class="login-button-container">
@@ -57,10 +58,12 @@ export default{
     }
   },
   methods: {
-    login (creds) {
+    login (creds, event) {
+      creds.captchaValue = event.target[2].value
       this.isValidEmail = validator.email(this.username)
       this.isValidPassword = validator.password(this.password)
-      if (this.isValidEmail && this.isValidPassword) {
+      this.isValidCaptcha = validator.captcha(creds.captchaValue)
+      if (this.isValidEmail && this.isValidPassword && this.isValidCaptcha) {
         this.snipper = true
         this.$store.dispatch('auth/login', creds).then(res => {
           let data = response.getResponse(res)
@@ -92,7 +95,8 @@ export default{
       password: '',
       snipper: false,
       isValidEmail: true,
-      isValidPassword: true
+      isValidPassword: true,
+      isValidCaptcha: true
     }
   }
 }

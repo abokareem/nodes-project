@@ -10,7 +10,8 @@ const en = {
     title: 'Login to Your Account',
     button: 'LOG IN',
     question: 'Not registered?',
-    redirect: 'Register here'
+    redirect: 'Register here',
+    forgot: 'Forgot password?'
   },
   singUp: {
     title: 'Register An Account',
@@ -21,6 +22,9 @@ const en = {
     },
     question: 'Already registered?',
     redirect: 'Login here'
+  },
+  terms: {
+    title: 'Terms'
   },
   index: {
     banner: {
@@ -137,7 +141,8 @@ const en = {
     shares: 'To participate, you must have at least 1 share. Possible free shares ',
     wallet: 'Invalid wallet',
     userBillAmount: 'Invalid price',
-    contactMessage: 'The field is required for complete'
+    contactMessage: 'The field is required for complete',
+    captcha: 'Press on captcha please'
   },
   login2fa: {
     title: 'Two Factor Authentication'

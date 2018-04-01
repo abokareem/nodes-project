@@ -10,6 +10,7 @@ import NavBar from '../components/header/Header.vue'
 import FooTer from '../components/footer/Footer.vue'
 import ForgotPassword from '../components/login/forgotten/ForgotPassword.vue'
 import ResetPassword from '../components/login/forgotten/ResetPassword.vue'
+import Terms from '../components/views/Terms.vue'
 
 import Masternodes from '../components/user/paper/Dashboard/Views/Masternodes.vue'
 import DashboardLayout from '../components/user/paper/Dashboard/Layout/DashboardLayout.vue'
@@ -48,6 +49,7 @@ export default new Router({
     {path: '/singup', components: siteComponenst(SingUp)},
     {path: '/faq', components: siteComponenst(Faq)},
     {path: '/contact', components: siteComponenst(Contact)},
+    {path: '/terms', name: 'terms', components: siteComponenst(Terms)},
     {
       path: '/user',
       name: 'user',

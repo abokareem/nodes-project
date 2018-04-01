@@ -15,7 +15,7 @@
         <div class="contact-form-container">
             <div class="contact-form-inside-container">
                 <p>{{ $t("contact.desc") }}</p>
-                <form>
+                <form @submit.prevent="send({name,email,subject,message}, $event)">
                     <div class="contact-form-container-top-fields">
                         <div>
                             <input name="name" type="text" placeholder="Name *" v-model="name">
@@ -42,9 +42,9 @@
                     </div>
                     <div class="contact-form-captcha-container">
                         <captcha></captcha>
+                        <span class="error-contact-span-custom" v-if="!isValidCaptcha">{{$t("validate.captcha")}}</span>
                     </div>
-                    <button type="submit" class="contact-form-button"
-                            @click.prevent="send({name,email,subject,message})">
+                    <button type="submit" class="contact-form-button">
                         {{ $t("contact.button") }}
                     </button>
                 </form>
@@ -67,10 +67,12 @@ export default {
   },
   name: 'Contact',
   methods: {
-    send (data) {
+    send (data, event) {
+      data.captchaValue = event.target[4].value
       this.isValidEmail = validator.email(this.email)
       this.isValidMessage = validator.contactUsMessage(this.message)
-      if (this.isValidEmail && this.isValidMessage) {
+      this.isValidCaptcha = validator.captcha(data.captchaValue)
+      if (this.isValidEmail && this.isValidMessage && this.isValidCaptcha) {
         this.spinner = true
         request.sendContactForm(data, this.$i18n.locale).then(res => {
           response.handleSuccess(res, this)
@@ -98,6 +100,7 @@ export default {
       subject: '',
       isValidMessage: true,
       isValidEmail: true,
+      isValidCaptcha: true,
       spinner: false
     }
   }

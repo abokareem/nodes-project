@@ -4,7 +4,7 @@
         right: 0; left: 0;" v-if="snipper" :size="60"></spinner>
         <div class="sing-up-container">
             <h3 class="sing-up-heading-lead center">{{ $t("singUp.title") }}</h3>
-            <form class="sing-up-form" @submit.prevent="register({ email, password, name, subscribe })">
+            <form class="sing-up-form" @submit.prevent="register({ email, password, name, subscribe }, $event)">
                 <div class="sing-up-data-container">
                     <input type="text" placeholder="Name *" v-model="name"
                            class="sing-up-name-input sing-up-input"
@@ -29,14 +29,15 @@
                            :class="{'error-login-custom':!isPasswordConfirmed}">
                     <span class="error-sing-up-validate" v-if="!isPasswordConfirmed">{{$t("validate.confirmedPassword")}}</span>
                 </div>
-                <div class="sing-up-captcha-container">
+                <div class="sing-up-data-container sing-up-captcha-container">
                     <captcha></captcha>
+                    <span class="error-sing-up-validate" v-if="!isValidCaptcha">{{$t("validate.captcha")}}</span>
                 </div>
                 <div class="sing-up-data-container">
                     <div class="sing-up-term-container">
                         <input type="checkbox" v-model="subscribe" name="sign-up-term">
                         <span>{{ $t("singUp.terms.text") }}
-                        <a href="#">{{ $t("singUp.terms.url") }}</a>.
+                            <router-link :to="{ name: 'terms'}">{{ $t("singUp.terms.url") }}</router-link>.
                     </span>
                     </div>
                 </div>
@@ -65,16 +66,19 @@ export default {
   },
   name: 'sing-up',
   methods: {
-    register (creds) {
+    register (creds, event) {
+      creds.captchaValue = event.target[4].value
       this.isValidName = validator.name(this.name)
       this.isValidPassword = validator.password(this.password)
       this.isValidEmail = validator.email(this.email)
+      this.isValidCaptcha = validator.captcha(creds.captchaValue)
       this.isPasswordConfirmed = validator.passwordConfirm(this.password, this.passwordConfirm)
       if (
         this.isValidEmail &&
         this.isValidPassword &&
         this.isValidName &&
-        this.isPasswordConfirmed
+        this.isPasswordConfirmed &&
+        this.isValidCaptcha
       ) {
         this.snipper = true
         const lang = navigator.language || navigator.userLanguage
@@ -109,6 +113,7 @@ export default {
     },
     password () {
       this.isValidPassword = validator.password(this.password)
+      this.isPasswordConfirmed = validator.passwordConfirm(this.password, this.passwordConfirm)
     },
     name () {
       this.isValidName = validator.name(this.name)
@@ -128,7 +133,8 @@ export default {
       isValidName: true,
       isValidPassword: true,
       isValidEmail: true,
-      isPasswordConfirmed: true
+      isPasswordConfirmed: true,
+      isValidCaptcha: true
     }
   }
 }

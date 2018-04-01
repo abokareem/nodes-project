@@ -4,6 +4,7 @@ const nameRegExp = /^\S.{1,20}$/
 const twoFaRegExp = /^\S+$/
 const walletRegExp = /^\S+$/
 const messageRegExp = /^\S+$/
+const captchaRegExp = /^\S+$/
 
 const validator = {
   email (email) {
@@ -26,6 +27,9 @@ const validator = {
     }
   },
   passwordConfirm (password, confirmed) {
+    if (password === '') {
+      return false
+    }
     if (password === confirmed) {
       return true
     } else {
@@ -76,6 +80,15 @@ const validator = {
   },
   contactUsMessage (message) {
     let result = messageRegExp.test(message)
+
+    if (result) {
+      return true
+    } else {
+      return false
+    }
+  },
+  captcha (captcha) {
+    let result = captchaRegExp.test(captcha)
 
     if (result) {
       return true
